@@ -4,12 +4,11 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-
 public class Ball {
 	private double _x;
 	private double _y;
 	private int _radius;
-	
+
 	// Masse de la balle
 	private double _mass;
 	private double _vx; // vitesse
@@ -19,31 +18,34 @@ public class Ball {
 	private double _vx0; // vitesse initiale
 	private double _vy0;
 	private double _fx, _fy; // force totale
-	private double _px, _py, _rx, _ry; //force P et R
+	private double _px, _py, _rx, _ry; // force P et R
 	private double _t; // temps relatif
 	private boolean _isOut;
 	private ArrayList<Point> _points;
 
-	public Ball(double x, double y, int radius, double mass) {
+	public Ball(double x, double y, int radius, double mass, double inclinaison) {
 		_x = x;
 		_y = y;
-		_radius = radius;	
+		_radius = radius;
 		_mass = mass;
-		_px = -_mass*Circuit.get_gravitation()*Math.cos(Math.toRadians(Circuit.get_inclinaison()));
-		_py = _mass*Circuit.get_gravitation()*Math.sin(Math.toRadians(Circuit.get_inclinaison()));
-		_rx = -_px;
-		_ry = 0;
-		_fx = _px + _rx; // force
-		_fy = _py + _ry;
-		_ax = _fx / _mass; // acceleration initiale
-		_ay = _fy / _mass; 
+		setAcceleration(inclinaison);
 		_vx0 = _vx = 0; // vitesse initiale 0 m/s
 		_vy0 = _vy = 0;
 		_x0 = _x; // position initiale
-		_y0 = _y; //(Panel.YMIN + Panel.YMAX)/2;
+		_y0 = _y; // (Panel.YMIN + Panel.YMAX)/2;
 		_t = 0;
 		_isOut = false;
 		calcPoints();
+	}
+
+	public void setAcceleration(double inclinaison) {
+		_px = -_mass * Circuit.get_gravitation() * Math.cos(Math.toRadians(inclinaison));
+		_py = _mass * Circuit.get_gravitation() * Math.sin(Math.toRadians(inclinaison));
+		_rx = -_px;
+		_ry = 0;
+		_fy = _py + _ry;
+		_ax = _fx / _mass; // acceleration initiale
+		_ay = _fy / _mass;
 	}
 
 	public void calcPoints() {
@@ -60,11 +62,11 @@ public class Ball {
 			}
 		}
 	}
-	
+
 	public ArrayList<Point> get_points() {
 		return _points;
 	}
-	
+
 	public void setAll(double x, double y, int radius, double mass) {
 		_x = x;
 		_y = y;
@@ -72,7 +74,7 @@ public class Ball {
 		_mass = mass;
 		calcPoints();
 	}
-	
+
 	public Boolean contains(Point p) {
 		double x = p.getX();
 		double y = p.getY();
@@ -109,8 +111,7 @@ public class Ball {
 		this._radius = _radius;
 		calcPoints();
 	}
-	
-	
+
 	public double get_mass() {
 		return this._mass;
 	}
@@ -254,30 +255,30 @@ public class Ball {
 	public void set_y(double _y) {
 		this._y = _y;
 	}
-	
-	public void step(){		
+
+	public void step() {
 		double scale = 40;
 		this._vx = (this._vx0 + this._ax * this._t);
 		this._vy = (this._vy0 + this._ay * this._t);
-		double t2 = this._t*this._t;
-		this._x = this._x0/scale + this._vx0 * this._t + (this._ax * t2) / 2;
-		this._y = this._y0/scale + this._vy0 * this._t + (this._ay * t2) / 2;
+		double t2 = this._t * this._t;
+		this._x = this._x0 / scale + this._vx0 * this._t + (this._ax * t2) / 2;
+		this._y = this._y0 / scale + this._vy0 * this._t + (this._ay * t2) / 2;
 		this._x *= 40;
 		this._y *= 40;
 		this._t += AnimationTimer.MSSTEP;
 	}
-	
-	public void collisionCircuit(int width, int height){
-		if(this._x >= width + this._radius|| this._x <= 0){
+
+	public void collisionCircuit(int width, int height) {
+		if (this._x >= width + this._radius || this._x <= 0) {
 			this._vx0 = -this._vx;
-			this._vy0 = this._vy ;
+			this._vy0 = this._vy;
 			this._x0 = this._x;
 			this._y0 = this._y;
 			this._t = 0;
 			_isOut = true;
 		}
-		
-		if(this._y >= height - this._radius || this._y <= 0){
+
+		if (this._y >= height - this._radius || this._y <= 0) {
 			this._vx0 = this._vx;
 			this._vy0 = -this._vy;
 			this._x0 = this._x;
@@ -287,133 +288,135 @@ public class Ball {
 		}
 	}
 
-
-	
-	public void resolveCollisionObstacle(ObstacleLine obstacle)
-	{
-		 /* Point2D.Double a = new Point2D.Double();
-		  Point2D.Double b = new Point2D.Double();
-		  
-		  a.x = obstacle.get_depart().getX()/40;
-		  a.y = obstacle.get_depart().getY()/40;
-		  b.x = obstacle.get_arrivee().getX()/40;
-		  b.y = obstacle.get_arrivee().getY()/40;
-		  
-		  Point2D.Double c = new Point2D.Double();
-		  
-		  if(a.y <= b.y) {
-			  c.y = b.y;
-			  c.x = a.x;
-		  }else {
-			  c.y = a.y;
-			  c.x = b.x;
-		  }
-		  
-		  double tanBeta = distance(maxPoint(a,b),c)/distance(minPoint(a,b),c);
-		  double Beta = Math.toDegrees(Math.atan(tanBeta));
-		  double Alpha = 90-Beta;
-		  this._vx0 = this._vx * Math.cos(Math.toRadians(Alpha));
-		  this._vy0 = -this._vy * Math.sin(Math.toRadians(Alpha));*/
-		  this._ax = 0;
-		  this._ay = 0;
-		  this._x0 = this._x;
-		  this._y0 = this._y;
-		  this._t = 0;
-	}
-	
-	
-	public void resolveCollisionBall(Ball ball)
-	{
-		/*this._vx0 = (this._vx*(this._mass-ball.get_mass())+2*ball.get_mass()*ball.get_vx())/(this._mass+ball.get_mass()) ;
-		this._vy0 = (this._vy*(this._mass-ball.get_mass())+2*ball.get_mass()*ball.get_vy())/(this._mass+ball.get_mass()) ;
-		ball.set_vx0(ball.get_vx()*(ball.get_mass()-this._mass)+2*this._mass*this.get_vx() /(this._mass+ball.get_mass()));
-		ball.set_vy0(ball.get_vy()*(ball.get_mass()-this._mass)+2*this._mass*this.get_vy() /(this._mass+ball.get_mass()));*/
-		
-		/*double alpha=0,teta1=0,teta2=0;
-		
-		this._vx0 = (((this._vx*Math.cos(teta1-alpha)*(this._mass-ball.get_mass())) + (2*ball.get_mass()*ball.get_vx()*Math.cos(teta2-alpha)) )/
-				       this._mass+ball.get_mass()) *  Math.cos(alpha)- this._vx*Math.sin(teta1-alpha)*Math.sin(alpha); 
-		this._vy0 = (((this._vy*Math.cos(teta1-alpha)*(this._mass-ball.get_mass())) + (2*ball.get_mass()*ball.get_vx()*Math.cos(teta2-alpha)) )/
-			       this._mass+ball.get_mass()) *  Math.sin(alpha)- this._vy*Math.sin(teta1-alpha)*Math.cos(alpha); 
-		
-		
-		ball.set_vx0((((ball.get_vx()*Math.cos(teta2-alpha)*(ball.get_mass()-this._mass)) + (2*this._mass*this._vx*Math.cos(teta1-alpha)) )/
-			            this._mass+ball.get_mass()) *  Math.cos(alpha)- ball.get_vx()*Math.sin(teta2-alpha)*Math.sin(alpha));
-		ball.set_vy0((((ball.get_vy()*Math.cos(teta2-alpha)*(ball.get_mass()-this._mass)) + (2*this._mass*this._vy*Math.cos(teta1-alpha)) )/
-	            this._mass+ball.get_mass()) *  Math.sin(alpha)- ball.get_vx()*Math.sin(teta2-alpha)*Math.cos(alpha));
-
-		
+	public void resolveCollisionObstacle(ObstacleLine obstacle) {
+		/*
+		 * Point2D.Double a = new Point2D.Double(); Point2D.Double b = new
+		 * Point2D.Double();
+		 * 
+		 * a.x = obstacle.get_depart().getX()/40; a.y =
+		 * obstacle.get_depart().getY()/40; b.x =
+		 * obstacle.get_arrivee().getX()/40; b.y =
+		 * obstacle.get_arrivee().getY()/40;
+		 * 
+		 * Point2D.Double c = new Point2D.Double();
+		 * 
+		 * if(a.y <= b.y) { c.y = b.y; c.x = a.x; }else { c.y = a.y; c.x = b.x;
+		 * }
+		 * 
+		 * double tanBeta = distance(maxPoint(a,b),c)/distance(minPoint(a,b),c);
+		 * double Beta = Math.toDegrees(Math.atan(tanBeta)); double Alpha =
+		 * 90-Beta; this._vx0 = this._vx * Math.cos(Math.toRadians(Alpha));
+		 * this._vy0 = -this._vy * Math.sin(Math.toRadians(Alpha));
+		 */
+		this._ax = 0;
+		this._ay = 0;
 		this._x0 = this._x;
 		this._y0 = this._y;
-		this._t = 0;*/
-		//handleCollision (ball);
-	    this._ax = 0;
-	    this._ay = 0;
-	    this._x0 = this._x;
-	    this._y0 = this._y;
-	    this._t = 0;
-	    
+		this._t = 0;
 	}
-	
-	public double distance (Point2D.Double a, Point2D.Double b)
-	{
-	   return Math.sqrt(Math.pow((b.x-a.x),2)+Math.pow((b.y-a.y),2));
-	}
-	
-	public Point2D.Double maxPoint(Point2D.Double a, Point2D.Double b){
-		if(a.getY() >= b.getY())
-			return a;
-		else 
-			return b;
-	}
-	
-	public Point2D.Double minPoint(Point2D.Double a, Point2D.Double b){
-		if(a.getY() <= b.getY())
-			return a;
-		else 
-			return b;
-	}
-	
-	/*private void handleCollision (Ball ball) {
-		translate(ball);
-		double nxs = ball.get_x() - this._x;
-		double nys = ball.get_y() - this._y;
-		double unxs = nxs / Math.sqrt((nxs*nxs + nys*nys));
-		double unys = nys / Math.sqrt((nxs*nxs + nys*nys));
-		double utxs = -unys;
-		double utys = unxs;
-		double n1 = unxs * this._vx + unys * this._vy;
-		double nt1 = utxs * this._vx + utys * this._vy;
-		double n2 = unxs * ball.get_vx() + unys * ball.get_vy();
-		double nt2 = utxs * ball.get_vx() + utys * ball.get_vy();
 
-		// double nn1 = ((Window.RESISTITION+1)*ball.area*n2 + n1*(this.area - Window.RESISTITION*ball.area))/(this.area + ball.area);
-		// double nn2 = ((Window.RESISTITION+1)*this.area*n1 - n2*(this.area - Window.RESISTITION*ball.area))/(this.area + ball.area);
-		double nn1 = ((ball.get_radius()*ball.get_radius()*Math.PI)*(n2 - n1)*0.25 + (ball.get_radius()*ball.get_radius()*Math.PI) * n2 + (this._radius*this._radius*Math.PI) * n1)/((this._radius*this._radius*Math.PI) + (ball.get_radius()*ball.get_radius()*Math.PI));
-		double nn2 = ((this._radius*this._radius*Math.PI)*(n1 - n2)*0.25 + (ball.get_radius()*ball.get_radius()*Math.PI) * n2 + (this._radius*this._radius*Math.PI) * n1)/((this._radius*this._radius*Math.PI) + (ball.get_radius()*ball.get_radius()*Math.PI));
-		this._vx0 = nn1 * unxs + nt1 * utxs;
-		this._vy0 = nn1 * unys + nt1 * utys;
+	public void resolveCollisionBall(Ball ball) {
+		/*
+		 * this._vx0 =
+		 * (this._vx*(this._mass-ball.get_mass())+2*ball.get_mass()*ball.get_vx(
+		 * ))/(this._mass+ball.get_mass()) ; this._vy0 =
+		 * (this._vy*(this._mass-ball.get_mass())+2*ball.get_mass()*ball.get_vy(
+		 * ))/(this._mass+ball.get_mass()) ;
+		 * ball.set_vx0(ball.get_vx()*(ball.get_mass()-this._mass)+2*this._mass*
+		 * this.get_vx() /(this._mass+ball.get_mass()));
+		 * ball.set_vy0(ball.get_vy()*(ball.get_mass()-this._mass)+2*this._mass*
+		 * this.get_vy() /(this._mass+ball.get_mass()));
+		 */
 
-		ball.set_vx0( nn2 * unxs + nt2 * utxs );
-		ball.set_vy0( nn2 * unys + nt2 * utys );
+		/*
+		 * double alpha=0,teta1=0,teta2=0;
+		 * 
+		 * this._vx0 =
+		 * (((this._vx*Math.cos(teta1-alpha)*(this._mass-ball.get_mass())) +
+		 * (2*ball.get_mass()*ball.get_vx()*Math.cos(teta2-alpha)) )/
+		 * this._mass+ball.get_mass()) * Math.cos(alpha)-
+		 * this._vx*Math.sin(teta1-alpha)*Math.sin(alpha); this._vy0 =
+		 * (((this._vy*Math.cos(teta1-alpha)*(this._mass-ball.get_mass())) +
+		 * (2*ball.get_mass()*ball.get_vx()*Math.cos(teta2-alpha)) )/
+		 * this._mass+ball.get_mass()) * Math.sin(alpha)-
+		 * this._vy*Math.sin(teta1-alpha)*Math.cos(alpha);
+		 * 
+		 * 
+		 * ball.set_vx0((((ball.get_vx()*Math.cos(teta2-alpha)*(ball.get_mass()-
+		 * this._mass)) + (2*this._mass*this._vx*Math.cos(teta1-alpha)) )/
+		 * this._mass+ball.get_mass()) * Math.cos(alpha)-
+		 * ball.get_vx()*Math.sin(teta2-alpha)*Math.sin(alpha));
+		 * ball.set_vy0((((ball.get_vy()*Math.cos(teta2-alpha)*(ball.get_mass()-
+		 * this._mass)) + (2*this._mass*this._vy*Math.cos(teta1-alpha)) )/
+		 * this._mass+ball.get_mass()) * Math.sin(alpha)-
+		 * ball.get_vx()*Math.sin(teta2-alpha)*Math.cos(alpha));
+		 * 
+		 * 
+		 * this._x0 = this._x; this._y0 = this._y; this._t = 0;
+		 */
+		// handleCollision (ball);
+		this._ax = 0;
+		this._ay = 0;
 		this._x0 = this._x;
 		this._y0 = this._y;
 		this._t = 0;
 
 	}
-	private void translate (Ball ball) {
-		double dx = (this._x - ball.get_x());
-		double dy = (this._y - ball.get_y());
-		double d = Math.sqrt(dx*dx + dy*dy);
-		dx *= (this._radius + ball.get_radius() - d)/d;
-		dy *= (this._radius + ball.get_radius() - d)/d;
-		double im1 = 1 / (this._radius*this._radius*Math.PI);
-		double im2 = 1 / (ball.get_radius()*ball.get_radius()*Math.PI);
-		this._x += dx * im1 /(im1 + im2);
-		this._y += dy * im1 /(im1 + im2);
-		ball.set_x( ball.get_x() - (dx * im2 /(im1 + im2)) );
-		ball.set_y( ball.get_y() - (dy * im2 /(im1 + im2)) ); 
-		//repaint();
+
+	public double distance(Point2D.Double a, Point2D.Double b) {
+		return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
 	}
-	*/
+
+	public Point2D.Double maxPoint(Point2D.Double a, Point2D.Double b) {
+		if (a.getY() >= b.getY())
+			return a;
+		else
+			return b;
+	}
+
+	public Point2D.Double minPoint(Point2D.Double a, Point2D.Double b) {
+		if (a.getY() <= b.getY())
+			return a;
+		else
+			return b;
+	}
+
+	/*
+	 * private void handleCollision (Ball ball) { translate(ball); double nxs =
+	 * ball.get_x() - this._x; double nys = ball.get_y() - this._y; double unxs
+	 * = nxs / Math.sqrt((nxs*nxs + nys*nys)); double unys = nys /
+	 * Math.sqrt((nxs*nxs + nys*nys)); double utxs = -unys; double utys = unxs;
+	 * double n1 = unxs * this._vx + unys * this._vy; double nt1 = utxs *
+	 * this._vx + utys * this._vy; double n2 = unxs * ball.get_vx() + unys *
+	 * ball.get_vy(); double nt2 = utxs * ball.get_vx() + utys * ball.get_vy();
+	 * 
+	 * // double nn1 = ((Window.RESISTITION+1)*ball.area*n2 + n1*(this.area -
+	 * Window.RESISTITION*ball.area))/(this.area + ball.area); // double nn2 =
+	 * ((Window.RESISTITION+1)*this.area*n1 - n2*(this.area -
+	 * Window.RESISTITION*ball.area))/(this.area + ball.area); double nn1 =
+	 * ((ball.get_radius()*ball.get_radius()*Math.PI)*(n2 - n1)*0.25 +
+	 * (ball.get_radius()*ball.get_radius()*Math.PI) * n2 +
+	 * (this._radius*this._radius*Math.PI) *
+	 * n1)/((this._radius*this._radius*Math.PI) +
+	 * (ball.get_radius()*ball.get_radius()*Math.PI)); double nn2 =
+	 * ((this._radius*this._radius*Math.PI)*(n1 - n2)*0.25 +
+	 * (ball.get_radius()*ball.get_radius()*Math.PI) * n2 +
+	 * (this._radius*this._radius*Math.PI) *
+	 * n1)/((this._radius*this._radius*Math.PI) +
+	 * (ball.get_radius()*ball.get_radius()*Math.PI)); this._vx0 = nn1 * unxs +
+	 * nt1 * utxs; this._vy0 = nn1 * unys + nt1 * utys;
+	 * 
+	 * ball.set_vx0( nn2 * unxs + nt2 * utxs ); ball.set_vy0( nn2 * unys + nt2 *
+	 * utys ); this._x0 = this._x; this._y0 = this._y; this._t = 0;
+	 * 
+	 * } private void translate (Ball ball) { double dx = (this._x -
+	 * ball.get_x()); double dy = (this._y - ball.get_y()); double d =
+	 * Math.sqrt(dx*dx + dy*dy); dx *= (this._radius + ball.get_radius() - d)/d;
+	 * dy *= (this._radius + ball.get_radius() - d)/d; double im1 = 1 /
+	 * (this._radius*this._radius*Math.PI); double im2 = 1 /
+	 * (ball.get_radius()*ball.get_radius()*Math.PI); this._x += dx * im1 /(im1
+	 * + im2); this._y += dy * im1 /(im1 + im2); ball.set_x( ball.get_x() - (dx
+	 * * im2 /(im1 + im2)) ); ball.set_y( ball.get_y() - (dy * im2 /(im1 + im2))
+	 * ); //repaint(); }
+	 */
 }

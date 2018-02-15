@@ -74,7 +74,7 @@ public class DrawingPanel extends JPanel {
 
 					} else {
 						Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
-								_controller.get_defaultBallMass());
+								_controller.get_defaultBallMass(), _controller.get_defaultInclinaison());
 						if (!(_controller.checkIfBallIsOnExistingObject(b))) {
 							b.set_x((int) (b.get_x() / _zoomFactor));
 							b.set_y((int) (b.get_y() / _zoomFactor));

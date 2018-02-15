@@ -10,7 +10,7 @@ public class Circuit {
 	private int _defaultBallRadius, _defaultLineThickness;
 	private double _defaultBallMass;
 	private static double _gravitation = 9.80665;
-	private static double _inclinaison = 10;
+	private double _defaultInclinaison;
 
 	public Circuit(int width, int height) {
 		_width = width;
@@ -18,6 +18,7 @@ public class Circuit {
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
 		_defaultLineThickness = 10;
+		_defaultInclinaison = 10;
 	}
 
 	public void addBall(Ball b) {
@@ -27,7 +28,7 @@ public class Circuit {
 	public Boolean removeBall(Ball b) {
 		return _balls.remove(b);
 	}
-	
+
 	public void clearAll() {
 		_balls = new ArrayList<Ball>();
 		_lines = new ArrayList<ObstacleLine>();
@@ -45,16 +46,19 @@ public class Circuit {
 		return _gravitation;
 	}
 
-	public static void set_gravitation(double _gravitation) {
-		Circuit._gravitation = _gravitation;
+	public static void set_gravitation(double gravitation) {
+		_gravitation = gravitation;
 	}
 
-	public static double get_inclinaison() {
-		return _inclinaison;
+	public double get_inclinaison() {
+		return _defaultInclinaison;
 	}
 
-	public static void set_inclinaison(double _inclinaison) {
-		Circuit._inclinaison = _inclinaison;
+	public void set_inclinaison(double inclinaison) {
+		_defaultInclinaison = inclinaison;
+		for (Ball b : _balls) {
+			b.setAcceleration(_defaultInclinaison);
+		}
 	}
 
 	public int get_width() {
@@ -96,7 +100,7 @@ public class Circuit {
 	public void set_defaultLineThickness(int _lineThickness) {
 		this._defaultLineThickness = _lineThickness;
 	}
-	
+
 	public double get_defaultBallMass() {
 		return _defaultBallMass;
 	}

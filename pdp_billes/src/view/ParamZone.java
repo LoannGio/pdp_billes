@@ -90,6 +90,10 @@ public class ParamZone extends JPanel {
 
 				if (checkDouble(_txtMass.getText()))
 					_controller.set_defaultBallMass(Double.parseDouble(_txtMass.getText()));
+
+				if (checkDouble(_txtInclinaison.getText()))
+					_controller.set_defaultInclinaison(Double.parseDouble(_txtInclinaison.getText()));
+
 			}
 		});
 
@@ -169,7 +173,7 @@ public class ParamZone extends JPanel {
 		_paramZoneHeight = (int) Math.round(heightProportion * frameSize.height);
 		_txtLongueur = new JTextField(Integer.toString(panelWidth));
 		_txtLargeur = new JTextField(Integer.toString(panelHeight));
-		_txtInclinaison = new JTextField(Integer.toString(0));
+		_txtInclinaison = new JTextField(Double.toString(_controller.get_defaultInclinaison()));
 		_txtThickness = new JTextField(Integer.toString(_controller.get_defaultLineThickness()));
 		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass = new JTextField(Double.toString(_controller.get_defaultBallMass()));
