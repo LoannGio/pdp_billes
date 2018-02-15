@@ -11,7 +11,7 @@ import controller.Controller;
 public class MainFrame extends JFrame {
 	private Controller _controller;
 	private DrawingPanel _panel;
-	private ParamZone _paramZone;
+	private ParamPanel _paramZone;
 
 	public MainFrame(Controller c) {
 		_controller = c;
@@ -36,6 +36,6 @@ public class MainFrame extends JFrame {
 
 	private void initializeComponents(Dimension frameSize) {
 		_panel = new DrawingPanel(frameSize, _controller, this);
-		_paramZone = new ParamZone(frameSize, _controller, _panel);
+		_paramZone = new ParamPanel(frameSize, _controller, _panel);
 	}
 }

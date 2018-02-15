@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import controller.Controller;
 
-public class ParamZone extends JPanel {
+public class ParamPanel extends JPanel {
 
 	private Controller _controller;
 	int _paramZoneWidth, _paramZoneHeight, _maxCreationZoneWidth, _maxCreationZoneHeight;
@@ -45,7 +45,7 @@ public class ParamZone extends JPanel {
 	private JButton _resetButton = new JButton("Reinitialiser");
 	private DrawingPanel _dp;
 
-	public ParamZone(Dimension frameSize, Controller c, DrawingPanel creationZone) {
+	public ParamPanel(Dimension frameSize, Controller c, DrawingPanel creationZone) {
 		_controller = c;
 		_dp = creationZone;
 		initialize(frameSize, creationZone);

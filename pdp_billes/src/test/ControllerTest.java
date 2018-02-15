@@ -69,30 +69,76 @@ public class ControllerTest {
 
 	@Test
 	public void test_removeLinesOutOfBounds() {
-
+		Point depart = new Point(150, 150);
+		Point arrivee = new Point(400, 150);
+		ObstacleLine o = new ObstacleLine(depart, arrivee, 3);
+		c.addLine(o);
+		circuit.set_width(450);
+		circuit.set_height(500);
+		c.removeLinesOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		assertEquals(c.get_lines().size(), 1, 0);
+		circuit.set_width(300);
+		c.removeLinesOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		assertEquals(c.get_lines().size(), 0, 0);
 	}
 
 	@Test
 	public void test_removeBallsOutOfBounds() {
-
+		Ball b = new Ball(400, 150, 10, 0, 0);
+		c.addBall(b);
+		circuit.set_width(450);
+		circuit.set_height(500);
+		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		assertEquals(c.get_balls().size(), 1, 0);
+		circuit.set_width(402);
+		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		assertEquals(c.get_balls().size(), 0, 0);
 	}
 
 	@Test
 	public void test_checkIfBallIsOnExistingLine() {
-
+		Point depart = new Point(150, 150);
+		Point arrivee = new Point(400, 150);
+		ObstacleLine o = new ObstacleLine(depart, arrivee, 3);
+		c.addLine(o);
+		Ball b = new Ball(50, 150, 10, 0, 0);
+		assertEquals(c.checkIfBallIsOnExistingLine(b), false);
+		Ball b2 = new Ball(200, 150, 10, 0, 0);
+		assertEquals(c.checkIfBallIsOnExistingLine(b2), true);
 	}
 
 	@Test
 	public void test_checkIfBallIsOnExistingBall() {
+		Ball b = new Ball(50, 150, 10, 0, 0);
+		c.addBall(b);
+		Ball b2 = new Ball(52, 150, 10, 0, 0);
+		assertEquals(c.checkIfBallIsOnExistingBall(b2), true);
+		Ball b3 = new Ball(150, 150, 10, 0, 0);
+		assertEquals(c.checkIfBallIsOnExistingBall(b3), false);
 
 	}
 
 	@Test
 	public void test_checkIfLineIsOnExistingBall() {
 		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10), 2);
-		Ball b = new Ball(10, 10, 2, 1, 0);
-		c.addLine(o);
 
+		// Existing ball
+		Ball b = new Ball(10, 10, 2, 1, 0);
+		c.addBall(b);
+
+		// La ligne traverse une bille en son centre
+		assertEquals(true, c.checkIfLineIsOnExistingBall(o));
+
+		// La ligne et la bille se touchent en renant en compte leur rayon et
+		// epaisseur
+		b.set_x(10);
+		b.set_y(7);
+		assertEquals(true, c.checkIfLineIsOnExistingBall(o));
+
+		// La ligne ne touche aucune bille
+		b.set_x(50);
+		b.set_y(50);
+		assertEquals(false, c.checkIfLineIsOnExistingBall(o));
 	}
 
 	@Test
