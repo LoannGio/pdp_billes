@@ -17,8 +17,8 @@ public class Circuit {
 		_height = height;
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
-		_defaultLineThickness = 10;
-		_defaultInclinaison = 10;
+		_defaultLineThickness = 1;
+		_defaultInclinaison = 45;
 	}
 
 	public void addBall(Ball b) {

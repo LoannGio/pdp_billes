@@ -18,7 +18,7 @@ public class ObstacleLine {
 		_thickness = thickness;
 		calcPoints();
 	}
-	
+
 	private void calcPoints() {
 		_points = new ArrayList<Point>();
 		double xMin = Math.min(_depart.getX(), _arrivee.getX()) - _thickness / 2;
@@ -121,7 +121,7 @@ public class ObstacleLine {
 
 	public Boolean contains(Point p) {
 		Shape s = new Line2D.Double(_depart.getX(), _depart.getY(), _arrivee.getX(), _arrivee.getY());
-		BasicStroke bs = new BasicStroke(_thickness);
+		BasicStroke bs = new BasicStroke(_thickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 		s = bs.createStrokedShape(s);
 
 		if (s.contains(p))
@@ -151,11 +151,11 @@ public class ObstacleLine {
 		_thickness = t;
 		calcPoints();
 	}
-	
+
 	public int get_thickness() {
 		return _thickness;
 	}
-	
+
 	public ArrayList<Point> get_points() {
 		return _points;
 	}
