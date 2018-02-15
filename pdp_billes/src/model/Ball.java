@@ -66,11 +66,12 @@ public class Ball {
 		return _points;
 	}
 
-	public void setAll(double x, double y, int radius, double mass) {
+	public void setAll(double x, double y, int radius, double mass, double inclinaison) {
 		_x = x;
 		_y = y;
 		_radius = radius;
 		_mass = mass;
+		setAcceleration(inclinaison);
 		calcPoints();
 	}
 

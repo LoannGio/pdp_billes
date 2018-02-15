@@ -292,14 +292,14 @@ public class Controller {
 		double oldMass = b.get_mass();
 		double oldX = b.get_x();
 		double oldY = b.get_y();
-		b.setAll(new_centreX, new_centreY, new_radius, new_mass);
+		b.setAll(new_centreX, new_centreY, new_radius, new_mass, _circuit.get_inclinaison());
 
 		if (!checkIfBallIsOnExistingObject(b) && !(new_centreX > _circuit.get_width())
 				&& !(new_centreY > _circuit.get_height())) {
 			return true;
 		}
 
-		b.setAll(oldX, oldY, oldRadius, oldMass);
+		b.setAll(oldX, oldY, oldRadius, oldMass, _circuit.get_inclinaison());
 		return false;
 	}
 

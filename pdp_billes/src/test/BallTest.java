@@ -28,7 +28,7 @@ public class BallTest {
 	@Test
 	public void test_listePoints() {
 		assertEquals(1, ball.get_points().size());
-		ball.setAll(10, 10, 1, 1);
+		ball.setAll(10, 10, 1, 1, 10);
 		ArrayList<Point> points = new ArrayList<Point>();
 		points.add(new Point(9, 10));
 		points.add(new Point(10, 9));
