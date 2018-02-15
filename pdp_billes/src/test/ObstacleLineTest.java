@@ -42,7 +42,7 @@ public class ObstacleLineTest {
 		arrivee = new Point(53, 50);
 		o = new ObstacleLine(depart, arrivee, thickness);
 		for (int j = 49; j <= 51; j++) {
-			for (int i = 50; i <= 52; i++) {
+			for (int i = 49; i <= 54; i++) {
 				p = new Point(i, j);
 				points.add(p);
 			}

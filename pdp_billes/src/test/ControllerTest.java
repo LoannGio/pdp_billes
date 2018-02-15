@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -200,4 +201,51 @@ public class ControllerTest {
 		assertEquals(new Point(0, 20), o.get_depart());
 		assertEquals(new Point(20, 20), o.get_arrivee());
 	}
+
+	@Test
+	public void testCollisionSegment() {
+		Circuit circuit = new Circuit(600, 800);
+		Controller controller = new Controller(circuit);
+		Ball ball1 = new Ball(120, 189, 10, 1, 0);
+		Ball ball2 = new Ball(300, 400, 10, 1, 0);
+		Point p1 = new Point(80, 200);
+		Point p2 = new Point(200, 200);
+		ObstacleLine obstacle = new ObstacleLine(p1, p2, 1);
+		boolean b1 = controller.collisionSegment(ball1, obstacle);
+		boolean b2 = controller.collisionSegment(ball2, obstacle);
+		assertEquals(true, b1);
+		assertEquals(false, b2);
+	}
+
+	@Test
+	public void testCollisionPointCerle() {
+		Ball ball1 = new Ball(29, 26, 15, 1, 0);
+		Ball ball2 = new Ball(26, 13, 5, 1, 0);
+		Point2D.Double p1 = new Point2D.Double(33.0, 10);
+		Point2D.Double p2 = new Point2D.Double(22.0, 10);
+		boolean b1 = c.collisionPointCerle(p1, p2, ball1);
+		boolean b2 = c.collisionPointCerle(p1, p2, ball2);
+		assertEquals(true, b1);
+		assertEquals(false, b2);
+	}
+
+	@Test
+	public void testDistance() {
+		Point2D.Double p1 = new Point2D.Double(33.0, 5);
+		Point2D.Double p2 = new Point2D.Double(22.0, 5);
+		double dist = c.distance(p1, p2);
+		assertEquals(11, dist, 0);
+	}
+
+	@Test
+	public void testCollisionBall() {
+		Ball ball1 = new Ball(120, 180, 10, 1, 0);
+		Ball ball2 = new Ball(110, 185, 6, 1, 0);
+		Ball ball3 = new Ball(200, 300, 8, 1, 0);
+		boolean b1 = c.collisionBall(ball1, ball2);
+		boolean b2 = c.collisionBall(ball1, ball3);
+		assertEquals(true, b1);
+		assertEquals(false, b2);
+	}
+
 }

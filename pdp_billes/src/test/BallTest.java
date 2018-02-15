@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Ball;
+import model.ObstacleLine;
 
 public class BallTest {
 	Ball ball;
@@ -49,8 +50,45 @@ public class BallTest {
 	}
 
 	@Test
-	public void test_step() {
+	public void testStep() {
+		double x_init = 100;
+		double y_init = 100;
+		ball = new Ball(x_init, y_init, 3, 1, 40);
+		ball.step();
+		ball.step();
+		boolean b1 = (x_init == ball.get_x());
+		boolean b2 = (y_init < ball.get_y());
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+	}
 
+	@Test
+	public void testResolveCollisionObstacle() {
+
+		ball.set_x(100);
+		ball.set_y(100);
+		ball.set_radius(3);
+		Point p1 = new Point(80, 140);
+		Point p2 = new Point(300, 200);
+		ObstacleLine obstacle = new ObstacleLine(p1, p2, 1);
+		ball.resolveCollisionObstacle(obstacle);
+		assertEquals(0, ball.get_ax(), 0);
+		assertEquals(0, ball.get_ay(), 0);
+
+	}
+
+	@Test
+	public void testResolveCollisionBall() {
+
+		ball.set_x(100);
+		ball.set_y(100);
+		ball.set_radius(10);
+		Ball ball2 = new Ball(110, 100, 15, 1, 10);
+		ball.resolveCollisionBall(ball2);
+		assertEquals(0, ball.get_ax(), 0);
+		assertEquals(0, ball.get_ay(), 0);
+		assertEquals(0, ball2.get_ax(), 0);
+		assertEquals(0, ball2.get_ay(), 0);
 	}
 
 }
