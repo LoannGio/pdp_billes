@@ -21,6 +21,7 @@ public class Ball {
 	private double _t; // temps relatif
 	private boolean _isOut;
 	private ArrayList<Point> _points;
+	private ArrayList<Point> _trace;
 
 	public Ball(double x, double y, int radius, double mass, double inclinaison) {
 		_x = x;
@@ -34,6 +35,7 @@ public class Ball {
 		_y0 = _y; // (Panel.YMIN + Panel.YMAX)/2;
 		_t = 0;
 		_isOut = false;
+		_trace = new ArrayList<Point>();
 		calcPoints();
 	}
 
@@ -64,6 +66,10 @@ public class Ball {
 
 	public ArrayList<Point> get_points() {
 		return _points;
+	}
+	
+	public ArrayList<Point> get_trace() {
+		return _trace;
 	}
 
 	public void setAll(double x, double y, int radius, double mass, double inclinaison) {
@@ -258,6 +264,8 @@ public class Ball {
 
 	public void step() {
 		double scale = 40;
+		int x = (int) _x;
+		int y = (int) _y;
 		this._vx = (this._vx0 + this._ax * this._t);
 		this._vy = (this._vy0 + this._ay * this._t);
 		double t2 = this._t * this._t;
@@ -265,6 +273,8 @@ public class Ball {
 		this._y = this._y0 / scale + this._vy0 * this._t + (this._ay * t2) / 2;
 		this._x *= 40;
 		this._y *= 40;
+		if(_x != x || _y != y)
+			_trace.add(new Point((int) _x, (int) _y));
 		this._t += AnimationTimer.MSSTEP;
 	}
 

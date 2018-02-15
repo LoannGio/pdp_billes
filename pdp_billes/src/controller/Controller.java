@@ -179,8 +179,6 @@ public class Controller {
 		AnimationTimer timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
 				for (Ball ball : _circuit.get_balls()) {
 					ball.step();
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
