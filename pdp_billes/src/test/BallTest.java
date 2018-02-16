@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -80,15 +81,14 @@ public class BallTest {
 	@Test
 	public void testResolveCollisionBall() {
 
-		ball.set_x(100);
-		ball.set_y(100);
-		ball.set_radius(10);
-		Ball ball2 = new Ball(110, 100, 15, 1, 10);
-		ball.resolveCollisionBall(ball2);
-		assertEquals(0, ball.get_ax(), 0);
-		assertEquals(0, ball.get_ay(), 0);
-		assertEquals(0, ball2.get_ax(), 0);
-		assertEquals(0, ball2.get_ay(), 0);
+		/*
+		 * ball.set_x(100); ball.set_y(100); ball.set_radius(10); Ball ball2 =
+		 * new Ball(110, 100, 15, 1, 10); ball.resolveCollisionBall(ball2);
+		 * assertEquals(0, ball.get_ax(), 0); assertEquals(0, ball.get_ay(), 0);
+		 * assertEquals(0, ball2.get_ax(), 0); assertEquals(0, ball2.get_ay(),
+		 * 0);
+		 */
+		fail("test");
 	}
 
 }

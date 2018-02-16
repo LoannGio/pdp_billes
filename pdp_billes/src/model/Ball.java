@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Ball {
@@ -67,7 +68,7 @@ public class Ball {
 	public ArrayList<Point> get_points() {
 		return _points;
 	}
-	
+
 	public ArrayList<Point> get_trace() {
 		return _trace;
 	}
@@ -273,7 +274,7 @@ public class Ball {
 		this._y = this._y0 / scale + this._vy0 * this._t + (this._ay * t2) / 2;
 		this._x *= 40;
 		this._y *= 40;
-		if(_x != x || _y != y)
+		if (_x != x || _y != y)
 			_trace.add(new Point((int) _x, (int) _y));
 		this._t += AnimationTimer.MSSTEP;
 	}
@@ -309,17 +310,50 @@ public class Ball {
 
 	public void resolveCollisionBall(Ball ball) {
 
-		this._ax = 0;
-		this._ay = 0;
-		this._x0 = this._x;
-		this._y0 = this._y;
-		this._t = 0;
+		double collisionision_angle = Math.atan2((ball.get_y() - this._y), (ball.get_x() - this._x));
+		double speed1 = this._vy;
+		double speed2 = ball.get_vy();
 
-		ball.set_ax(0);
-		ball.set_ay(0);
-		ball.set_x0(ball.get_x());
-		ball.set_y0(ball.get_y());
-		ball.set_t(0);
+		double direction_1 = Math.atan2(this._vy, this._vx);
+		double direction_2 = Math.atan2(ball.get_vy(), ball.get_vx());
+		double new_xspeed_1 = speed1 * Math.cos(direction_1 - collisionision_angle);
+		double new_yspeed_1 = speed1 * Math.sin(direction_1 - collisionision_angle);
+		double new_xspeed_2 = speed2 * Math.cos(direction_2 - collisionision_angle);
+		double new_yspeed_2 = speed2 * Math.sin(direction_2 - collisionision_angle);
 
+		double final_xspeed_1 = ((this._mass - ball.get_mass()) * new_xspeed_1
+				+ (ball.get_mass() + ball.get_mass()) * new_xspeed_2) / (this._mass + ball.get_mass());
+		double final_xspeed_2 = ((this._mass + this._mass) * new_xspeed_1
+				+ (ball.get_mass() - this._mass) * new_xspeed_2) / (this._mass + ball.get_mass());
+		double final_yspeed_1 = new_yspeed_1;
+		double final_yspeed_2 = new_yspeed_2;
+
+		double cosAngle = Math.cos(collisionision_angle);
+		double sinAngle = Math.sin(collisionision_angle);
+		this._vx0 = cosAngle * final_xspeed_1 - sinAngle * final_yspeed_1;
+		this._vy0 = sinAngle * final_xspeed_1 + cosAngle * final_yspeed_1;
+		ball.set_vx0(cosAngle * final_xspeed_2 - sinAngle * final_yspeed_2);
+		ball.set_vy0(sinAngle * final_xspeed_2 + cosAngle * final_yspeed_2);
+
+		// get the mtd
+		Point2D.Double posDiff = new Point2D.Double((this._x - ball.get_x()), (this._y - ball.get_y()));
+		double d = Math.sqrt(posDiff.x * posDiff.x + posDiff.y * posDiff.y);
+
+		// minimum translation distance to push balls apart after intersecting
+		double mtdx = posDiff.x * (((this.get_radius() + ball.get_radius()) - d) / d);
+		double mtdy = posDiff.y * (((this.get_radius() + ball.get_radius()) - d) / d);
+		// resolve intersection --
+		// computing inverse mass quantities
+		double im1 = 1 / this._mass;
+		double im2 = 1 / ball.get_mass();
+
+		// push-pull them apart based off their mass
+		this._x0 = this._x + mtdx * (im1 / (im1 + im2));
+		this._y0 = this._y + mtdy * (im1 / (im1 + im2));
+		this._t = 0.001;
+		ball.set_x0(ball.get_x() - mtdx * (im2 / (im1 + im2)));
+		ball.set_y0(ball.get_y() - mtdy * (im2 / (im1 + im2)));
+		ball.set_t(0.001);
 	}
+
 }
