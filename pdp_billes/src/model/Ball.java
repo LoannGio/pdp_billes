@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import view.DrawingPanel;
+
 public class Ball {
 	private double _x;
 	private double _y;
@@ -310,16 +312,16 @@ public class Ball {
 
 	public void resolveCollisionBall(Ball ball) {
 
-		double collisionision_angle = Math.atan2((ball.get_y() - this._y), (ball.get_x() - this._x));
+		double collision_angle = Math.atan2((ball.get_y() - this._y), (ball.get_x() - this._x));
 		double speed1 = this._vy;
 		double speed2 = ball.get_vy();
 
 		double direction_1 = Math.atan2(this._vy, this._vx);
 		double direction_2 = Math.atan2(ball.get_vy(), ball.get_vx());
-		double new_xspeed_1 = speed1 * Math.cos(direction_1 - collisionision_angle);
-		double new_yspeed_1 = speed1 * Math.sin(direction_1 - collisionision_angle);
-		double new_xspeed_2 = speed2 * Math.cos(direction_2 - collisionision_angle);
-		double new_yspeed_2 = speed2 * Math.sin(direction_2 - collisionision_angle);
+		double new_xspeed_1 = speed1 * Math.cos(direction_1 - collision_angle);
+		double new_yspeed_1 = speed1 * Math.sin(direction_1 - collision_angle);
+		double new_xspeed_2 = speed2 * Math.cos(direction_2 - collision_angle);
+		double new_yspeed_2 = speed2 * Math.sin(direction_2 - collision_angle);
 
 		double final_xspeed_1 = ((this._mass - ball.get_mass()) * new_xspeed_1
 				+ (ball.get_mass() + ball.get_mass()) * new_xspeed_2) / (this._mass + ball.get_mass());
@@ -328,8 +330,8 @@ public class Ball {
 		double final_yspeed_1 = new_yspeed_1;
 		double final_yspeed_2 = new_yspeed_2;
 
-		double cosAngle = Math.cos(collisionision_angle);
-		double sinAngle = Math.sin(collisionision_angle);
+		double cosAngle = Math.cos(collision_angle);
+		double sinAngle = Math.sin(collision_angle);
 		this._vx0 = cosAngle * final_xspeed_1 - sinAngle * final_yspeed_1;
 		this._vy0 = sinAngle * final_xspeed_1 + cosAngle * final_yspeed_1;
 		ball.set_vx0(cosAngle * final_xspeed_2 - sinAngle * final_yspeed_2);

@@ -81,14 +81,31 @@ public class BallTest {
 	@Test
 	public void testResolveCollisionBall() {
 
-		/*
-		 * ball.set_x(100); ball.set_y(100); ball.set_radius(10); Ball ball2 =
-		 * new Ball(110, 100, 15, 1, 10); ball.resolveCollisionBall(ball2);
-		 * assertEquals(0, ball.get_ax(), 0); assertEquals(0, ball.get_ay(), 0);
-		 * assertEquals(0, ball2.get_ax(), 0); assertEquals(0, ball2.get_ay(),
-		 * 0);
-		 */
-		fail("test");
+		ball.set_x(100); ball.set_y(100);
+		ball.set_radius(10);
+		Ball ball2 = new Ball(120, 100, 10, 1, 10);
+		ball.resolveCollisionBall(ball2);
+		boolean ball_ay_is_null = (ball.get_ay() == 0);
+		boolean ball2_ay_is_null = (ball2.get_ay() == 0);
+		assertEquals(0, ball.get_ax(), 0);
+		assertEquals(ball_ay_is_null, false);
+		assertEquals(0, ball2.get_ax(), 0);
+		assertEquals(ball2_ay_is_null, false);
+		ball.step();
+		ball2.step();
+		ball.set_vx(1);
+		ball2.set_vx(-1);
+		ball.set_vx0(1);
+		ball2.set_vx0(-1);
+		ball.resolveCollisionBall(ball2);
+		boolean ball_vy0_is_positive = (ball.get_vy0() > 0);
+		boolean ball2_vy0_is_positive = (ball2.get_vy0() > 0);
+		boolean ball_vx0_is_negative = (ball.get_vx0() < 0);
+		boolean ball2_vx0_is_positive = (ball2.get_vx0() > 0);
+		assertEquals(ball_vx0_is_negative, true);
+		assertEquals(ball_vy0_is_positive, true);
+		assertEquals(ball2_vx0_is_positive, true);
+		assertEquals(ball2_vy0_is_positive, true);
 	}
 
 }
