@@ -27,22 +27,6 @@ public class BallTest {
 	}
 
 	@Test
-	public void test_listePoints() {
-		assertEquals(1, ball.get_points().size());
-		ball.setAll(10, 10, 1, 1, 10);
-		ArrayList<Point> points = new ArrayList<Point>();
-		points.add(new Point(9, 10));
-		points.add(new Point(10, 9));
-		points.add(new Point(10, 10));
-		points.add(new Point(10, 11));
-		points.add(new Point(11, 10));
-
-		assertEquals(5, ball.get_points().size());
-		assertEquals(true, ball.get_points().equals(points));
-
-	}
-
-	@Test
 	public void test_ballLocation() {
 		assertEquals(new Point(0, 0), new Point((int) ball.get_x(), (int) ball.get_y()));
 		ball.set_x(10);
@@ -71,7 +55,7 @@ public class BallTest {
 		ball.set_radius(3);
 		Point p1 = new Point(80, 140);
 		Point p2 = new Point(300, 200);
-		ObstacleLine obstacle = new ObstacleLine(p1, p2, 1);
+		ObstacleLine obstacle = new ObstacleLine(p1, p2);
 		ball.resolveCollisionObstacle(obstacle);
 		assertEquals(0, ball.get_ax(), 0);
 		assertEquals(0, ball.get_ay(), 0);

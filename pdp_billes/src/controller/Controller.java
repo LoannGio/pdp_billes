@@ -31,7 +31,7 @@ public class Controller {
 	}
 
 	public void addLine(Point depart, Point arrivee) {
-		_circuit.addLine(new ObstacleLine(depart, arrivee, _circuit.get_defaultLineThickness()));
+		_circuit.addLine(new ObstacleLine(depart, arrivee));
 	}
 
 	public void addLine(ObstacleLine o) {
@@ -120,16 +120,8 @@ public class Controller {
 		return _circuit.get_defaultBallRadius();
 	}
 
-	public int get_defaultLineThickness() {
-		return _circuit.get_defaultLineThickness();
-	}
-
 	public void set_defaultBallRadius(int radius) {
 		_circuit.set_defaultBallRadius(radius);
-	}
-
-	public void set_defaultLineThickness(int thickness) {
-		_circuit.set_defaultLineThickness(thickness);
 	}
 
 	public double get_defaultBallMass() {
@@ -150,28 +142,26 @@ public class Controller {
 	}
 
 	public Boolean checkIfBallIsOnExistingLine(Ball b) {
-		for (ObstacleLine o : _circuit.get_lines())
-			for (Point p : o.get_points())
-				if (b.get_points().contains(p))
-					return true;
+		for(ObstacleLine o : _circuit.get_lines()) {
+			if(collisionObstacle(b,o))
+				return true;
+		}
 		return false;
 	}
 
 	public Boolean checkIfBallIsOnExistingBall(Ball b) {
-		for (Ball b2 : _circuit.get_balls())
-			if (b2 != b)
-				for (Point p : b.get_points())
-					if (b2.get_points().contains(p))
-						return true;
+		for(Ball b2 : _circuit.get_balls()) {
+			if(collisionBall(b,b2) && !b.equals(b2))
+				return true;
+		}
 		return false;
 	}
 
 	public boolean checkIfLineIsOnExistingBall(ObstacleLine o) {
-
-		for (Ball b : _circuit.get_balls())
-			for (Point p : b.get_points())
-				if (o.get_points().contains(p))
-					return true;
+		for(Ball b : _circuit.get_balls()) {
+			if(collisionObstacle(b,o))
+				return true;
+		}
 		return false;
 	}
 
@@ -291,7 +281,6 @@ public class Controller {
 		double oldX = b.get_x();
 		double oldY = b.get_y();
 		b.setAll(new_centreX, new_centreY, new_radius, new_mass, _circuit.get_inclinaison());
-
 		if (!checkIfBallIsOnExistingObject(b) && !(new_centreX > _circuit.get_width())
 				&& !(new_centreY > _circuit.get_height())) {
 			return true;
@@ -301,22 +290,21 @@ public class Controller {
 		return false;
 	}
 
-	public Boolean updateLine(ObstacleLine line, int new_thickness, int new_departX, int new_departY, int new_arriveeX,
+	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX,
 			int new_arriveeY) {
-		int oldThickness = line.get_thickness();
 		Point oldDepart = line.get_depart();
 		Point oldArrivee = line.get_arrivee();
 		Point newDepart = new Point(new_departX, new_departY);
 		Point newArrivee = new Point(new_arriveeX, new_arriveeY);
 
-		line.setAll(newDepart, newArrivee, new_thickness);
+		line.setAll(newDepart, newArrivee);
 
 		if (!checkIfLineIsOnExistingBall(line) && !(new_departX > _circuit.get_width())
 				&& !(new_departY > _circuit.get_height()) && !(new_arriveeX > _circuit.get_width())
 				&& !(new_arriveeY > _circuit.get_height()))
 			return true;
 
-		line.setAll(oldDepart, oldArrivee, oldThickness);
+		line.setAll(oldDepart, oldArrivee);
 		return false;
 	}
 

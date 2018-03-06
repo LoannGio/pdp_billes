@@ -52,14 +52,10 @@ public class ControllerTest {
 	@Test
 	public void test_checkIfPointIsInLine() {
 		Point p = new Point(10, 10);
-		ObstacleLine o = new ObstacleLine(new Point(10, 0), new Point(10, 20), 10);
+		ObstacleLine o = new ObstacleLine(new Point(10, 0), new Point(10, 20));
 		c.addLine(o);
 
 		// Le point est pile sur la ligne
-		assertEquals(o, c.checkIfPointIsInLine(p));
-
-		// Le point est sur la ligne en tenant compte de l'epaisseur de celle-ci
-		p.setLocation(11, 10);
 		assertEquals(o, c.checkIfPointIsInLine(p));
 
 		// Le point est en dehors de la ligne
@@ -71,7 +67,7 @@ public class ControllerTest {
 	public void test_removeLinesOutOfBounds() {
 		Point depart = new Point(150, 150);
 		Point arrivee = new Point(400, 150);
-		ObstacleLine o = new ObstacleLine(depart, arrivee, 3);
+		ObstacleLine o = new ObstacleLine(depart, arrivee);
 		c.addLine(o);
 		circuit.set_width(450);
 		circuit.set_height(500);
@@ -99,7 +95,7 @@ public class ControllerTest {
 	public void test_checkIfBallIsOnExistingLine() {
 		Point depart = new Point(150, 150);
 		Point arrivee = new Point(400, 150);
-		ObstacleLine o = new ObstacleLine(depart, arrivee, 3);
+		ObstacleLine o = new ObstacleLine(depart, arrivee);
 		c.addLine(o);
 		Ball b = new Ball(50, 150, 10, 0, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b), false);
@@ -120,7 +116,7 @@ public class ControllerTest {
 
 	@Test
 	public void test_checkIfLineIsOnExistingBall() {
-		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10), 2);
+		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10));
 
 		// Existing ball
 		Ball b = new Ball(10, 10, 2, 1, 0);
@@ -132,7 +128,7 @@ public class ControllerTest {
 		// La ligne et la bille se touchent en renant en compte leur rayon et
 		// epaisseur
 		b.set_x(10);
-		b.set_y(7);
+		b.set_y(8.1);
 		assertEquals(true, c.checkIfLineIsOnExistingBall(o));
 
 		// La ligne ne touche aucune bille
@@ -144,25 +140,14 @@ public class ControllerTest {
 	@Test
 	public void test_updateBall() {
 		Ball b = new Ball(10, 10, 0, 1, 0);
-		ArrayList<Point> points = new ArrayList<Point>();
-		points.add(new Point(10, 10));
 
 		c.addBall(b);
-		assertEquals(1, b.get_points().size());
 		assertEquals(1, b.get_mass(), 0.001);
 		assertEquals(0, b.get_radius());
-		assertEquals(true, b.get_points().equals(points));
-
-		points = new ArrayList<Point>();
-		points.add(new Point(19, 20));
-		points.add(new Point(20, 19));
-		points.add(new Point(20, 20));
-		points.add(new Point(20, 21));
-		points.add(new Point(21, 20));
 
 		// *** Test update valide
 		c.updateBall(b, 1, 2, 20, 20);
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		// *** Test update invalide
 		// La modification ne peut pas se faire, la bille doit revenir dans
@@ -170,10 +155,10 @@ public class ControllerTest {
 
 		// ** Test en updatant avec des coordonnees hors de l ecran
 		c.updateBall(b, 1, 2, circuit.get_width() + 1, 20);
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		c.updateBall(b, 1, 2, 20, circuit.get_height() + 1);
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		// ** Test en updatant sur un autre objet (ball ou line)
 		// * Conflit avec une bille
@@ -182,39 +167,37 @@ public class ControllerTest {
 		// Centres identiques
 		c.updateBall(b, 1, 2, 30, 30);
 
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		// Centres differents mais b et b2 se chevauchent
 		c.updateBall(b, 1, 2, 29, 30);
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		// * Conflit avec un obstacle
-		ObstacleLine o = new ObstacleLine(new Point(0, 30), new Point(60, 30), 10);
+		ObstacleLine o = new ObstacleLine(new Point(0, 30), new Point(60, 30));
 		c.addLine(o);
 
 		// Centre de la bille sur la droite
 		c.updateBall(b, 1, 2, 30, 30);
-		testBallPosition(b, points);
+		testBallPosition(b);
 
 		// Centre de la bille sur l'obstacle en prenant en compte son epaisseur
 		c.updateBall(b, 1, 2, 35, 30);
-		testBallPosition(b, points);
+		testBallPosition(b);
 	}
 
-	private void testBallPosition(Ball b, ArrayList<Point> points) {
-		assertEquals(5, b.get_points().size());
+	private void testBallPosition(Ball b) {
 		assertEquals(2, b.get_mass(), 0.001);
 		assertEquals(1, b.get_radius());
-		assertEquals(true, b.get_points().equals(points));
 	}
 
 	@Test
 	public void test_updateLine() {
-		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10), 2);
+		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10));
 		c.addLine(o);
 
 		// ** Update valide
-		c.updateLine(o, 3, 0, 20, 20, 20);
+		c.updateLine(o, 0, 20, 20, 20);
 		testLinePosition(o);
 
 		// ** Update invalide
@@ -222,28 +205,27 @@ public class ControllerTest {
 		// l'etat dans lequel elle etait avant l update
 
 		// * Modification des positions hors du circuit
-		c.updateLine(o, 3, circuit.get_width() + 1, 20, 20, 20);
+		c.updateLine(o, circuit.get_width() + 1, 20, 20, 20);
 		testLinePosition(o);
 
-		c.updateLine(o, 3, 0, circuit.get_height() + 1, 20, 20);
+		c.updateLine(o, 0, circuit.get_height() + 1, 20, 20);
 		testLinePosition(o);
 
-		c.updateLine(o, 3, 0, 20, circuit.get_width() + 1, 20);
+		c.updateLine(o, 0, 20, circuit.get_width() + 1, 20);
 		testLinePosition(o);
 
-		c.updateLine(o, 3, 0, 20, 20, circuit.get_height() + 1);
+		c.updateLine(o, 0, 20, 20, circuit.get_height() + 1);
 		testLinePosition(o);
 
 		// * Conflit avec une bille
 		Ball b = new Ball(30, 20, 2, 1, 0);
 		c.addBall(b);
 
-		c.updateLine(o, 3, 0, 20, 60, 20);
+		c.updateLine(o, 0, 20, 60, 20);
 		testLinePosition(o);
 	}
 
 	private void testLinePosition(ObstacleLine o) {
-		assertEquals(3, o.get_thickness());
 		assertEquals(new Point(0, 20), o.get_depart());
 		assertEquals(new Point(20, 20), o.get_arrivee());
 	}
@@ -256,7 +238,7 @@ public class ControllerTest {
 		Ball ball2 = new Ball(300, 400, 10, 1, 0);
 		Point p1 = new Point(80, 200);
 		Point p2 = new Point(200, 200);
-		ObstacleLine obstacle = new ObstacleLine(p1, p2, 1);
+		ObstacleLine obstacle = new ObstacleLine(p1, p2);
 		boolean b1 = controller.collisionSegment(ball1, obstacle);
 		boolean b2 = controller.collisionSegment(ball2, obstacle);
 		assertEquals(true, b1);

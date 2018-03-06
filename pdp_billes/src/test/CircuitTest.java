@@ -21,7 +21,7 @@ public class CircuitTest {
 	public void setUp() throws Exception {
 		c = new Circuit(500, 500);
 		b = new Ball(0, 0, 1, 1, 10);
-		o = new ObstacleLine(new Point(10, 10), new Point(20, 20), 5);
+		o = new ObstacleLine(new Point(10, 10), new Point(20, 20));
 	}
 
 	@After

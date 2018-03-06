@@ -12,6 +12,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -93,8 +94,7 @@ public class DrawingPanel extends JPanel {
 							&& e.getX() != _pressedLocation.getX() && e.getY() != _pressedLocation.getY()) {
 						Point arrivee = new Point();
 						arrivee.setLocation(e.getX(), e.getY());
-						ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee,
-								_controller.get_defaultLineThickness());
+						ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
 						if (!(_controller.checkIfLineIsOnExistingBall(o))) {
 							arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
 							o.set_arrivee(arrivee);
@@ -126,10 +126,8 @@ public class DrawingPanel extends JPanel {
 		}
 
 		for (ObstacleLine o : _controller.get_lines()) {
-			Stroke oldStroke = g2.getStroke();
-			g2.setStroke(new BasicStroke(o.get_thickness(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			g2.drawLine(o.get_depart().x, o.get_depart().y, o.get_arrivee().x, o.get_arrivee().y);
-			g2.setStroke(oldStroke);
+			Line2D line = new Line2D.Double(o.get_depart(), o.get_arrivee());
+			g2.draw(line);
 		}
 
 		if (_creatingLine) {

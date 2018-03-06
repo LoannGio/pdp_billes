@@ -23,7 +23,6 @@ public class Ball {
 	private double _px, _py, _rx, _ry; // force P et R
 	private double _t; // temps relatif
 	private boolean _isOut;
-	private ArrayList<Point> _points;
 	private ArrayList<Point> _trace;
 
 	public Ball(double x, double y, int radius, double mass, double inclinaison) {
@@ -39,7 +38,6 @@ public class Ball {
 		_t = 0;
 		_isOut = false;
 		_trace = new ArrayList<Point>();
-		calcPoints();
 	}
 
 	public void setAcceleration(double inclinaison) {
@@ -52,25 +50,6 @@ public class Ball {
 		_ay = _fy / _mass;
 	}
 
-	public void calcPoints() {
-		_points = new ArrayList<Point>();
-		for (double x = _x - _radius; x <= _x + _radius; x++) {
-			for (double y = _y - _radius; y <= _y + _radius; y++) {
-				Point p = new Point();
-				double calc = Math.pow(x - _x, 2) + Math.pow(y - _y, 2);
-				double radius_squared = Math.pow(_radius, 2);
-				if (calc <= radius_squared) {
-					p.setLocation(x, y);
-					_points.add(p);
-				}
-			}
-		}
-	}
-
-	public ArrayList<Point> get_points() {
-		return _points;
-	}
-
 	public ArrayList<Point> get_trace() {
 		return _trace;
 	}
@@ -81,7 +60,6 @@ public class Ball {
 		_radius = radius;
 		_mass = mass;
 		setAcceleration(inclinaison);
-		calcPoints();
 	}
 
 	public Boolean contains(Point p) {
@@ -100,7 +78,6 @@ public class Ball {
 
 	public void set_x(int _x) {
 		this._x = _x;
-		calcPoints();
 	}
 
 	public double get_y() {
@@ -109,7 +86,6 @@ public class Ball {
 
 	public void set_y(int _y) {
 		this._y = _y;
-		calcPoints();
 	}
 
 	public int get_radius() {
@@ -118,7 +94,6 @@ public class Ball {
 
 	public void set_radius(int _radius) {
 		this._radius = _radius;
-		calcPoints();
 	}
 
 	public double get_mass() {
