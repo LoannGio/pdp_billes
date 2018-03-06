@@ -78,6 +78,16 @@ public class Controller {
 		}
 		return lineContains;
 	}
+	
+	public ObstacleLine checkIfPointIsNearLine(Point p) {
+		ObstacleLine lineContains = null;
+
+		for (ObstacleLine o : _circuit.get_lines()) {
+			if (o.isNearPoint(p))
+				lineContains = o;
+		}
+		return lineContains;
+	}
 
 	public void removeLinesOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
 		Point depart, arrivee;
