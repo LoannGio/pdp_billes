@@ -6,15 +6,11 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
-import controller.Controller;
-
 public class MainFrame extends JFrame {
-	private Controller _controller;
 	private DrawingPanel _panel;
 	private ParamPanel _paramZone;
 
-	public MainFrame(Controller c) {
-		_controller = c;
+	public MainFrame() {
 		initialize();
 	}
 
@@ -35,7 +31,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initializeComponents(Dimension frameSize) {
-		_panel = new DrawingPanel(frameSize, _controller, this);
-		_paramZone = new ParamPanel(frameSize, _controller, _panel);
+		_panel = new DrawingPanel(frameSize, this);
+		_paramZone = new ParamPanel(frameSize, _panel);
 	}
 }

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,8 +20,7 @@ public class ControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		circuit = new Circuit(500, 500);
-		c = new Controller(circuit);
+		c = Controller.getInstance();
 	}
 
 	@After
@@ -34,7 +32,7 @@ public class ControllerTest {
 	@Test
 	public void test_checkIfPointIsInBall() {
 		Point p = new Point(10, 10);
-		Ball b = new Ball(10, 10, 3, 1, 0);
+		Ball b = new Ball(10, 10, 3, 1);
 		c.addBall(b);
 
 		// Le point est sur le centre de la bille
@@ -80,7 +78,7 @@ public class ControllerTest {
 
 	@Test
 	public void test_removeBallsOutOfBounds() {
-		Ball b = new Ball(400, 150, 10, 0, 0);
+		Ball b = new Ball(400, 150, 10, 0);
 		c.addBall(b);
 		circuit.set_width(450);
 		circuit.set_height(500);
@@ -97,19 +95,19 @@ public class ControllerTest {
 		Point arrivee = new Point(400, 150);
 		ObstacleLine o = new ObstacleLine(depart, arrivee);
 		c.addLine(o);
-		Ball b = new Ball(50, 150, 10, 0, 0);
+		Ball b = new Ball(50, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b), false);
-		Ball b2 = new Ball(200, 150, 10, 0, 0);
+		Ball b2 = new Ball(200, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b2), true);
 	}
 
 	@Test
 	public void test_checkIfBallIsOnExistingBall() {
-		Ball b = new Ball(50, 150, 10, 0, 0);
+		Ball b = new Ball(50, 150, 10, 0);
 		c.addBall(b);
-		Ball b2 = new Ball(52, 150, 10, 0, 0);
+		Ball b2 = new Ball(52, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b2), true);
-		Ball b3 = new Ball(150, 150, 10, 0, 0);
+		Ball b3 = new Ball(150, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b3), false);
 
 	}
@@ -119,7 +117,7 @@ public class ControllerTest {
 		ObstacleLine o = new ObstacleLine(new Point(0, 10), new Point(20, 10));
 
 		// Existing ball
-		Ball b = new Ball(10, 10, 2, 1, 0);
+		Ball b = new Ball(10, 10, 2, 1);
 		c.addBall(b);
 
 		// La ligne traverse une bille en son centre
@@ -139,7 +137,7 @@ public class ControllerTest {
 
 	@Test
 	public void test_updateBall() {
-		Ball b = new Ball(10, 10, 0, 1, 0);
+		Ball b = new Ball(10, 10, 0, 1);
 
 		c.addBall(b);
 		assertEquals(1, b.get_mass(), 0.001);
@@ -162,7 +160,7 @@ public class ControllerTest {
 
 		// ** Test en updatant sur un autre objet (ball ou line)
 		// * Conflit avec une bille
-		Ball b2 = new Ball(30, 30, 2, 1, 0);
+		Ball b2 = new Ball(30, 30, 2, 1);
 		c.addBall(b2);
 		// Centres identiques
 		c.updateBall(b, 1, 2, 30, 30);
@@ -218,7 +216,7 @@ public class ControllerTest {
 		testLinePosition(o);
 
 		// * Conflit avec une bille
-		Ball b = new Ball(30, 20, 2, 1, 0);
+		Ball b = new Ball(30, 20, 2, 1);
 		c.addBall(b);
 
 		c.updateLine(o, 0, 20, 60, 20);
@@ -232,10 +230,9 @@ public class ControllerTest {
 
 	@Test
 	public void testCollisionSegment() {
-		Circuit circuit = new Circuit(600, 800);
-		Controller controller = new Controller(circuit);
-		Ball ball1 = new Ball(120, 189, 10, 1, 0);
-		Ball ball2 = new Ball(300, 400, 10, 1, 0);
+		Controller controller = Controller.getInstance();
+		Ball ball1 = new Ball(120, 189, 10, 1);
+		Ball ball2 = new Ball(300, 400, 10, 1);
 		Point p1 = new Point(80, 200);
 		Point p2 = new Point(200, 200);
 		ObstacleLine obstacle = new ObstacleLine(p1, p2);
@@ -247,8 +244,8 @@ public class ControllerTest {
 
 	@Test
 	public void testCollisionPointCerle() {
-		Ball ball1 = new Ball(29, 26, 15, 1, 0);
-		Ball ball2 = new Ball(26, 13, 5, 1, 0);
+		Ball ball1 = new Ball(29, 26, 15, 1);
+		Ball ball2 = new Ball(26, 13, 5, 1);
 		Point2D.Double p1 = new Point2D.Double(33.0, 10);
 		Point2D.Double p2 = new Point2D.Double(22.0, 10);
 		boolean b1 = c.collisionPointCerle(p1, p2, ball1);
@@ -267,9 +264,9 @@ public class ControllerTest {
 
 	@Test
 	public void testCollisionBall() {
-		Ball ball1 = new Ball(120, 180, 10, 1, 0);
-		Ball ball2 = new Ball(110, 185, 6, 1, 0);
-		Ball ball3 = new Ball(200, 300, 8, 1, 0);
+		Ball ball1 = new Ball(120, 180, 10, 1);
+		Ball ball2 = new Ball(110, 185, 6, 1);
+		Ball ball3 = new Ball(200, 300, 8, 1);
 		boolean b1 = c.collisionBall(ball1, ball2);
 		boolean b2 = c.collisionBall(ball1, ball3);
 		assertEquals(true, b1);

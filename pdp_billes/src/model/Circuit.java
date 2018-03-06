@@ -127,7 +127,7 @@ public class Circuit {
 			mass = Double.parseDouble(massBilles.item(i).getTextContent());
 			inclinaison = _defaultInclinaison;
 			radius = Integer.parseInt(radiusBilles.item(i).getTextContent());
-			_balls.add(new Ball(x, y, radius, mass, inclinaison));
+			_balls.add(new Ball(x, y, radius, mass));
 		}
 	}
 
@@ -279,7 +279,7 @@ public class Circuit {
 	public void set_inclinaison(double inclinaison) {
 		_defaultInclinaison = inclinaison;
 		for (Ball b : _balls) {
-			b.setAcceleration(_defaultInclinaison);
+			b.setAcceleration();
 		}
 	}
 

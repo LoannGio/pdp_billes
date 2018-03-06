@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import view.DrawingPanel;
+import controller.Controller;
 
 public class Ball {
 	private double _x;
@@ -25,12 +25,12 @@ public class Ball {
 	private boolean _isOut;
 	private ArrayList<Point> _trace;
 
-	public Ball(double x, double y, int radius, double mass, double inclinaison) {
+	public Ball(double x, double y, int radius, double mass) {
 		_x = x;
 		_y = y;
 		_radius = radius;
 		_mass = mass;
-		setAcceleration(inclinaison);
+		setAcceleration();
 		_vx0 = _vx = 0; // vitesse initiale 0 m/s
 		_vy0 = _vy = 0;
 		_x0 = _x; // position initiale
@@ -40,7 +40,8 @@ public class Ball {
 		_trace = new ArrayList<Point>();
 	}
 
-	public void setAcceleration(double inclinaison) {
+	public void setAcceleration() {
+		double inclinaison = Controller.getInstance().get_defaultInclinaison();
 		_px = -_mass * Circuit.get_gravitation() * Math.cos(Math.toRadians(inclinaison));
 		_py = _mass * Circuit.get_gravitation() * Math.sin(Math.toRadians(inclinaison));
 		_rx = -_px;
@@ -59,7 +60,7 @@ public class Ball {
 		_y = y;
 		_radius = radius;
 		_mass = mass;
-		setAcceleration(inclinaison);
+		setAcceleration();
 	}
 
 	public Boolean contains(Point p) {

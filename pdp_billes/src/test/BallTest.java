@@ -1,10 +1,8 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.awt.Point;
-import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +16,7 @@ public class BallTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ball = new Ball(0, 0, 0, 1, 10);
+		ball = new Ball(0, 0, 0, 1);
 	}
 
 	@After
@@ -38,7 +36,7 @@ public class BallTest {
 	public void testStep() {
 		double x_init = 100;
 		double y_init = 100;
-		ball = new Ball(x_init, y_init, 3, 1, 40);
+		ball = new Ball(x_init, y_init, 3, 1);
 		ball.step();
 		ball.step();
 		boolean b1 = (x_init == ball.get_x());
@@ -65,9 +63,10 @@ public class BallTest {
 	@Test
 	public void testResolveCollisionBall() {
 
-		ball.set_x(100); ball.set_y(100);
+		ball.set_x(100);
+		ball.set_y(100);
 		ball.set_radius(10);
-		Ball ball2 = new Ball(120, 100, 10, 1, 10);
+		Ball ball2 = new Ball(120, 100, 10, 1);
 		ball.resolveCollisionBall(ball2);
 		boolean ball_ay_is_null = (ball.get_ay() == 0);
 		boolean ball2_ay_is_null = (ball2.get_ay() == 0);

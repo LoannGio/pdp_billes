@@ -18,9 +18,14 @@ import view.DrawingPanel;
 
 public class Controller {
 	private Circuit _circuit;
+	private static Controller instance = new Controller();
 
-	public Controller(Circuit c) {
-		_circuit = c;
+	private Controller() {
+		_circuit = new Circuit(500, 500);
+	}
+
+	public static Controller getInstance() {
+		return instance;
 	}
 
 	public void addBall(Ball b) {
@@ -28,8 +33,7 @@ public class Controller {
 	}
 
 	public void addBall(double x, double y) {
-		_circuit.addBall(new Ball(x, y, _circuit.get_defaultBallRadius(), _circuit.get_defaultBallMass(),
-				_circuit.get_inclinaison()));
+		_circuit.addBall(new Ball(x, y, _circuit.get_defaultBallRadius(), _circuit.get_defaultBallMass()));
 	}
 
 	public void addLine(Point depart, Point arrivee) {
@@ -78,7 +82,7 @@ public class Controller {
 		}
 		return lineContains;
 	}
-	
+
 	public ObstacleLine checkIfPointIsNearLine(Point p) {
 		ObstacleLine lineContains = null;
 
@@ -154,24 +158,24 @@ public class Controller {
 	}
 
 	public Boolean checkIfBallIsOnExistingLine(Ball b) {
-		for(ObstacleLine o : _circuit.get_lines()) {
-			if(collisionObstacle(b,o))
+		for (ObstacleLine o : _circuit.get_lines()) {
+			if (collisionObstacle(b, o))
 				return true;
 		}
 		return false;
 	}
 
 	public Boolean checkIfBallIsOnExistingBall(Ball b) {
-		for(Ball b2 : _circuit.get_balls()) {
-			if(collisionBall(b,b2) && !b.equals(b2))
+		for (Ball b2 : _circuit.get_balls()) {
+			if (collisionBall(b, b2) && !b.equals(b2))
 				return true;
 		}
 		return false;
 	}
 
 	public boolean checkIfLineIsOnExistingBall(ObstacleLine o) {
-		for(Ball b : _circuit.get_balls()) {
-			if(collisionObstacle(b,o))
+		for (Ball b : _circuit.get_balls()) {
+			if (collisionObstacle(b, o))
 				return true;
 		}
 		return false;
@@ -302,8 +306,7 @@ public class Controller {
 		return false;
 	}
 
-	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX,
-			int new_arriveeY) {
+	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX, int new_arriveeY) {
 		Point oldDepart = line.get_depart();
 		Point oldArrivee = line.get_arrivee();
 		Point newDepart = new Point(new_departX, new_departY);

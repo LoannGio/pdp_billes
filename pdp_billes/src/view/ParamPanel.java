@@ -52,8 +52,8 @@ public class ParamPanel extends JPanel {
 
 	private DrawingPanel _dp;
 
-	public ParamPanel(Dimension frameSize, Controller c, DrawingPanel creationZone) {
-		_controller = c;
+	public ParamPanel(Dimension frameSize, DrawingPanel creationZone) {
+		_controller = Controller.getInstance();
 		_dp = creationZone;
 		initialize(frameSize, creationZone);
 	}

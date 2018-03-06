@@ -30,13 +30,13 @@ public class DrawingPanel extends JPanel {
 	private int _panelWidth, _panelHeight;
 	private IRightClickPopUpMenu _rightClickPopUp;
 
-	public DrawingPanel(Dimension frameSize, Controller c, JFrame parent) {
-		initialize(frameSize, c, parent);
+	public DrawingPanel(Dimension frameSize, JFrame parent) {
+		initialize(frameSize, parent);
 		addListneners();
 	}
 
-	private void initialize(Dimension frameSize, Controller c, JFrame parent) {
-		_controller = c;
+	private void initialize(Dimension frameSize, JFrame parent) {
+		_controller = Controller.getInstance();
 		_pressedLocation = null;
 		_creatingLine = false;
 		_tmpDraw = null;
@@ -73,7 +73,7 @@ public class DrawingPanel extends JPanel {
 
 					} else {
 						Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
-								_controller.get_defaultBallMass(), _controller.get_defaultInclinaison());
+								_controller.get_defaultBallMass());
 						if (!(_controller.checkIfBallIsOnExistingObject(b))) {
 							b.set_x((int) (b.get_x() / _zoomFactor));
 							b.set_y((int) (b.get_y() / _zoomFactor));
