@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -182,10 +183,20 @@ public class Controller {
 	}
 
 	public void run(DrawingPanel dp) {
+		
 		AnimationTimer timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Rectangle square;
+				
 				for (Ball ball : _circuit.get_balls()) {
+					int XRect = (int) ball.get_x()-ball.get_radius();
+					int YRect = (int) ball.get_y()-ball.get_radius();
+					int dimRect = 2*ball.get_radius();
+					
+					square = new Rectangle(XRect, YRect, dimRect, dimRect);
+					dp.repaint(square);
+					// Bug : la bille la plus basse est rognée. Si plusieurs billes sont au même "niveau de plus bas", elles seront toutes rognées.  
 					ball.step();
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
 						if (collisionObstacle(ball, obstacle)) {
@@ -199,9 +210,9 @@ public class Controller {
 								ball.resolveCollisionBall(ball2);
 							}
 					}
-
+					
 				}
-				dp.repaint();
+				//dp.repaint();
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});

@@ -89,7 +89,7 @@ public class DrawingPanel extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
-							&& e.getX() != _pressedLocation.getX() && e.getY() != _pressedLocation.getY()) {
+							&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
 						Point arrivee = new Point();
 						arrivee.setLocation(e.getX(), e.getY());
 						ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
@@ -117,9 +117,9 @@ public class DrawingPanel extends JPanel {
 		for (Ball b : _controller.get_balls()) {
 			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()), b.get_radius() * 2,
 					b.get_radius() * 2);
-			for (Point p : b.get_trace()) {
+			/*for (Point p : b.get_trace()) {
 				g2.fillOval(p.x, p.y, 1, 1);
-			}
+			}*/
 		}
 
 		for (ObstacleLine o : _controller.get_lines()) {
