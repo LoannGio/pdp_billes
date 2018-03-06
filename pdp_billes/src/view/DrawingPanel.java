@@ -118,9 +118,9 @@ public class DrawingPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(Color.red);
 		for (Ball b : _controller.get_balls()) {
-			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()),
-					b.get_radius() * 2, b.get_radius() * 2);
-			for(Point p : b.get_trace()) {
+			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()), b.get_radius() * 2,
+					b.get_radius() * 2);
+			for (Point p : b.get_trace()) {
 				g2.fillOval(p.x, p.y, 1, 1);
 			}
 		}

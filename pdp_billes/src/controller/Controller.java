@@ -1,10 +1,12 @@
 package controller;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -324,5 +326,19 @@ public class Controller {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
 		creationZone.setBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
+	}
+
+	public Dimension getDimensionsPlan() {
+		return new Dimension(_circuit.get_width(), _circuit.get_height());
+	}
+
+	public void importerCircuit(DrawingPanel creationZone, File f) {
+		_circuit.importer(f);
+		setDimensionsPlan(creationZone, _circuit.get_width(), _circuit.get_height());
+		creationZone.repaint();
+	}
+
+	public void exporterCircuit(File f) {
+		_circuit.exporter(f);
 	}
 }

@@ -14,7 +14,7 @@ public abstract class ARightClickPopUp extends JPopupMenu implements IRightClick
 		_controller = c;
 		_drawingPan = dp;
 	}
-	
+
 	@Override
 	public void show(Component eventOrigin, int mouseX, int mouseY) {
 		super.show(eventOrigin, mouseX, mouseY);

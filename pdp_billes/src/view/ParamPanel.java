@@ -4,13 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
 
@@ -43,6 +46,9 @@ public class ParamPanel extends JPanel {
 	private JButton _changeButton = new JButton("Changer");
 	private JButton _runButton = new JButton("Lancer");
 	private JButton _resetButton = new JButton("Reinitialiser");
+	private JButton _exportButton = new JButton("Exporter");
+	private JButton _importButton = new JButton("Importer");
+
 	private DrawingPanel _dp;
 
 	public ParamPanel(Dimension frameSize, Controller c, DrawingPanel creationZone) {
@@ -58,6 +64,10 @@ public class ParamPanel extends JPanel {
 		setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 
 		initializeContainers();
+
+		// Les boutons agissent sur la zone de dessin, on a donc besoin de la
+		// connaitre dans la gestion des listneners, c'est pour ca qu'elle est
+		// passee en parametre
 		addListneners(creationZone);
 	}
 
@@ -111,6 +121,46 @@ public class ParamPanel extends JPanel {
 				creationZone.repaint();
 			}
 		});
+
+		_importButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
+
+				chooser.setFileFilter(filter);
+
+				int retValue = chooser.showOpenDialog(null);
+				if (retValue == JFileChooser.APPROVE_OPTION) {
+					_controller.importerCircuit(creationZone, chooser.getSelectedFile());
+				}
+
+				Dimension creationZoneDim = _controller.getDimensionsPlan();
+				updateLabels(creationZoneDim.width, creationZoneDim.height);
+			}
+		});
+
+		_exportButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
+
+				chooser.setFileFilter(filter);
+
+				int retValue = chooser.showSaveDialog(null);
+				if (retValue == JFileChooser.APPROVE_OPTION) {
+					File f = null;
+					if (!chooser.getSelectedFile().getName().endsWith(".pdp"))
+						f = new File(chooser.getSelectedFile().getAbsolutePath() + ".pdp");
+					else
+						f = chooser.getSelectedFile();
+					_controller.exporterCircuit(f);
+
+				}
+			}
+		});
 	}
 
 	private Boolean checkInt(String s) {
@@ -159,6 +209,9 @@ public class ParamPanel extends JPanel {
 		_conteneur.add(_changeButton);
 		_conteneur.add(_runButton);
 		_conteneur.add(_resetButton);
+		_conteneur.add(_importButton);
+		_conteneur.add(_exportButton);
+
 		add(_conteneur);
 	}
 
@@ -171,13 +224,26 @@ public class ParamPanel extends JPanel {
 		double heightProportion = 0.92;
 		_paramZoneWidth = (int) Math.round(widthProportion * frameSize.width);
 		_paramZoneHeight = (int) Math.round(heightProportion * frameSize.height);
+		initializeLabels(panelWidth, panelHeight);
+		return panelWidth;
+	}
+
+	private void initializeLabels(int panelWidth, int panelHeight) {
 		_txtLongueur = new JTextField(Integer.toString(panelWidth));
 		_txtLargeur = new JTextField(Integer.toString(panelHeight));
 		_txtInclinaison = new JTextField(Double.toString(_controller.get_defaultInclinaison()));
 		_txtThickness = new JTextField(Integer.toString(_controller.get_defaultLineThickness()));
 		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass = new JTextField(Double.toString(_controller.get_defaultBallMass()));
-		return panelWidth;
+	}
+
+	private void updateLabels(int panelWidth, int panelHeight) {
+		_txtLongueur.setText(Integer.toString(panelWidth));
+		_txtLargeur.setText(Integer.toString(panelHeight));
+		_txtInclinaison.setText(Double.toString(_controller.get_defaultInclinaison()));
+		_txtThickness.setText(Integer.toString(_controller.get_defaultLineThickness()));
+		_txtRadius.setText(Integer.toString(_controller.get_defaultBallRadius()));
+		_txtMass.setText(Double.toString(_controller.get_defaultBallMass()));
 	}
 
 }
