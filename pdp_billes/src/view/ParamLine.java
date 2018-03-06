@@ -15,10 +15,6 @@ import model.ObstacleLine;
 public class ParamLine extends AParamObject {
 	private ObstacleLine _line;
 
-	private JPanel _thicknessConteneur = new JPanel();
-	private JLabel _thicknessLabel = new JLabel("Epaisseur  ");
-	private JTextField _thicknessText;
-
 	private JPanel _departConteneur = new JPanel();
 	private JLabel _departLabel = new JLabel("Depart  ");
 	private JLabel _departXLabel = new JLabel("X ");
@@ -60,24 +56,22 @@ public class ParamLine extends AParamObject {
 		_buttonChange.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String thickness = _thicknessText.getText();
 				String departX = _departXText.getText();
 				String departY = _departYText.getText();
 				String arriveeX = _arriveeXText.getText();
 				String arriveeY = _arriveeYText.getText();
 
-				int ithickness, idepartX, idepartY, iarriveeX, iarriveeY;
+				int idepartX, idepartY, iarriveeX, iarriveeY;
 
 				// Si il y a une erreur de typo, on ne fait pas l'operation
-				if (checkInt(thickness) && checkInt(departX) && checkInt(departY) && checkInt(arriveeX)
+				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX)
 						&& checkInt(arriveeY)) {
-					ithickness = Integer.parseInt(thickness);
 					idepartX = Integer.parseInt(departX);
 					idepartY = Integer.parseInt(departY);
 					iarriveeX = Integer.parseInt(arriveeX);
 					iarriveeY = Integer.parseInt(arriveeY);
 
-					if (_controller.updateLine(_line, ithickness, idepartX, idepartY, iarriveeX, iarriveeY)) {
+					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY)) {
 						_drawingPan.repaint();
 					}
 				}
@@ -89,13 +83,11 @@ public class ParamLine extends AParamObject {
 
 	private void initializeContainers() {
 		_conteneur.setLayout(new BoxLayout(_conteneur, BoxLayout.PAGE_AXIS));
-		_thicknessConteneur.setLayout(new BoxLayout(_thicknessConteneur, BoxLayout.LINE_AXIS));
 		_buttonConteneur.setLayout(new BoxLayout(_buttonConteneur, BoxLayout.LINE_AXIS));
 		_departConteneur.setLayout(new BoxLayout(_departConteneur, BoxLayout.LINE_AXIS));
 		_arriveeConteneur.setLayout(new BoxLayout(_arriveeConteneur, BoxLayout.LINE_AXIS));
 
-		_thicknessConteneur.add(_thicknessLabel);
-		_thicknessConteneur.add(_thicknessText);
+		
 		_buttonConteneur.add(_buttonChange);
 
 		_departConteneur.add(_departLabel);
@@ -112,11 +104,9 @@ public class ParamLine extends AParamObject {
 
 		_conteneur.add(_departConteneur);
 		_conteneur.add(_arriveeConteneur);
-		_conteneur.add(_thicknessConteneur);
 		_conteneur.add(_buttonConteneur);
 
 		_buttonConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-		_thicknessConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 		_departConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 		_arriveeConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
@@ -126,7 +116,6 @@ public class ParamLine extends AParamObject {
 	}
 
 	private void initializeComponents() {
-		_thicknessText = new JTextField(Integer.toString(_line.get_thickness()));
 		_departXText = new JTextField(Integer.toString((int) _line.get_depart().getX()));
 		_departYText = new JTextField(Integer.toString((int) _line.get_depart().getY()));
 		_arriveeXText = new JTextField(Integer.toString((int) _line.get_arrivee().getX()));

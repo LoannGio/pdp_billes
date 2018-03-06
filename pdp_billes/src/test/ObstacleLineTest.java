@@ -15,15 +15,9 @@ public class ObstacleLineTest {
 
 	private ObstacleLine o;
 	private Point depart, arrivee, p;
-	private int thickness;
-	private ArrayList<Point> points; // Il est admis que la colonne de points du
-										// point d'arrivee n'est pas incluse
-										// dans la liste
 
 	@Before
 	public void setUp() throws Exception {
-		thickness = 3;
-		points = new ArrayList<Point>();
 	}
 
 	@After
@@ -31,23 +25,7 @@ public class ObstacleLineTest {
 		o = null;
 		depart = null;
 		arrivee = null;
-		points = null;
 		p = null;
-
-	}
-
-	@Test
-	public void test_calcPoints() {
-		depart = new Point(50, 50);
-		arrivee = new Point(53, 50);
-		o = new ObstacleLine(depart, arrivee, thickness);
-		for (int j = 49; j <= 51; j++) {
-			for (int i = 50; i <= 52; i++) {
-				p = new Point(i, j);
-				points.add(p);
-			}
-		}
-		assertEquals(o.get_points().equals(points), true);
 
 	}
 
@@ -55,13 +33,12 @@ public class ObstacleLineTest {
 	public void test_contains() {
 		depart = new Point(50, 50);
 		arrivee = new Point(50, 53);
-		thickness = 50;
-		o = new ObstacleLine(depart, arrivee, thickness);
+		o = new ObstacleLine(depart, arrivee);
 		assertEquals(o.contains(depart), true);
 		depart.setLocation(0, 20);
-		o.setAll(depart, arrivee, thickness);
+		o.setAll(depart, arrivee);
 		p = new Point(-1, 25);
-		assertEquals(o.contains(p), true);
+		assertEquals(o.contains(p), false);
 	}
 
 }

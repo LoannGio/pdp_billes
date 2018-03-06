@@ -26,7 +26,7 @@ public class Circuit {
 	private int _height;
 	private ArrayList<Ball> _balls = new ArrayList<Ball>();
 	private ArrayList<ObstacleLine> _lines = new ArrayList<ObstacleLine>();
-	private int _defaultBallRadius, _defaultLineThickness;
+	private int _defaultBallRadius;
 	private double _defaultBallMass;
 	private static double _gravitation = 9.80665;
 	private double _defaultInclinaison;
@@ -36,7 +36,6 @@ public class Circuit {
 		_height = height;
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
-		_defaultLineThickness = 1;
 		_defaultInclinaison = 45;
 	}
 
@@ -315,14 +314,6 @@ public class Circuit {
 
 	public void set_defaultBallRadius(int _ballRadius) {
 		this._defaultBallRadius = _ballRadius;
-	}
-
-	public int get_defaultLineThickness() {
-		return _defaultLineThickness;
-	}
-
-	public void set_defaultLineThickness(int _lineThickness) {
-		this._defaultLineThickness = _lineThickness;
 	}
 
 	public double get_defaultBallMass() {
