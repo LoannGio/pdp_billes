@@ -245,6 +245,7 @@ public class ParamPanel extends JPanel {
 		_txtLargeur.setText(Integer.toString(creationZoneDim.height));
 		_txtRadius.setText(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass.setText(Double.toString(_controller.get_defaultBallMass()));
+		_inclinaisonSlider.setValue((int) _controller.get_defaultInclinaison());
 	}
 
 }
