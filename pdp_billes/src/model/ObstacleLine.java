@@ -15,18 +15,16 @@ public class ObstacleLine {
 		double distDepartPoint = p.distance(_depart);
 		double distPointArrivee = _arrivee.distance(p);
 		double distDepartArrivee = _arrivee.distance(_depart);
-		if(distDepartArrivee == distDepartPoint + distPointArrivee)
+		if (distDepartArrivee == distDepartPoint + distPointArrivee)
 			return true;
 		return false;
 	}
-	
+
 	public Boolean isNearPoint(Point p) {
 		int distDepartPoint = (int) p.distance(_depart);
 		int distPointArrivee = (int) _arrivee.distance(p);
 		int distDepartArrivee = (int) _arrivee.distance(_depart);
-		System.out.println(distDepartPoint + " " + distPointArrivee + " " + distDepartArrivee);
-		System.out.println(Math.abs(distDepartArrivee - (distDepartPoint + distPointArrivee)));
-		if(Math.abs(distDepartArrivee - (distDepartPoint + distPointArrivee)) == 0)
+		if (Math.abs(distDepartArrivee - (distDepartPoint + distPointArrivee)) == 0)
 			return true;
 		return false;
 	}

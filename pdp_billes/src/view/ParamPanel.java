@@ -160,7 +160,6 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				_controller.set_defaultInclinaison(_inclinaisonSlider.getValue());
-				updateLabels();
 			}
 
 		});
