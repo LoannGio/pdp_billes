@@ -98,8 +98,7 @@ public class Circuit {
 			xarr = Double.parseDouble(xArrivee.item(i).getTextContent());
 			yarr = Double.parseDouble(yArrivee.item(i).getTextContent());
 
-			_lines.add(
-					new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr), 1));
+			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr)));
 		}
 	}
 

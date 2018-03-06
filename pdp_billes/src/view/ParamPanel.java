@@ -230,7 +230,6 @@ public class ParamPanel extends JPanel {
 		_txtLongueur.setText(Integer.toString(panelWidth));
 		_txtLargeur.setText(Integer.toString(panelHeight));
 		_txtInclinaison.setText(Double.toString(_controller.get_defaultInclinaison()));
-		_txtThickness.setText(Integer.toString(_controller.get_defaultLineThickness()));
 		_txtRadius.setText(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass.setText(Double.toString(_controller.get_defaultBallMass()));
 	}
