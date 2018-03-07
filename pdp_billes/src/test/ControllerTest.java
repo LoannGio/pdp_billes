@@ -265,8 +265,8 @@ public class ControllerTest {
 		Ball ball1 = new Ball(120, 180, 10, 1);
 		Ball ball2 = new Ball(110, 185, 6, 1);
 		Ball ball3 = new Ball(200, 300, 8, 1);
-		boolean b1 = c.checkCollisionBall(ball1, ball2);
-		boolean b2 = c.checkCollisionBall(ball1, ball3);
+		boolean b1 = c.checkCollisionBallBall(ball1, ball2);
+		boolean b2 = c.checkCollisionBallBall(ball1, ball3);
 		assertEquals(true, b1);
 		assertEquals(false, b2);
 	}

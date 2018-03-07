@@ -104,7 +104,7 @@ public class ParamPanel extends JPanel {
 		_runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_controller.run(_dp);
+				_controller.runSimulation(_dp);
 			}
 		});
 
