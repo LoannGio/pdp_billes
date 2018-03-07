@@ -234,9 +234,11 @@ public class Controller {
 	}
 
 	public boolean checkCollisionBallBall(Ball ball1, Ball ball2) {
+		Point2D.Double centre1 = new Point2D.Double(ball1.get_location().getX(), ball1.get_location().getY());
+		Point2D.Double centre2 = new Point2D.Double(ball2.get_location().getX(), ball2.get_location().getY());
 
-		double dist = Math.pow(ball1.get_x() - ball2.get_x(), 2) + Math.pow((ball1.get_y() - ball2.get_y()), 2);
-		if (dist > Math.pow(ball1.get_radius() + ball2.get_radius(), 2))
+		double dist = distance(centre1, centre2);
+		if (dist > ball1.get_radius() + ball2.get_radius())
 			return false;
 		else
 			return true;
