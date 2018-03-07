@@ -22,7 +22,6 @@ public class Ball {
 	private double _fx, _fy; // force totale
 	private double _px, _py, _rx, _ry; // force P et R
 	private double _t; // temps relatif
-	private boolean _isOut;
 	private ArrayList<Point> _trace;
 
 	public Ball(double x, double y, int radius, double mass) {
@@ -36,7 +35,6 @@ public class Ball {
 		_x0 = _x; // position initiale
 		_y0 = _y; // (Panel.YMIN + Panel.YMAX)/2;
 		_t = 0;
-		_isOut = false;
 		_trace = new ArrayList<Point>();
 	}
 
@@ -225,14 +223,6 @@ public class Ball {
 		this._t = _t;
 	}
 
-	public boolean is_isOut() {
-		return _isOut;
-	}
-
-	public void set_isOut(boolean _isOut) {
-		this._isOut = _isOut;
-	}
-
 	public void set_x(double _x) {
 		this._x = _x;
 	}
@@ -257,33 +247,37 @@ public class Ball {
 		this._t += AnimationTimer.MSSTEP;
 	}
 
-	public void collisionCircuit(int width, int height) {
-		if (this._x >= width + this._radius || this._x <= 0) {
-			this._vx0 = -this._vx;
-			this._vy0 = this._vy;
-			this._x0 = this._x;
-			this._y0 = this._y;
-			this._t = 0;
-			_isOut = true;
-		}
-
-		if (this._y >= height - this._radius || this._y <= 0) {
-			this._vx0 = this._vx;
-			this._vy0 = -this._vy;
-			this._x0 = this._x;
-			this._y0 = this._y;
-			this._t = 0;
-			_isOut = true;
-		}
-	}
-
 	public void resolveCollisionObstacle(ObstacleLine obstacle) {
+		Point2D.Double a, b, c;
+		int dir = 1;
+		double angle = Math.toDegrees(Math.atan2(this._vy, this._vx));
 
-		this._ax = 0;
-		this._ay = 0;
+		if (obstacle.get_depart().getY() > obstacle.get_arrivee().getY()) {
+			a = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_arrivee().getY());
+			b = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_depart().getY());
+			c = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_depart().getY());
+		} else {
+			a = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_depart().getY());
+			b = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_arrivee().getY());
+			c = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_arrivee().getY());
+		}
+		if (a.getX() > b.getX())
+			dir = -1;
+		double tetha = Math.toDegrees(Math.atan(this.distance(a, c) / this.distance(b, c)));
+		int normalAngle = (int) (90 + (dir * tetha));
+		angle = 2 * normalAngle - 180 - angle;
+		double mag = 0.9 * Math.hypot(this._vx, this._vy);
+		this._vx0 = Math.cos(Math.toRadians(angle)) * mag;
+		this._vy0 = Math.sin(Math.toRadians(angle)) * mag;
+		// this._vx0 = Math.cos(Math.toRadians(tetha))*this.distance(a,b)/100;
+		// this._vy0 = Math.sin(Math.toRadians(tetha))*this.distance(a,b)/100;
 		this._x0 = this._x;
 		this._y0 = this._y;
-		this._t = 0;
+		this._t = 0.01;
+	}
+
+	public double distance(Point2D.Double point, Point2D.Double b) {
+		return Math.sqrt(Math.pow((b.x - point.x), 2) + Math.pow((b.y - point.y), 2));
 	}
 
 	public void resolveCollisionBall(Ball ball) {
