@@ -65,10 +65,11 @@ public class DrawingPanel extends JPanel {
 				} else if (e.getButton() == MouseEvent.BUTTON3) {
 					Object o = null;
 					if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
-						_rightClickPopUp = new RightClickPopUpBall((Ball) o, _controller, getMyself());
+						_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller, getMyself());
 						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 					} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
-						_rightClickPopUp = new RightClickPopUpLine((ObstacleLine) o, _controller, getMyself());
+						_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
+								getMyself());
 						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
 					} else {
