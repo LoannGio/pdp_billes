@@ -47,6 +47,11 @@ public class Ball {
 		_fy = _py + _ry;
 		_ax = _fx / _mass; // acceleration initiale
 		_ay = _fy / _mass;
+		_vx0 = _vx;
+		_vy0 = _vy;
+		_y0 = _y;
+		_x0 = _x;
+		_t = 0;
 	}
 
 	public ArrayList<Point> get_trace() {
@@ -240,8 +245,8 @@ public class Ball {
 		double t2 = this._t * this._t;
 		this._x = this._x0 / scale + this._vx0 * this._t + (this._ax * t2) / 2;
 		this._y = this._y0 / scale + this._vy0 * this._t + (this._ay * t2) / 2;
-		this._x *= 40;
-		this._y *= 40;
+		this._x *= scale;
+		this._y *= scale;
 		if (_x != x || _y != y)
 			_trace.add(new Point((int) _x, (int) _y));
 		this._t += AnimationTimer.MSSTEP;
@@ -266,7 +271,8 @@ public class Ball {
 		double tetha = Math.toDegrees(Math.atan(this.distance(a, c) / this.distance(b, c)));
 		int normalAngle = (int) (90 + (dir * tetha));
 		angle = 2 * normalAngle - 180 - angle;
-		double mag = 0.9 * Math.hypot(this._vx, this._vy);
+		double coefficientRestitution = 0.9;
+		double mag = coefficientRestitution * Math.hypot(this._vx, this._vy);
 		this._vx0 = Math.cos(Math.toRadians(angle)) * mag;
 		this._vy0 = Math.sin(Math.toRadians(angle)) * mag;
 		// this._vx0 = Math.cos(Math.toRadians(tetha))*this.distance(a,b)/100;
@@ -276,7 +282,7 @@ public class Ball {
 		this._t = 0.01;
 	}
 
-	public double distance(Point2D.Double point, Point2D.Double b) {
+	private double distance(Point2D.Double point, Point2D.Double b) {
 		return Math.sqrt(Math.pow((b.x - point.x), 2) + Math.pow((b.y - point.y), 2));
 	}
 
@@ -322,10 +328,10 @@ public class Ball {
 		// push-pull them apart based off their mass
 		this._x0 = this._x + mtdx * (im1 / (im1 + im2));
 		this._y0 = this._y + mtdy * (im1 / (im1 + im2));
-		this._t = 0.001;
+		this._t = 0.01;
 		ball.set_x0(ball.get_x() - mtdx * (im2 / (im1 + im2)));
 		ball.set_y0(ball.get_y() - mtdy * (im2 / (im1 + im2)));
-		ball.set_t(0.001);
+		ball.set_t(0.01);
 	}
 
 }

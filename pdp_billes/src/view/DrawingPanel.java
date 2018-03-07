@@ -65,10 +65,11 @@ public class DrawingPanel extends JPanel {
 				} else if (e.getButton() == MouseEvent.BUTTON3) {
 					Object o = null;
 					if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
-						_rightClickPopUp = new RightClickPopUpBall((Ball) o, _controller, getMyself());
+						_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller, getMyself());
 						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 					} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
-						_rightClickPopUp = new RightClickPopUpLine((ObstacleLine) o, _controller, getMyself());
+						_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
+								getMyself());
 						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
 					} else {
@@ -89,7 +90,7 @@ public class DrawingPanel extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
-							&& e.getX() != _pressedLocation.getX() && e.getY() != _pressedLocation.getY()) {
+							&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
 						Point arrivee = new Point();
 						arrivee.setLocation(e.getX(), e.getY());
 						ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
