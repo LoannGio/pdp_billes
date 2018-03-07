@@ -76,8 +76,7 @@ public class DrawingPanel extends JPanel {
 						Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
 								_controller.get_defaultBallMass());
 						if (!(_controller.checkIfBallIsOnExistingObject(b))) {
-							b.set_x((int) (b.get_x() / _zoomFactor));
-							b.set_y((int) (b.get_y() / _zoomFactor));
+							b.set_init_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
 							_controller.addBall(b);
 						}
 						repaint();
@@ -118,9 +117,9 @@ public class DrawingPanel extends JPanel {
 		for (Ball b : _controller.get_balls()) {
 			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()), b.get_radius() * 2,
 					b.get_radius() * 2);
-			/*for (Point p : b.get_trace()) {
-				g2.fillOval(p.x, p.y, 1, 1);
-			}*/
+			/*
+			 * for (Point p : b.get_trace()) { g2.fillOval(p.x, p.y, 1, 1); }
+			 */
 		}
 
 		for (ObstacleLine o : _controller.get_lines()) {

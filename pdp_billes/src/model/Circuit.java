@@ -29,6 +29,7 @@ public class Circuit {
 	private int _defaultBallRadius;
 	private double _defaultBallMass;
 	private static double _gravitation = 9.80665;
+	private static double _scale = 40;
 	private double _defaultInclinaison;
 
 	public Circuit(int width, int height) {
@@ -321,6 +322,14 @@ public class Circuit {
 
 	public void set_defaultBallMass(double _ballMass) {
 		this._defaultBallMass = _ballMass;
+	}
+
+	public static double get_scale() {
+		return _scale;
+	}
+
+	public static void set_scale(double _scale) {
+		Circuit._scale = _scale;
 	}
 
 }
