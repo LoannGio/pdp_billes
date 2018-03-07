@@ -2,10 +2,10 @@ package model;
 
 public class Vector {
 
-	public double x; // projection of vector on x
-	public double y; // projection of vector on y
-	public double r; // length of vector
-	public double teta; // angle of vector to x axis
+	private double x; // projection of vector on x
+	private double y; // projection of vector on y
+	private double r; // length of vector
+	private double teta; // angle of vector to x axis
 
 	public final double pi = Math.PI;
 

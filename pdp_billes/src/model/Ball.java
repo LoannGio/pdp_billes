@@ -100,6 +100,10 @@ public class Ball {
 		return _radius;
 	}
 
+	public void set_radius(int radius) {
+		_radius = radius;
+	}
+
 	public Vector get_velocity() {
 		return _velocity;
 	}
@@ -114,6 +118,14 @@ public class Ball {
 
 	public ArrayList<Point> get_trace() {
 		return _trace;
+	}
+
+	public Vector get_acceleration() {
+		return _acceleration;
+	}
+
+	public Vector get_init_velocity() {
+		return _init_velocity;
 	}
 
 	/*******************************

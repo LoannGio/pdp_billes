@@ -189,11 +189,11 @@ public class Controller {
 				for (Ball ball : _circuit.get_balls()) {
 					ball.step();
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
-						resolveCollisionObstacle(ball, obstacle);
+						resolveCollisionBallObstacle(ball, obstacle);
 					}
 					for (Ball ball2 : _circuit.get_balls()) {
 						if (ball2.get_x() != ball.get_x() && ball2.get_y() != ball.get_y())
-							collisionOfTwoBall(ball, ball2);
+							resolveCollisionBallBall(ball, ball2);
 					}
 				}
 				dp.repaint();
@@ -272,7 +272,7 @@ public class Controller {
 			return true;
 	}
 
-	public void collisionOfTwoBall(Ball ball1, Ball ball2) {
+	public void resolveCollisionBallBall(Ball ball1, Ball ball2) {
 		if (checkCollisionBall(ball1, ball2)) {
 			double vx1, vy1, vx2, vy2; // these velocities are after the
 										// collision
@@ -405,7 +405,7 @@ public class Controller {
 		return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
 	}
 
-	public void resolveCollisionObstacle(Ball ball, ObstacleLine obstacle) {
+	public void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		if (collisionObstacle(ball, obstacle)) {
 			Point2D.Double a, b, c;
 			int dir = 1;
