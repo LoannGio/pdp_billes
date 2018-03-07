@@ -27,8 +27,7 @@ public class BallTest {
 	@Test
 	public void test_ballLocation() {
 		assertEquals(new Point(0, 0), new Point((int) ball.get_x(), (int) ball.get_y()));
-		ball.set_x(10);
-		ball.set_y(10);
+		ball.set_init_location(10, 10);
 		assertEquals(new Point(10, 10), new Point((int) ball.get_x(), (int) ball.get_y()));
 	}
 
