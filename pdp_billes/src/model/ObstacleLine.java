@@ -21,10 +21,10 @@ public class ObstacleLine {
 	}
 
 	public Boolean isNearPoint(Point p) {
-		int distDepartPoint = (int) p.distance(_depart);
-		int distPointArrivee = (int) _arrivee.distance(p);
-		int distDepartArrivee = (int) _arrivee.distance(_depart);
-		if (Math.abs(distDepartArrivee - (distDepartPoint + distPointArrivee)) == 0)
+		double distDepartPoint = p.distance(_depart);
+		double distPointArrivee = _arrivee.distance(p);
+		double distDepartArrivee = _arrivee.distance(_depart);
+		if (Math.abs(distDepartArrivee - (distDepartPoint + distPointArrivee)) <= 0.1)
 			return true;
 		return false;
 	}
