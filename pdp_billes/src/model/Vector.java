@@ -19,6 +19,10 @@ public class Vector {
 
 	}
 
+	public void set_r(double r) {
+		this.r = r;
+	}
+
 	public Vector(double x, double y) {
 		this();
 		setCartesian(x, y);
@@ -54,7 +58,7 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.r = Math.sqrt(x * x + y * y);
-		this.teta = Math.atan2(y,x);
+		this.teta = Math.atan2(y, x);
 	}
 
 	public void setPolar(double r, double teta) {
@@ -63,7 +67,7 @@ public class Vector {
 		this.x = r * Math.cos(teta);
 		this.y = r * Math.sin(teta);
 	}
-	
+
 	public static Vector vectorSum(Vector A, Vector B) { // sum two vectors
 		Vector vector = new Vector();
 		vector.setCartesian(A.getX() + B.getX(), A.getY() + B.getY());

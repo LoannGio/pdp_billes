@@ -223,9 +223,14 @@ public class PhysicalEngine {
 		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new Point2D.Double(ball.get_x(), ball.get_y()));
 		double normalAngle = Math.toDegrees(N.getTeta());
 		angle = 2 * normalAngle - 180 - angle;
-		double _vx = Math.cos(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-		double _vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-		ball.set_speed(_vx, _vy);
+		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+
+		while (_controller.checkCollisionBallObstacle(ball, obstacle) && vy < 0) {
+			ball.set_location(ball.get_location().getX(), ball.get_location().getY() - 1);
+		}
+
+		ball.set_speed(vx, vy);
 	}
 
 	/*********************

@@ -91,6 +91,7 @@ public class Ball {
 	public void step(Vector acceleration) {
 		double x0 = _location.getX();
 		double y0 = _location.getY();
+
 		double ax = acceleration.getX() / Circuit.get_scale();
 		double ay = acceleration.getY() / Circuit.get_scale();
 		double vx = _velocity.getX() + ax;
@@ -103,7 +104,7 @@ public class Ball {
 
 		if (_location.getX() != x0 || _location.getY() != y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));
-		
+
 	}
 
 }
