@@ -38,7 +38,7 @@ public class PhysicalEngine {
 							resolveCollisionBallObstacle(ball1, obstacle);
 					}
 					for (Ball ball2 : _circuit.get_balls()) {
-						if (ball2 != ball1)
+						if (ball2.get_x() != ball1.get_x() && ball2.get_y() != ball1.get_y())
 							if (_controller.checkCollisionBallBall(ball1, ball2))
 								resolveCollisionBallBall(ball1, ball2);
 					}
