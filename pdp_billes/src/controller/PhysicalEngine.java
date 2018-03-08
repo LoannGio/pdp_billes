@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,19 +32,62 @@ public class PhysicalEngine {
 		AnimationTimer timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (Ball ball1 : _circuit.get_balls()) {
-					ball1.step(_circuit.get_acceleration());
+				Rectangle square;
+				//Rectangle trace = null;
+				//ArrayList<Point> listTrace;
+				for (Ball ball : _circuit.get_balls()) {
+					int xSquare = (int) ball.get_x()-ball.get_radius();
+					int ySquare = (int) ball.get_y()-ball.get_radius();
+					int dimSquare = 2*ball.get_radius();
+					
+					square = new Rectangle(xSquare-50, ySquare-50, dimSquare+100, dimSquare+100);
+					
+					/*listTrace = ball.get_trace();
+					int xTrace = 0;
+					int yTrace = 0;
+					int dimTrace = 0;
+					if(listTrace.size() > 50) {
+						xTrace = listTrace.get(listTrace.size()-51).x;
+						yTrace = listTrace.get(listTrace.size()-51).y;
+						dimTrace = 1;
+						trace = new Rectangle(xTrace, yTrace, dimTrace, dimTrace);
+						System.out.println("1");
+					}*/
+					 		
+					dp.repaint(square);
+					/*if(trace != null) {
+						dp.repaint(trace);
+						System.out.println("2");	
+					}*/
+					// Bug : la bille la plus basse est rognée. Si plusieurs billes sont au même "niveau de plus bas", elles seront toutes rognées. 
+					ball.step(_circuit.get_acceleration());
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
-						if (_controller.checkCollisionBallObstacle(ball1, obstacle))
-							resolveCollisionBallObstacle(ball1, obstacle);
+						if(_controller.checkCollisionBallObstacle(ball, obstacle))
+							resolveCollisionBallObstacle(ball, obstacle);
 					}
 					for (Ball ball2 : _circuit.get_balls()) {
-						if (ball2 != ball1)
-							if (_controller.checkCollisionBallBall(ball1, ball2))
-								resolveCollisionBallBall(ball1, ball2);
+						if (ball2 != ball)
+							if(_controller.checkCollisionBallBall(ball, ball2))
+								resolveCollisionBallBall(ball, ball2);
 					}
+					
+					// Le repaint suivant refait plus bas règle le problème d'en haut, mais raison exacte inconnue
+					square.setRect(xSquare-50, ySquare-50, dimSquare+100, dimSquare+100);
+					//dp.repaint(square);
+					
+					/*if(listTrace.size() > 50) {
+						xTrace = listTrace.get(listTrace.size()-51).x;
+						yTrace = listTrace.get(listTrace.size()-51).y;
+						if(trace != null) {
+							trace.setRect(xTrace, yTrace, dimTrace, dimTrace);
+							System.out.println("3");
+							dp.repaint(trace);
+							System.out.println("4");
+						}
+					}*/
+					
 				}
-				dp.repaint();
+				//dp.repaint();
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});
