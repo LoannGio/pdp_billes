@@ -6,21 +6,25 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import model.AnimationTimer;
 import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
+import model.Quadtree;
 import model.Vector;
 import view.DrawingPanel;
 
 public class PhysicalEngine {
 	private Circuit _circuit;
 	private Controller _controller;
+	private Quadtree _quad;
 
 	public PhysicalEngine(DrawingPanel dp, Circuit circuit) {
 		_circuit = circuit;
 		_controller = Controller.getInstance();
+		_quad = new Quadtree(0, new Rectangle(0, 0, 1344, 966));
 		run(dp);
 	}
 
@@ -35,6 +39,16 @@ public class PhysicalEngine {
 				Rectangle square;
 				// Rectangle trace = null;
 				// ArrayList<Point> listTrace;
+
+				// on vide le quadtree
+				_quad.clear();
+				// on ajoute toutes les balls dans le quadtree
+				for (Ball ball : _circuit.get_balls()) {
+					_quad.insert(ball);
+				}
+
+				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
+
 				for (Ball ball : _circuit.get_balls()) {
 					int xSquare = (int) ball.get_x() - ball.get_radius();
 					int ySquare = (int) ball.get_y() - ball.get_radius();
@@ -60,14 +74,24 @@ public class PhysicalEngine {
 					// billes sont au même "niveau de plus bas", elles seront
 					// toutes rognées.
 					ball.step(_circuit.get_acceleration());
+					returnObjects.clear();
+					int returnNeighbors = 0;
+					_quad.retrieve(returnObjects, ball);
+					for (Ball neighborBall : returnObjects) {
+						returnNeighbors++;
+					}
+
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
 						if (_controller.checkCollisionBallObstacle(ball, obstacle))
 							resolveCollisionBallObstacle(ball, obstacle);
 					}
-					for (Ball ball2 : _circuit.get_balls()) {
-						if (ball2 != ball)
-							if (_controller.checkCollisionBallBall(ball, ball2))
+					for (Ball ball2 : returnObjects) {
+						returnNeighbors++;
+						if (ball2 != ball) {
+							if (_controller.checkCollisionBallBall(ball, ball2)) {
 								resolveCollisionBallBall(ball, ball2);
+							}
+						}
 					}
 
 					// Le repaint suivant refait plus bas règle le problème
