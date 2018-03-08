@@ -3,9 +3,10 @@ package model;
 import java.awt.Point;
 
 public class ObstacleLine {
+	public static double COR = 0.9; // Coefficient of Restitution
 	private Point _depart;
 	private Point _arrivee;
-
+	
 	public ObstacleLine(Point depart, Point arrivee) {
 		_depart = depart;
 		_arrivee = arrivee;

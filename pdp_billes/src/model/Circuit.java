@@ -29,8 +29,9 @@ public class Circuit {
 	private int _defaultBallRadius;
 	private double _defaultBallMass;
 	private static double _gravitation = 9.80665;
-	private static double _scale = 40;
+	private static double _scale = 400;
 	private double _defaultInclinaison;
+	private Vector _gravityAcceleration;
 
 	public Circuit(int width, int height) {
 		_width = width;
@@ -38,6 +39,9 @@ public class Circuit {
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
 		_defaultInclinaison = 45;
+		double _ax = 0;
+		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
+		_gravityAcceleration = new Vector(_ax, _ay);
 	}
 
 	public void addBall(Ball b) {
@@ -279,9 +283,14 @@ public class Circuit {
 
 	public void set_inclinaison(double inclinaison) {
 		_defaultInclinaison = inclinaison;
-		for (Ball b : _balls) {
-			b.setAcceleration();
-		}
+		double _ax = 0;
+		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
+		_gravityAcceleration.setCartesian(_ax, _ay);
+		;
+	}
+
+	public Vector get_acceleration() {
+		return _gravityAcceleration;
 	}
 
 	public int get_width() {
@@ -330,6 +339,14 @@ public class Circuit {
 
 	public static void set_scale(double _scale) {
 		Circuit._scale = _scale;
+	}
+
+	public Vector get_gravityAcceleration() {
+		return _gravityAcceleration;
+	}
+
+	public void set_gravityAcceleration(Vector _gravityAcceleration) {
+		this._gravityAcceleration = _gravityAcceleration;
 	}
 
 }

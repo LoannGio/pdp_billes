@@ -77,7 +77,7 @@ public class DrawingPanel extends JPanel {
 						Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
 								_controller.get_defaultBallMass());
 						if (!(_controller.checkIfBallIsOnExistingObject(b))) {
-							b.set_init_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
+							b.set_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
 							_controller.addBall(b);
 						}
 						repaint();
