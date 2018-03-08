@@ -96,6 +96,7 @@ public class Ball {
 		double ay = acceleration.getY() / Circuit.get_scale();
 		double vx = _velocity.getX() + ax;
 		double vy = _velocity.getY() + ay;
+
 		double x = x0 + vx;
 		double y = y0 + vy;
 
@@ -104,7 +105,6 @@ public class Ball {
 
 		if (_location.getX() != x0 || _location.getY() != y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));
-
 	}
 
 }

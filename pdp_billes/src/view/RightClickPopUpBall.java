@@ -36,7 +36,6 @@ public class RightClickPopUpBall extends ARightClickPopUp {
 		_suppr.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				System.out.println("event suppr");
 				supprimer();
 			}
 		});
