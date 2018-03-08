@@ -10,6 +10,7 @@ import java.util.Iterator;
 import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
+import model.Vector;
 import view.DrawingPanel;
 
 public class Controller {
@@ -148,6 +149,10 @@ public class Controller {
 		_circuit.set_defaultBallMass(mass);
 	}
 
+	public Vector get_gravityAcceleration() {
+		return _circuit.get_gravityAcceleration();
+	}
+
 	public boolean checkIfBallIsOnExistingObject(Ball b) {
 		if (checkIfBallIsOnExistingBall(b))
 			return true;
@@ -186,13 +191,13 @@ public class Controller {
 		double oldMass = b.get_mass();
 		double oldX = b.get_x();
 		double oldY = b.get_y();
-		b.setAll(new_centreX, new_centreY, new_radius, new_mass, _circuit.get_inclinaison());
+		b.setAll(new_centreX, new_centreY, new_radius, new_mass);
 		if (!checkIfBallIsOnExistingObject(b) && !(new_centreX > _circuit.get_width())
 				&& !(new_centreY > _circuit.get_height())) {
 			return true;
 		}
 
-		b.setAll(oldX, oldY, oldRadius, oldMass, _circuit.get_inclinaison());
+		b.setAll(oldX, oldY, oldRadius, oldMass);
 		return false;
 	}
 
@@ -245,18 +250,18 @@ public class Controller {
 	}
 
 	public boolean checkCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-
-		Point2D.Double u = new Point2D.Double();
-		u.x = (obstacle.get_depart().getX() - obstacle.get_arrivee().getX());
-		u.y = (obstacle.get_depart().getY() - obstacle.get_arrivee().getY());
-		Point2D.Double AC = new Point2D.Double();
-		AC.x = (int) (ball.get_x() - obstacle.get_arrivee().getX());
-		AC.y = (int) (ball.get_y() - obstacle.get_arrivee().getY());
-		double numerateur = u.x * AC.y - u.y * AC.x; // norme du vecteur v
+		Vector u = new Vector(obstacle.get_depart().getX() - obstacle.get_arrivee().getX(),
+				obstacle.get_depart().getY() - obstacle.get_arrivee().getY());
+		Vector AC = new Vector(ball.get_x() - obstacle.get_arrivee().getX(),
+				ball.get_y() - obstacle.get_arrivee().getY());
+		double numerateur = u.getX() * AC.getY() - u.getY() * AC.getX(); // norme
+																			// du
+																			// vecteur
+																			// v
 		if (numerateur < 0)
 			numerateur = -numerateur; // valeur absolue ; si c'est nÃ©gatif,
 										// on prend l'opposÃ©.
-		double denominateur = Math.sqrt(u.x * u.x + u.y * u.y);
+		double denominateur = u.getR();
 		double CI = numerateur / denominateur;
 		if (CI < ball.get_radius()) {
 			return collisionSegment(ball, obstacle);
@@ -265,40 +270,31 @@ public class Controller {
 	}
 
 	public boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
-		Point2D.Double A = new Point2D.Double();
-		Point2D.Double B = new Point2D.Double();
-		Point2D.Double C = new Point2D.Double();
-		A.x = obstacle.get_depart().getX();
-		A.y = obstacle.get_depart().getY();
-		B.x = obstacle.get_arrivee().getX();
-		B.y = obstacle.get_arrivee().getY();
-		C.x = ball.get_x();
-		C.y = ball.get_y();
 
-		Point2D.Double AB = new Point2D.Double();
-		Point2D.Double ACC = new Point2D.Double();
-		Point2D.Double BC = new Point2D.Double();
-		AB.x = B.x - A.x;
-		AB.y = B.y - A.y;
-		ACC.x = C.x - A.x;
-		ACC.y = C.y - A.y;
-		BC.x = C.x - B.x;
-		BC.y = C.y - B.y;
-		float pscal1 = (float) (AB.x * ACC.x + AB.y * ACC.y); // produit
-																// scalaire
-		float pscal2 = (float) ((-AB.x) * BC.x + (-AB.y) * BC.y); // produit
-																	// scalaire
+		Point2D.Double A = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_depart().getY());
+		Point2D.Double B = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_arrivee().getY());
+		Point2D.Double C = new Point2D.Double(ball.get_x(), ball.get_y());
+
+		Vector AB = new Vector(B.x - A.x, B.y - A.y);
+		Vector AC = new Vector(C.x - A.x, C.y - A.y);
+		Vector BC = new Vector(C.x - B.x, C.y - B.y);
+		Vector BA = new Vector(-AB.getX(), -AB.getY());
+
+		float pscal1 = (float) Vector.dotProduct(AB, AC); // produit scalaire
+		float pscal2 = (float) Vector.dotProduct(BA, BC); // produit scalaire
+
 		if (pscal1 >= 0 && pscal2 >= 0)
 			return true; // I entre A et B, ok.
+
 		// dernière possibilité, A ou B dans le cercle
-		if (collisionPointCerle(A, C, ball))
+		if (collisionPointCercle(A, C, ball))
 			return true;
-		if (collisionPointCerle(B, C, ball))
+		if (collisionPointCercle(B, C, ball))
 			return true;
 		return false;
 	}
 
-	public boolean collisionPointCerle(Point2D.Double a, Point2D.Double b, Ball ball) {
+	public boolean collisionPointCercle(Point2D.Double a, Point2D.Double b, Ball ball) {
 		if (distance(a, b) <= ball.get_radius())
 			return true;
 		return false;

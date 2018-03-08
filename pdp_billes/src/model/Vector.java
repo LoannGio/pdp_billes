@@ -54,34 +54,7 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.r = Math.sqrt(x * x + y * y);
-		// finding teta
-		if (y / x < 0) {
-			if (y > 0)
-				this.teta = pi / 2 + Math.atan(-x / y);
-			else
-				this.teta = 2 * pi - Math.atan(-y / x);
-		}
-		if (y / x > 0) {
-			if (y < 0)
-				this.teta = pi + Math.atan(y / x);
-			else
-				this.teta = Math.atan(y / x);
-		}
-		if (y == 0) {
-			if (x == 0)
-				this.teta = 0;
-			else if (x > 0)
-				this.teta = 0;
-			else
-				this.teta = -pi;
-		}
-		if (x == 0) {
-			if (y > 0)
-				this.teta = pi / 2;
-			else
-				this.teta = 3 * pi / 2;
-		}
-
+		this.teta = Math.atan2(y,x);
 	}
 
 	public void setPolar(double r, double teta) {
@@ -90,7 +63,7 @@ public class Vector {
 		this.x = r * Math.cos(teta);
 		this.y = r * Math.sin(teta);
 	}
-
+	
 	public static Vector vectorSum(Vector A, Vector B) { // sum two vectors
 		Vector vector = new Vector();
 		vector.setCartesian(A.getX() + B.getX(), A.getY() + B.getY());
