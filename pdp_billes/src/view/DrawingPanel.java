@@ -11,6 +11,7 @@ import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -107,7 +108,7 @@ public class DrawingPanel extends JPanel {
 			}
 		});
 	}
-
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -120,6 +121,12 @@ public class DrawingPanel extends JPanel {
 			/*
 			 * for (Point p : b.get_trace()) { g2.fillOval(p.x, p.y, 1, 1); }
 			 */
+			
+			
+			/*ArrayList<Point> trace = b.get_trace();
+			if(trace.size() > 200)
+				for(int i = 200 ; i > 0 ; i--)
+				g2.fillOval(trace.get(trace.size()-i).x, trace.get(trace.size()-i).y, 1, 1);*/
 		}
 
 		for (ObstacleLine o : _controller.get_lines()) {

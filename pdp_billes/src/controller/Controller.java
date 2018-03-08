@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -186,7 +187,34 @@ public class Controller {
 		AnimationTimer timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Rectangle square;
+				//Rectangle trace = null;
+				//ArrayList<Point> listTrace;
 				for (Ball ball : _circuit.get_balls()) {
+					int xSquare = (int) ball.get_x()-ball.get_radius();
+					int ySquare = (int) ball.get_y()-ball.get_radius();
+					int dimSquare = 2*ball.get_radius();
+					
+					square = new Rectangle(xSquare, ySquare, dimSquare, dimSquare);
+					
+					/*listTrace = ball.get_trace();
+					int xTrace = 0;
+					int yTrace = 0;
+					int dimTrace = 0;
+					if(listTrace.size() > 50) {
+						xTrace = listTrace.get(listTrace.size()-51).x;
+						yTrace = listTrace.get(listTrace.size()-51).y;
+						dimTrace = 1;
+						trace = new Rectangle(xTrace, yTrace, dimTrace, dimTrace);
+						System.out.println("1");
+					}*/
+					 		
+					dp.repaint(square);
+					/*if(trace != null) {
+						dp.repaint(trace);
+						System.out.println("2");	
+					}*/
+					// Bug : la bille la plus basse est rognée. Si plusieurs billes sont au même "niveau de plus bas", elles seront toutes rognées. 
 					ball.step();
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
 						resolveCollisionBallObstacle(ball, obstacle);
@@ -195,8 +223,24 @@ public class Controller {
 						if (ball2.get_x() != ball.get_x() && ball2.get_y() != ball.get_y())
 							resolveCollisionBallBall(ball, ball2);
 					}
+					
+					// Le repaint suivant refait plus bas règle le problème d'en haut, mais raison exacte inconnue
+					square.setRect(xSquare, ySquare+50, dimSquare, dimSquare);
+					dp.repaint(square);
+					
+					/*if(listTrace.size() > 50) {
+						xTrace = listTrace.get(listTrace.size()-51).x;
+						yTrace = listTrace.get(listTrace.size()-51).y;
+						if(trace != null) {
+							trace.setRect(xTrace, yTrace, dimTrace, dimTrace);
+							System.out.println("3");
+							dp.repaint(trace);
+							System.out.println("4");
+						}
+					}*/
+					
 				}
-				dp.repaint();
+				//dp.repaint();
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});
@@ -387,7 +431,7 @@ public class Controller {
 																	// scalaire
 		if (pscal1 >= 0 && pscal2 >= 0)
 			return true; // I entre A et B, ok.
-		// derni�re possibilit�, A ou B dans le cercle
+		// derni�re possibilit�, A ou B dans le cercle
 		if (collisionPointCerle(A, C, ball))
 			return true;
 		if (collisionPointCerle(B, C, ball))
