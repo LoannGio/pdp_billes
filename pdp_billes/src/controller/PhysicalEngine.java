@@ -207,7 +207,7 @@ public class PhysicalEngine {
 
 	/**************** Version 1 Obstacle - Ball *************************/
 
-	Vector GetNormale(Point A, Point B, Point2D.Double C) {
+	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 
 		Vector u, AC, N;
 		u = new Vector(B.x - A.x, B.y - A.y);
