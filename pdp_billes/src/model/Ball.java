@@ -103,7 +103,7 @@ public class Ball {
 
 		if (_location.getX() != x0 || _location.getY() != y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));
-
+		
 	}
 
 }
