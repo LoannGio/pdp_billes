@@ -38,9 +38,6 @@ public class PhysicalEngine {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Rectangle square;
-				// Rectangle trace = null;
-				// ArrayList<Point> listTrace;
-
 				// on vide le quadtree
 				_quad.clear();
 				// on ajoute toutes les balls dans le quadtree
@@ -57,36 +54,15 @@ public class PhysicalEngine {
 
 					square = new Rectangle(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
 
-					/*
-					 * listTrace = ball.get_trace(); int xTrace = 0; int yTrace
-					 * = 0; int dimTrace = 0; if(listTrace.size() > 50) { xTrace
-					 * = listTrace.get(listTrace.size()-51).x; yTrace =
-					 * listTrace.get(listTrace.size()-51).y; dimTrace = 1; trace
-					 * = new Rectangle(xTrace, yTrace, dimTrace, dimTrace);
-					 * System.out.println("1"); }
-					 */
-
 					dp.repaint(square);
-					/*
-					 * if(trace != null) { dp.repaint(trace);
-					 * System.out.println("2"); }
-					 */
-					// Bug : la bille la plus basse est rognée. Si plusieurs
-					// billes sont au même "niveau de plus bas", elles seront
-					// toutes rognées.
 					ball.step(_circuit.get_acceleration());
 					returnObjects.clear();
 					_quad.retrieve(returnObjects, ball);
 					for (ObstacleLine obstacle : _circuit.get_lines()) {
 						if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
-							while (_controller.checkCollisionBallObstacle(ball, obstacle)
-									&& ball.get_velocity().getY() > 0) {
-								ball.set_location(ball.get_location().getX(), ball.get_location().getY() - 0.1);
-							}
 							resolveCollisionBallObstacle(ball, obstacle);
 						}
 					}
-					// System.out.println(cpt);
 					for (Ball ball2 : returnObjects) {
 						if (ball2 != ball) {
 							if (_controller.checkCollisionBallBall(ball, ball2)) {
@@ -95,22 +71,9 @@ public class PhysicalEngine {
 						}
 					}
 
-					// Le repaint suivant refait plus bas règle le problème
-					// d'en haut, mais raison exacte inconnue
 					square.setRect(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
-					// dp.repaint(square);
-
-					/*
-					 * if(listTrace.size() > 50) { xTrace =
-					 * listTrace.get(listTrace.size()-51).x; yTrace =
-					 * listTrace.get(listTrace.size()-51).y; if(trace != null) {
-					 * trace.setRect(xTrace, yTrace, dimTrace, dimTrace);
-					 * System.out.println("3"); dp.repaint(trace);
-					 * System.out.println("4"); } }
-					 */
 
 				}
-				// dp.repaint();
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});
