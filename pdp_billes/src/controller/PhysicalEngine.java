@@ -19,65 +19,85 @@ import view.DrawingPanel;
 public class PhysicalEngine {
 	private Circuit _circuit;
 	private Controller _controller;
+	private AnimationTimer timer;
 	private Quadtree _quad;
 
-	public PhysicalEngine(DrawingPanel dp, Circuit circuit) {
+	public PhysicalEngine(Circuit circuit) {
 		_circuit = circuit;
 		_controller = Controller.getInstance();
 		_quad = new Quadtree(0, new Rectangle(0, 0, (int) _controller.getDimensionsPlan().getWidth(),
 				(int) _controller.getDimensionsPlan().getHeight()));
-		run(dp);
 	}
 
 	/************************************
 	 * Ball - Ball
 	 ************************************/
 
-	private void run(DrawingPanel dp) {
-		AnimationTimer timer = new AnimationTimer(new ActionListener() {
+	public void run(DrawingPanel dp) {
+		timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Rectangle square;
 				// on vide le quadtree
 				_quad.clear();
-				// on ajoute toutes les balls dans le quadtree
-				for (Ball ball : _circuit.get_balls()) {
-					_quad.insert(ball);
-				}
 
 				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
 
 				for (Ball ball : _circuit.get_balls()) {
-					int xSquare = (int) ball.get_x() - ball.get_radius();
-					int ySquare = (int) ball.get_y() - ball.get_radius();
-					int dimSquare = 2 * ball.get_radius();
+					if (!ballIsOutOfPanel(ball, dp)) {
+						_quad.insert(ball);
+						int xSquare = (int) ball.get_x() - ball.get_radius();
+						int ySquare = (int) ball.get_y() - ball.get_radius();
+						int dimSquare = 2 * ball.get_radius();
 
-					square = new Rectangle(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
+						square = new Rectangle(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
 
-					dp.repaint(square);
-					ball.step(_circuit.get_acceleration());
-					returnObjects.clear();
-					_quad.retrieve(returnObjects, ball);
-					for (ObstacleLine obstacle : _circuit.get_lines()) {
-						if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
-							resolveCollisionBallObstacle(ball, obstacle);
-						}
-					}
-					for (Ball ball2 : returnObjects) {
-						if (ball2 != ball) {
-							if (_controller.checkCollisionBallBall(ball, ball2)) {
-								resolveCollisionBallBall(ball, ball2);
+						dp.repaint(square);
+
+						ball.step(_circuit.get_acceleration());
+						returnObjects.clear();
+						_quad.retrieve(returnObjects, ball);
+						for (ObstacleLine obstacle : _circuit.get_lines()) {
+							if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
+								while (_controller.checkCollisionBallObstacle(ball, obstacle)
+										&& ball.get_velocity().getY() > 0) {
+									ball.set_location(ball.get_location().getX(), ball.get_location().getY() - 0.1);
+								}
+								resolveCollisionBallObstacle(ball, obstacle);
 							}
 						}
+						for (Ball ball2 : returnObjects) {
+							if (ball2 != ball) {
+								if (_controller.checkCollisionBallBall(ball, ball2)) {
+									resolveCollisionBallBall(ball, ball2);
+								}
+							}
+						}
+						square.setRect(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
 					}
-
-					square.setRect(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
-
 				}
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});
 		timer.start();
+	}
+
+	public void stop() {
+		timer.stop();
+	}
+
+	public boolean ballIsOutOfPanel(Ball b, DrawingPanel dp) {
+		double bx = b.get_x();
+		double by = b.get_y();
+		double br = b.get_radius();
+		int dpx = dp.getX();
+		int dpy = dp.getY();
+		int dpwidth = dp.getWidth();
+		int dpheight = dp.getHeight();
+		if (bx - br > dpx + dpwidth || bx + br < dpx || by - br > dpy + dpheight || by + br < dpy)
+			return true;
+		return false;
+
 	}
 
 	/**************** Version 1 Ball - Ball *************************/
@@ -200,6 +220,7 @@ public class PhysicalEngine {
 	}
 
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+
 		double angle = Math.toDegrees(ball.get_velocity().getTeta());
 		Vector N = new Vector();
 		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new Point2D.Double(ball.get_x(), ball.get_y()));
@@ -207,8 +228,25 @@ public class PhysicalEngine {
 		angle = 2 * normalAngle - 180 - angle;
 		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
 		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-
 		ball.set_speed(vx, vy);
+
+		Point2D.Double a = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_depart().getY());
+		Point2D.Double b = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_arrivee().getY());
+		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
+		Point2D.Double i = new Point2D.Double();
+		i = ProjectionI(a, b, c);
+		double dist = _controller.distance(c, i);
+		if (dist < ball.get_radius()) {
+			ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
+		}
+	}
+
+	Point2D.Double ProjectionI(Point2D.Double A, Point2D.Double B, Point2D.Double C) {
+		Vector u = new Vector(B.x - A.x, B.y - A.y);
+		Vector AC = new Vector(C.x - A.x, C.y - A.y);
+		double ti = (u.getX() * AC.getX() + u.getY() * AC.getY()) / (u.getX() * u.getX() + u.getY() * u.getY());
+		Point2D.Double I = new Point2D.Double(A.x + ti * u.getX(), A.y + ti * u.getY());
+		return I;
 	}
 
 	/*********************

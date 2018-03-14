@@ -56,53 +56,57 @@ public class DrawingPanel extends JPanel {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					_pressedLocation = new Point((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor));
-					_creatingLine = true;
-					_tmpDraw = new Rectangle((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor) - 5, 10,
-							10);
-					repaint();
-				} else if (e.getButton() == MouseEvent.BUTTON3) {
-					Object o = null;
-					if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
-						_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller, getMyself());
-						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
-					} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
-						_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
-								getMyself());
-						_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
-
-					} else {
-						Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
-								_controller.get_defaultBallMass());
-						if (!(_controller.checkIfBallIsOnExistingObject(b))) {
-							b.set_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
-							_controller.addBall(b);
-						}
+				if(!_controller.isRunningApp()) {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						_pressedLocation = new Point((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor));
+						_creatingLine = true;
+						_tmpDraw = new Rectangle((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor) - 5, 10,
+								10);
 						repaint();
-					}
-				}
+					} else if (e.getButton() == MouseEvent.BUTTON3) {
+						Object o = null;
+						if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
+							_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller, getMyself());
+							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
+						} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
+							_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
+									getMyself());
+							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
+						} else {
+							Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
+									_controller.get_defaultBallMass());
+							if (!(_controller.checkIfBallIsOnExistingObject(b))) {
+								b.set_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
+								_controller.addBall(b);
+							}
+							repaint();
+						}
+					}
+
+				}
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
-							&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
-						Point arrivee = new Point();
-						arrivee.setLocation(e.getX(), e.getY());
-						ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
-						if (!(_controller.checkIfLineIsOnExistingBall(o))) {
-							arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
-							o.set_arrivee(arrivee);
-							_controller.addLine(o);
+				if(!_controller.isRunningApp()) {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
+								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
+							Point arrivee = new Point();
+							arrivee.setLocation(e.getX(), e.getY());
+							ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
+							if (!(_controller.checkIfLineIsOnExistingBall(o))) {
+								arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
+								o.set_arrivee(arrivee);
+								_controller.addLine(o);
+							}
 						}
+						_pressedLocation = null;
+						_creatingLine = false;
+						_tmpDraw = null;
+						repaint();
 					}
-					_pressedLocation = null;
-					_creatingLine = false;
-					_tmpDraw = null;
-					repaint();
 				}
 			}
 		});

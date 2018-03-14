@@ -44,6 +44,7 @@ public class ParamPanel extends JPanel {
 	private JTextField _txtRadius;
 	private JButton _changeButton = new JButton("Changer");
 	private JButton _runButton = new JButton("Lancer");
+	private JButton _stopButton = new JButton("Arreter");
 	private JButton _resetButton = new JButton("Reinitialiser");
 	private JButton _exportButton = new JButton("Exporter");
 	private JButton _importButton = new JButton("Importer");
@@ -76,43 +77,56 @@ public class ParamPanel extends JPanel {
 		_changeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (checkInt(_txtLongueur.getText()) && checkInt(_txtLargeur.getText())) {
-					int newCreationZoneWidth = Integer.parseInt(_txtLongueur.getText());
-					if (newCreationZoneWidth > _maxCreationZoneWidth) {
-						newCreationZoneWidth = _maxCreationZoneWidth;
-						_txtLongueur.setText(Integer.toString(newCreationZoneWidth));
-					}
+				if(!_controller.isRunningApp()) {
+					if (checkInt(_txtLongueur.getText()) && checkInt(_txtLargeur.getText())) {
+						int newCreationZoneWidth = Integer.parseInt(_txtLongueur.getText());
+						if (newCreationZoneWidth > _maxCreationZoneWidth) {
+							newCreationZoneWidth = _maxCreationZoneWidth;
+							_txtLongueur.setText(Integer.toString(newCreationZoneWidth));
+						}
 
-					int newCreationZoneHeight = Integer.parseInt(_txtLargeur.getText());
-					if (newCreationZoneHeight > _maxCreationZoneHeight) {
-						newCreationZoneHeight = _maxCreationZoneHeight;
-						_txtLargeur.setText(Integer.toString(newCreationZoneHeight));
+						int newCreationZoneHeight = Integer.parseInt(_txtLargeur.getText());
+						if (newCreationZoneHeight > _maxCreationZoneHeight) {
+							newCreationZoneHeight = _maxCreationZoneHeight;
+							_txtLargeur.setText(Integer.toString(newCreationZoneHeight));
+						}
+						creationZone.deleteObjectsOutOfBounds(creationZone.getX(),
+								creationZone.getX() + newCreationZoneWidth, creationZone.getY(),
+								creationZone.getY() + newCreationZoneHeight);
+						_controller.setDimensionsPlan(creationZone, newCreationZoneWidth, newCreationZoneHeight);
 					}
-					creationZone.deleteObjectsOutOfBounds(creationZone.getX(),
-							creationZone.getX() + newCreationZoneWidth, creationZone.getY(),
-							creationZone.getY() + newCreationZoneHeight);
-					_controller.setDimensionsPlan(creationZone, newCreationZoneWidth, newCreationZoneHeight);
+					if (checkInt(_txtRadius.getText()))
+						_controller.set_defaultBallRadius(Integer.parseInt(_txtRadius.getText()));
+
+					if (checkDouble(_txtMass.getText()))
+						_controller.set_defaultBallMass(Double.parseDouble(_txtMass.getText()));
 				}
-				if (checkInt(_txtRadius.getText()))
-					_controller.set_defaultBallRadius(Integer.parseInt(_txtRadius.getText()));
-
-				if (checkDouble(_txtMass.getText()))
-					_controller.set_defaultBallMass(Double.parseDouble(_txtMass.getText()));
 			}
 		});
 
 		_runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_controller.runSimulation(_dp);
+				if(!_controller.isRunningApp())
+					_controller.runSimulation(_dp);
+			}
+		});
+		
+		_stopButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(_controller.isRunningApp())
+					_controller.stopSimulation();
 			}
 		});
 
 		_resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_controller.clearCircuit();
-				creationZone.repaint();
+				if(!_controller.isRunningApp()) {
+					_controller.clearCircuit();
+					creationZone.repaint();
+				}
 			}
 		});
 
@@ -120,37 +134,41 @@ public class ParamPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
+				if(!_controller.isRunningApp()) {
+					JFileChooser chooser = new JFileChooser();
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
-				chooser.setFileFilter(filter);
+					chooser.setFileFilter(filter);
 
-				int retValue = chooser.showOpenDialog(null);
-				if (retValue == JFileChooser.APPROVE_OPTION) {
-					_controller.importerCircuit(creationZone, chooser.getSelectedFile());
+					int retValue = chooser.showOpenDialog(null);
+					if (retValue == JFileChooser.APPROVE_OPTION) {
+						_controller.importerCircuit(creationZone, chooser.getSelectedFile());
+					}
+
+					updateLabels();
 				}
-
-				updateLabels();
 			}
 		});
 
 		_exportButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
+				if(!_controller.isRunningApp()) {
+					JFileChooser chooser = new JFileChooser();
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
-				chooser.setFileFilter(filter);
+					chooser.setFileFilter(filter);
 
-				int retValue = chooser.showSaveDialog(null);
-				if (retValue == JFileChooser.APPROVE_OPTION) {
-					File f = null;
-					if (!chooser.getSelectedFile().getName().endsWith(".pdp"))
-						f = new File(chooser.getSelectedFile().getAbsolutePath() + ".pdp");
-					else
-						f = chooser.getSelectedFile();
-					_controller.exporterCircuit(f);
+					int retValue = chooser.showSaveDialog(null);
+					if (retValue == JFileChooser.APPROVE_OPTION) {
+						File f = null;
+						if (!chooser.getSelectedFile().getName().endsWith(".pdp"))
+							f = new File(chooser.getSelectedFile().getAbsolutePath() + ".pdp");
+						else
+							f = chooser.getSelectedFile();
+						_controller.exporterCircuit(f);
 
+					}
 				}
 			}
 		});
@@ -212,6 +230,7 @@ public class ParamPanel extends JPanel {
 
 		_conteneur.add(_changeButton);
 		_conteneur.add(_runButton);
+		_conteneur.add(_stopButton);
 		_conteneur.add(_resetButton);
 		_conteneur.add(_importButton);
 		_conteneur.add(_exportButton);
