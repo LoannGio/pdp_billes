@@ -248,16 +248,38 @@ public class PhysicalEngine {
 	}
 
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-		double angle = Math.toDegrees(ball.get_velocity().getTeta());
-		Vector N = new Vector();
-		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new Point2D.Double(ball.get_x(), ball.get_y()));
-		double normalAngle = Math.toDegrees(N.getTeta());
-		angle = 2 * normalAngle - 180 - angle;
-		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+	   	 
+	   	 double angle = Math.toDegrees(ball.get_velocity().getTeta());
+	   	 Vector N = new Vector();
+	   	 N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new Point2D.Double(ball.get_x(), ball.get_y()));
+	   	 double normalAngle = Math.toDegrees(N.getTeta());
+	   	 angle = 2 * normalAngle - 180 - angle;
+	   	 double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+	   	 double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+	   	 ball.set_speed(vx, vy);
+	   	 
+	   	 Point2D.Double a = new Point2D.Double(obstacle.get_depart().getX(),obstacle.get_depart().getY());
+	   	 Point2D.Double b = new Point2D.Double(obstacle.get_arrivee().getX(),obstacle.get_arrivee().getY());
+	   	 Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
+	   	 Point2D.Double i = new Point2D.Double();
+	   	 i =  ProjectionI(a,b,c);
+	   	 double dist = _controller.distance(c,i);
+	   	 if(dist < ball.get_radius() ) {
+	   		 ball.set_location(ball.get_x(), ball.get_y()-(ball.get_radius()-dist));
+	   	 }
+	   	 System.out.println(dist);
+	    }
 
-		ball.set_speed(vx, vy);
-	}
+
+	    Point2D.Double ProjectionI(Point2D.Double A,Point2D.Double B,Point2D.Double C)
+	    {
+	      Vector u = new Vector(B.x - A.x,B.y - A.y);
+	      Vector AC = new Vector(C.x - A.x,C.y - A.y);
+	      double ti = (u.getX()*AC.getX() + u.getY()*AC.getY())/(u.getX()*u.getX() + u.getY()*u.getY());
+	      Point2D.Double I = new Point2D.Double(A.x + ti*u.getX(),A.y + ti*u.getY());
+	      return I;
+	    }
+
 
 	/*********************
 	 * Version 2 Obstacle - Ball
