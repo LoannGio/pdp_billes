@@ -20,9 +20,13 @@ import view.DrawingPanel;
 public class Controller {
 	private Circuit _circuit;
 	private static Controller instance = new Controller();
+	private boolean isRunning;
+	PhysicalEngine pe;
 
 	private Controller() {
 		_circuit = new Circuit(500, 500);
+		isRunning = false;
+		pe = null;
 	}
 
 	public static Controller getInstance() {
@@ -126,7 +130,16 @@ public class Controller {
 	}
 
 	public void runSimulation(DrawingPanel creationZone) {
-		PhysicalEngine pe = new PhysicalEngine(creationZone, _circuit);
+		isRunning = true;
+		//PhysicalEngine pe = new PhysicalEngine(creationZone, _circuit);
+		if(pe == null)
+			pe = new PhysicalEngine(_circuit);
+		pe.run(creationZone);
+	}
+	
+	public void stopSimulation() {
+		isRunning = false;
+		pe.stop();
 	}
 
 	public ArrayList<Ball> get_balls() {
@@ -305,5 +318,9 @@ public class Controller {
 
 	public double distance(Point2D.Double a, Point2D.Double b) {
 		return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
+	}
+	
+	public boolean isRunningApp() {
+		return isRunning;
 	}
 }
