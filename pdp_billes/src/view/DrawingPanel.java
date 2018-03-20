@@ -94,7 +94,6 @@ public class DrawingPanel extends JPanel {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (!_controller.isRunningApp()) {
-					e.getX() = 2;
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
 								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
