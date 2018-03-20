@@ -53,8 +53,6 @@ public class PhysicalEngine {
 						square = new Rectangle(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
 
 						dp.repaint(square);
-
-						ball.step(_circuit.get_acceleration());
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
 						for (ObstacleLine obstacle : _circuit.get_lines()) {
@@ -70,6 +68,9 @@ public class PhysicalEngine {
 							}
 						}
 						square.setRect(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
+						dp.repaint(square);
+						ball.step(_circuit.get_acceleration());
+
 					}
 				}
 				Toolkit.getDefaultToolkit().sync();
@@ -96,12 +97,12 @@ public class PhysicalEngine {
 
 	}
 
-	/**************** Version 1 Ball - Ball *************************/
+	/**************** Version Ball - Ball *************************/
 
 	public double angleCollisionBall(Ball ball1, Ball ball2) {
 		Vector v;
-		double d1 = ball1.get_location().getR();
-		double d2 = ball2.get_location().getR();
+		double d1 = Math.sqrt(Math.pow(ball1.get_x(), 2) + Math.pow(ball1.get_y(), 2));
+		double d2 = Math.sqrt(Math.pow(ball2.get_x(), 2) + Math.pow(ball2.get_y(), 2));
 		Vector loc1 = ball1.get_location();
 		Vector loc2 = ball2.get_location();
 
@@ -109,98 +110,95 @@ public class PhysicalEngine {
 			v = Vector.vectorSubtract(loc1, loc2);
 		else
 			v = Vector.vectorSubtract(loc2, loc1);
-		return v.getTeta();
+
+		double angle = Math.atan2(v.getY(), v.getX());
+		return angle;
 	}
 
-	public void resolveCollisionBallBall(Ball ball1, Ball ball2) {
-		double vx1, vy1, vx2, vy2; // these velocities are after the collision
-		double v1, v2; // these are the velocities before the collision, these
-						// // are
-		double vxr1, vxr2; // these are just notations, however they
-		double theta1, theta2;
-		double phi;
-		double m1, m2;
-		m1 = ball1.get_mass();
-		m2 = ball2.get_mass();
-		theta1 = ball1.get_velocity().getTeta();
-		theta2 = ball2.get_velocity().getTeta();
-		v1 = ball1.get_speed();
-		v2 = ball2.get_speed();
+	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
 
-		// this is an angle when the two balls touch. angle between the line //
-		// which connects two ball and x axis
-		phi = angleCollisionBall(ball1, ball2);
+		double collision_angle = angleCollisionBall(ball1, ball2);
+		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX()); // direction
+																									// of
+																									// ball
+																									// 1
+		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX()); // direction
+																									// of
+																									// ball
+																									// 2
+		Vector pos1 = ball1.get_location(); // position of ball 1
+		Vector pos2 = ball2.get_location(); // position of ball 2
+		double v1 = ball1.get_speed(); // speed of ball 1
+		double v2 = ball2.get_speed(); // speed of ball 2
+		double m1 = ball1.get_mass(); // mass of ball 1
+		double m2 = ball2.get_mass(); // mass of ball 2
+		double r1 = ball1.get_radius(); // raduis of ball 2
+		double r2 = ball2.get_radius(); // raduis of ball 1
 
-		vxr1 = (m2 * v2 * Math.cos(theta2 - phi) * (1 + Ball.COR) + (m1 - m2 * Ball.COR) * v1 * Math.cos(theta1 - phi))
-				/ (m1 + m2);
-		vxr2 = (m1 * v1 * Math.cos(theta1 - phi) * (1 + Ball.COR) + (m2 - Ball.COR * m1) * v2 * Math.cos(theta2 - phi))
-				/ (m1 + m2);
+		/***************
+		 * new Velocity of two ball according to their directions
+		 **************/
+		Vector new_v1 = new Vector(v1 * Math.cos(direction_1 - collision_angle),
+				v1 * Math.sin(direction_1 - collision_angle));
+		Vector new_v2 = new Vector(v2 * Math.cos(direction_2 - collision_angle),
+				v2 * Math.sin(direction_2 - collision_angle));
+		Vector final_v1 = new Vector(((m1 - m2) * new_v1.getX() + (m2 * 2) * new_v2.getX()) / (m1 + m2), new_v1.getY());
+		Vector final_v2 = new Vector(((m1 * 2) * new_v1.getX() + (m2 - m1) * new_v2.getX()) / (m1 + m2), new_v2.getY());
+		double cosAngle = Math.cos(collision_angle);
+		double sinAngle = Math.sin(collision_angle);
+		ball1.set_speed(cosAngle * final_v1.getX() - sinAngle * final_v1.getY(),
+				sinAngle * final_v1.getX() + cosAngle * final_v1.getY());
+		ball2.set_speed(cosAngle * final_v2.getX() - sinAngle * final_v2.getY(),
+				sinAngle * final_v2.getX() + cosAngle * final_v2.getY());
 
-		vx1 = vxr1 * Math.cos(phi) + v1 * Math.sin(theta1 - phi) * Math.cos(phi + Math.PI / 2);
-		vy1 = vxr1 * Math.sin(phi) + v1 * Math.sin(theta1 - phi) * Math.sin(phi + Math.PI / 2);
-		vx2 = vxr2 * Math.cos(phi) + v2 * Math.sin(theta2 - phi) * Math.cos(phi + Math.PI / 2);
-		vy2 = vxr2 * Math.sin(phi) + v2 * Math.sin(theta2 - phi) * Math.sin(phi + Math.PI / 2);
+		/**************
+		 * minimum translation distance to push balls apart after
+		 *************/
 
-		ball1.set_speed(vx1, vy1);
-		ball2.set_speed(vx2, vy2);
+		Vector posDiff = Vector.vectorSubtract(pos1, pos2);
+		double d = Math.sqrt(Math.pow(posDiff.getX(), 2) + Math.pow(posDiff.getY(), 2));
+		Vector mtd = new Vector(posDiff.getX() * (((r1 + r2) - d) / d), posDiff.getY() * (((r1 + r2) - d) / d));
+		// computing inverse mass quantities
+		double im1 = 1 / m1;
+		double im2 = 1 / m2;
+		// push-pull them apart based off their mass
+		ball1.set_location(pos1.getX() + mtd.getX() * (im1 / (im1 + im2)),
+				pos1.getY() + mtd.getY() * (im1 / (im1 + im2)));
+		ball2.set_location(pos2.getX() - mtd.getX() * (im2 / (im1 + im2)),
+				pos2.getY() - mtd.getY() * (im2 / (im1 + im2)));
+
 	}
-
-	/**************** Version 2 Ball - Ball *************************/
-
-	/*
-	 * private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
-	 * 
-	 * double collision_angle = angleCollisionBall(ball1, ball2);
-	 * 
-	 * double speed1 = ball1.get_speed(); double speed2 = ball2.get_speed();
-	 * double direction_1 = ball1.get_velocity().getTeta(); double direction_2 =
-	 * ball2.get_velocity().getTeta();
-	 * 
-	 * double new_xspeed_1 = speed1 * Math.cos(direction_1 - collision_angle);
-	 * double new_yspeed_1 = speed1 * Math.sin(direction_1 - collision_angle);
-	 * double new_xspeed_2 = speed2 * Math.cos(direction_2 - collision_angle);
-	 * double new_yspeed_2 = speed2 * Math.sin(direction_2 - collision_angle);
-	 * double final_xspeed_1 = ((ball1.get_mass() - ball2.get_mass()) *
-	 * new_xspeed_1 + (ball2.get_mass() + ball2.get_mass()) * new_xspeed_2) /
-	 * (ball1.get_mass() + ball2.get_mass()); double final_xspeed_2 =
-	 * ((ball1.get_mass() * 2) * new_xspeed_1 + (ball2.get_mass() -
-	 * ball1.get_mass()) * new_xspeed_2) / (ball1.get_mass() +
-	 * ball2.get_mass()); double final_yspeed_1 = new_yspeed_1; double
-	 * final_yspeed_2 = new_yspeed_2; double cosAngle =
-	 * Math.cos(collision_angle); double sinAngle = Math.sin(collision_angle);
-	 * 
-	 * double vx = cosAngle * final_xspeed_1 - sinAngle * final_yspeed_1; double
-	 * vy = sinAngle * final_xspeed_1 + cosAngle * final_yspeed_1;
-	 * ball1.set_speed(vx, vy); vx = cosAngle * final_xspeed_2 - sinAngle *
-	 * final_yspeed_2; vy = sinAngle * final_xspeed_2 + cosAngle *
-	 * final_yspeed_2; ball2.set_speed(vx, vy);
-	 * 
-	 * // get the mtd /* Vector posDiff = new Vector(); posDiff =
-	 * Vector.vectorSubtract(ball1.get_location(), ball2.get_location()); double
-	 * d = posDiff.getR();
-	 * 
-	 * // minimum translation distance to push balls apart after
-	 * 
-	 * // intersecting double mtdx = posDiff.getX() * (((ball1.get_radius() +
-	 * ball2.get_radius()) - d) / d); double mtdy = posDiff.getY() *
-	 * (((ball1.get_radius() + ball2.get_radius()) - d) / d); // resolve
-	 * intersection -- // computing inverse mass quantities double im1 = 1 /
-	 * ball1.get_mass(); double im2 = 1 / ball2.get_mass(); // push-pull them
-	 * apart based off their mass double x0 = ball1.get_x() + mtdx * (im1 / (im1
-	 * + im2)); double y0 = ball1.get_y() + mtdy * (im1 / (im1 + im2));
-	 * ball1.set_location(x0, y0); x0 = ball2.get_x() - mtdx * (im2 / (im1 +
-	 * im2)); y0 = ball2.get_y() - mtdy * (im2 / (im1 + im2));
-	 * ball2.set_location(x0, y0);
-	 *
-	 * 
-	 * }
-	 */
 
 	/**************************************
-	 * Ball - Obstacle
+	 * * Ball - Obstacle
 	 ****************************/
 
-	/**************** Version 1 Obstacle - Ball *************************/
+	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+
+		/*********
+		 * new Velocity of two ball according to its direction
+		 *********/
+		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
+		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
+		Vector N = new Vector();
+		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		double normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX()));
+		angle = 2 * normalAngle - 180 - angle;
+		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
+		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
+		ball.set_speed(vx, vy);
+
+		/***
+		 * move the ball in the direction of its respective velocity until they
+		 * have only one point of intersection
+		 ***/
+		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		double dist = _controller.distance(c, p);
+		if (dist < ball.get_radius()) {
+			ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
+		}
+
+	}
 
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 
@@ -209,58 +207,18 @@ public class PhysicalEngine {
 		AC = new Vector(C.x - A.x, C.y - A.y);
 		float parenthesis = (float) (u.getX() * AC.getY() - u.getY() * AC.getX());
 		N = new Vector(-u.getY() * (parenthesis), u.getX() * (parenthesis));
-		float norme = (float) N.getR();
+		float norme = (float) Math.sqrt(Math.pow(N.getX(), 2) + Math.pow(N.getY(), 2));
 		N.setCartesian(N.getX() / norme, N.getY() / norme);
 		return N;
 	}
 
-	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+	Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
 
-		double angle = Math.toDegrees(ball.get_velocity().getTeta());
-		Vector N = new Vector();
-		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new Point2D.Double(ball.get_x(), ball.get_y()));
-		double normalAngle = Math.toDegrees(N.getTeta());
-		angle = 2 * normalAngle - 180 - angle;
-		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
-		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-		ball.set_speed(vx, vy);
-
-		/*
-		 * Point2D.Double a = new Point2D.Double(obstacle.get_depart().getX(),
-		 * obstacle.get_depart().getY()); Point2D.Double b = new
-		 * Point2D.Double(obstacle.get_arrivee().getX(),
-		 * obstacle.get_arrivee().getY()); Point2D.Double c = new
-		 * Point2D.Double(ball.get_x(), ball.get_y()); Point2D.Double i = new
-		 * Point2D.Double(); i = ProjectionI(a, b, c); double dist =
-		 * _controller.distance(c, i); if (dist < ball.get_radius()) {
-		 * ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() -
-		 * dist)); }
-		 */
-	}
-
-	Point2D.Double ProjectionI(Point2D.Double A, Point2D.Double B, Point2D.Double C) {
 		Vector u = new Vector(B.x - A.x, B.y - A.y);
 		Vector AC = new Vector(C.x - A.x, C.y - A.y);
 		double ti = (u.getX() * AC.getX() + u.getY() * AC.getY()) / (u.getX() * u.getX() + u.getY() * u.getY());
 		Point2D.Double I = new Point2D.Double(A.x + ti * u.getX(), A.y + ti * u.getY());
 		return I;
 	}
-
-	/*********************
-	 * Version 2 Obstacle - Ball
-	 *******************************/
-
-	/*
-	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine
-	 * obstacle) { Vector N = new Vector(); N =
-	 * this.GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), new
-	 * Point2D.Double(ball.get_x(), ball.get_y())); Vector v = new Vector(); v =
-	 * CalculerVecteurV2(ball.get_velocity(), N); ball.set_speed(v.getX() *
-	 * ObstacleLine.COR, v.getY() * ObstacleLine.COR); }
-	 * 
-	 * Vector CalculerVecteurV2(Vector v, Vector N) { float pscal = (float)
-	 * (Vector.dotProduct(v, N)); Vector v2 = new Vector(v.getX() - 2 * pscal *
-	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
-	 */
 
 }

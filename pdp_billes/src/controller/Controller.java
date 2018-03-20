@@ -273,7 +273,7 @@ public class Controller {
 		if (numerateur < 0)
 			numerateur = -numerateur; // valeur absolue ; si c'est négatif,
 										// on prend l'opposé.
-		double denominateur = u.getR();
+		double denominateur = Math.sqrt(Math.pow(u.getX(), 2) + Math.pow(u.getY(), 2));
 		double CI = numerateur / denominateur;
 		if (CI < ball.get_radius()) {
 			return collisionSegment(ball, obstacle);

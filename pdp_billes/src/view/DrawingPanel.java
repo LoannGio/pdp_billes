@@ -10,6 +10,9 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
 import javax.swing.BorderFactory;
@@ -56,7 +59,7 @@ public class DrawingPanel extends JPanel {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						_pressedLocation = new Point((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor));
 						_creatingLine = true;
@@ -66,7 +69,8 @@ public class DrawingPanel extends JPanel {
 					} else if (e.getButton() == MouseEvent.BUTTON3) {
 						Object o = null;
 						if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
-							_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller, getMyself());
+							_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller,
+									getMyself());
 							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 						} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
 							_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
@@ -89,7 +93,8 @@ public class DrawingPanel extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
+					e.getX() = 2;
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
 								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
@@ -110,6 +115,26 @@ public class DrawingPanel extends JPanel {
 				}
 			}
 		});
+
+		MouseWheelListener mwl = new MouseWheelListener() {
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				// Zoom in
+				if (e.getWheelRotation() < 0) {
+					_zoomFactor *= 1.1;
+					repaint();
+				}
+				// Zoom out
+				if (e.getWheelRotation() > 0) {
+					_zoomFactor /= 1.1;
+					repaint();
+				}
+				// _zoomer = true;
+			}
+		};
+
+		addMouseWheelListener(mwl);
 	}
 
 	@Override
@@ -118,6 +143,17 @@ public class DrawingPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(Color.red);
+
+		if ((int) _zoomFactor != 1) {
+			AffineTransform at = new AffineTransform();
+			at.scale(_zoomFactor, _zoomFactor);
+			Rectangle size = getBounds();
+			double tx = ((size.getWidth() - getWidth() * _zoomFactor) / 2) / _zoomFactor;
+			double ty = ((size.getHeight() - getHeight() * _zoomFactor) / 2) / _zoomFactor;
+			at.translate(tx, ty);
+			g2.transform(at);
+		}
+
 		for (Ball b : _controller.get_balls()) {
 			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()), b.get_radius() * 2,
 					b.get_radius() * 2);

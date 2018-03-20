@@ -73,7 +73,8 @@ public class Ball {
 	}
 
 	public double get_speed() {
-		return _velocity.getR();
+		double speed = Math.sqrt(Math.pow(_velocity.getX(), 2) + Math.pow(_velocity.getY(), 2));
+		return speed;
 	}
 
 	public double get_mass() {
@@ -92,16 +93,11 @@ public class Ball {
 		double x0 = _location.getX();
 		double y0 = _location.getY();
 
-		double ax = acceleration.getX() / Circuit.get_scale();
-		double ay = acceleration.getY() / Circuit.get_scale();
-		double vx = _velocity.getX() + ax;
-		double vy = _velocity.getY() + ay;
+		Vector new_speed = Vector.vectorSum(_velocity, acceleration);
+		set_speed(new_speed.getX(), new_speed.getY());
 
-		double x = x0 + vx;
-		double y = y0 + vy;
-
-		set_speed((vx), (vy));
-		set_location(x, y);
+		Vector new_location = Vector.vectorSum(_location, _velocity);
+		set_location(new_location.getX(), new_location.getY());
 
 		if (_location.getX() != x0 || _location.getY() != y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));

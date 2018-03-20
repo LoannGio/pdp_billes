@@ -41,7 +41,7 @@ public class Circuit {
 		_defaultInclinaison = 45;
 		double _ax = 0;
 		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration = new Vector(_ax, _ay);
+		_gravityAcceleration = new Vector(_ax / _scale, _ay / _scale);
 	}
 
 	public void addBall(Ball b) {
@@ -285,8 +285,7 @@ public class Circuit {
 		_defaultInclinaison = inclinaison;
 		double _ax = 0;
 		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration.setCartesian(_ax, _ay);
-		;
+		_gravityAcceleration.setCartesian(_ax / _scale, _ay / _scale);
 	}
 
 	public Vector get_acceleration() {
