@@ -77,7 +77,7 @@ public class ParamPanel extends JPanel {
 		_changeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
 					if (checkInt(_txtLongueur.getText()) && checkInt(_txtLargeur.getText())) {
 						int newCreationZoneWidth = Integer.parseInt(_txtLongueur.getText());
 						if (newCreationZoneWidth > _maxCreationZoneWidth) {
@@ -107,15 +107,15 @@ public class ParamPanel extends JPanel {
 		_runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!_controller.isRunningApp())
+				if (!_controller.isRunningApp())
 					_controller.runSimulation(_dp);
 			}
 		});
-		
+
 		_stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(_controller.isRunningApp())
+				if (_controller.isRunningApp())
 					_controller.stopSimulation();
 			}
 		});
@@ -123,8 +123,9 @@ public class ParamPanel extends JPanel {
 		_resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
 					_controller.clearCircuit();
+					creationZone.clearBufferedImage();
 					creationZone.repaint();
 				}
 			}
@@ -134,7 +135,7 @@ public class ParamPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
@@ -153,7 +154,7 @@ public class ParamPanel extends JPanel {
 		_exportButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!_controller.isRunningApp()) {
+				if (!_controller.isRunningApp()) {
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 

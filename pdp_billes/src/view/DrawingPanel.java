@@ -10,10 +10,8 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -32,6 +30,7 @@ public class DrawingPanel extends JPanel {
 	private double _zoomFactor;
 	private int _panelWidth, _panelHeight;
 	private IRightClickPopUpMenu _rightClickPopUp;
+	private BufferedImage _buffer;
 
 	public DrawingPanel(Dimension frameSize, JFrame parent) {
 		initialize(frameSize, parent);
@@ -51,6 +50,7 @@ public class DrawingPanel extends JPanel {
 		_panelWidth = (int) Math.round(widthProportion * frameSize.width);
 		_panelHeight = (int) Math.round(heightProportion * frameSize.height);
 		_controller.setDimensionsPlan(this, _panelWidth, _panelHeight);
+		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 		setBackground(new Color(255, 255, 255));
 		setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 	}
@@ -104,6 +104,7 @@ public class DrawingPanel extends JPanel {
 								arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
 								o.set_arrivee(arrivee);
 								_controller.addLine(o);
+								drawLineBuffer(o);
 							}
 						}
 						_pressedLocation = null;
@@ -113,27 +114,25 @@ public class DrawingPanel extends JPanel {
 					}
 				}
 			}
+
 		});
+	}
 
-		MouseWheelListener mwl = new MouseWheelListener() {
+	public void drawLineBuffer(ObstacleLine o) {
+		Line2D line = new Line2D.Double(o.get_depart(), o.get_arrivee());
+		Graphics2D gbuff = _buffer.createGraphics();
+		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		gbuff.setColor(Color.red);
+		gbuff.draw(line);
+		gbuff.dispose();
+	}
 
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				// Zoom in
-				if (e.getWheelRotation() < 0) {
-					_zoomFactor *= 1.1;
-					repaint();
-				}
-				// Zoom out
-				if (e.getWheelRotation() > 0) {
-					_zoomFactor /= 1.1;
-					repaint();
-				}
-				// _zoomer = true;
-			}
-		};
-
-		addMouseWheelListener(mwl);
+	public void drawTraceBuffer(Point p) {
+		Graphics2D gbuff = _buffer.createGraphics();
+		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		gbuff.setColor(Color.red);
+		gbuff.fillOval(p.x, p.y, 1, 1);
+		gbuff.dispose();
 	}
 
 	@Override
@@ -143,34 +142,11 @@ public class DrawingPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(Color.red);
 
-		if ((int) _zoomFactor != 1) {
-			AffineTransform at = new AffineTransform();
-			at.scale(_zoomFactor, _zoomFactor);
-			Rectangle size = getBounds();
-			double tx = ((size.getWidth() - getWidth() * _zoomFactor) / 2) / _zoomFactor;
-			double ty = ((size.getHeight() - getHeight() * _zoomFactor) / 2) / _zoomFactor;
-			at.translate(tx, ty);
-			g2.transform(at);
-		}
+		g2.drawImage(_buffer, 0, 0, this);
 
 		for (Ball b : _controller.get_balls()) {
 			g2.fillOval((int) (b.get_x() - b.get_radius()), (int) (b.get_y() - b.get_radius()), b.get_radius() * 2,
 					b.get_radius() * 2);
-			/*
-			 * for (Point p : b.get_trace()) { g2.fillOval(p.x, p.y, 1, 1); }
-			 */
-
-			/*
-			 * ArrayList<Point> trace = b.get_trace(); if(trace.size() > 200)
-			 * for(int i = 200 ; i > 0 ; i--)
-			 * g2.fillOval(trace.get(trace.size()-i).x,
-			 * trace.get(trace.size()-i).y, 1, 1);
-			 */
-		}
-
-		for (ObstacleLine o : _controller.get_lines()) {
-			Line2D line = new Line2D.Double(o.get_depart(), o.get_arrivee());
-			g2.draw(line);
 		}
 
 		if (_creatingLine) {
@@ -190,10 +166,24 @@ public class DrawingPanel extends JPanel {
 
 	public void setPanelWidth(int panelWidth) {
 		_panelWidth = panelWidth;
+		_buffer = resizeBufferedImage(_buffer, panelWidth, getPanelHeight());
+
 	}
 
 	public void setPanelHeight(int panelHeight) {
 		_panelHeight = panelHeight;
+		_buffer = resizeBufferedImage(_buffer, getPanelWidth(), panelHeight);
+
+	}
+
+	public static BufferedImage resizeBufferedImage(BufferedImage img, int newW, int newH) {
+		BufferedImage tmp = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g2d = tmp.createGraphics();
+		g2d.drawImage(img, 0, 0, null);
+		g2d.dispose();
+
+		return tmp;
 	}
 
 	public JFrame get_parent() {
@@ -208,8 +198,22 @@ public class DrawingPanel extends JPanel {
 		return this;
 	}
 
+	public BufferedImage get_buffer() {
+		return _buffer;
+	}
+
 	public void deleteObjectsOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
 		_controller.removeBallsOutOfBounds(xMin, xMax, yMin, yMax);
 		_controller.removeLinesOutOfBounds(xMin, xMax, yMin, yMax);
+	}
+
+	public void mySetBounds(int x, int y, int newCreationZoneWidth, int newCreationZoneHeight) {
+		setBounds(x, y, newCreationZoneWidth, newCreationZoneHeight);
+		if (_buffer != null)
+			_buffer = resizeBufferedImage(_buffer, newCreationZoneWidth, newCreationZoneHeight);
+	}
+
+	public void clearBufferedImage() {
+		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 	}
 }

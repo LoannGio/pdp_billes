@@ -46,13 +46,7 @@ public class PhysicalEngine {
 				for (Ball ball : _circuit.get_balls()) {
 					if (!ballIsOutOfPanel(ball, dp)) {
 						_quad.insert(ball);
-						int xSquare = (int) ball.get_x() - ball.get_radius();
-						int ySquare = (int) ball.get_y() - ball.get_radius();
-						int dimSquare = 2 * ball.get_radius();
 
-						square = new Rectangle(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
-
-						dp.repaint(square);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
 						for (ObstacleLine obstacle : _circuit.get_lines()) {
@@ -67,9 +61,9 @@ public class PhysicalEngine {
 								}
 							}
 						}
-						square.setRect(xSquare - 50, ySquare - 50, dimSquare + 100, dimSquare + 100);
-						dp.repaint(square);
+						dp.repaint();
 						ball.step(_circuit.get_acceleration());
+						dp.drawTraceBuffer(ball.get_trace().get(ball.get_trace().size() - 1));
 
 					}
 				}

@@ -234,7 +234,7 @@ public class Controller {
 	public void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight) {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
-		creationZone.setBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
+		creationZone.mySetBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
 	}
 
 	public Dimension getDimensionsPlan() {
@@ -244,6 +244,9 @@ public class Controller {
 	public void importerCircuit(DrawingPanel creationZone, File f) {
 		_circuit.importer(f);
 		setDimensionsPlan(creationZone, _circuit.get_width(), _circuit.get_height());
+		for (ObstacleLine o : _circuit.get_lines()) {
+			creationZone.drawLineBuffer(o);
+		}
 		creationZone.repaint();
 	}
 
