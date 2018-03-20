@@ -18,6 +18,7 @@ public class Ball {
 		_radius = radius;
 		_mass = mass;
 		_trace = new ArrayList<Point>();
+		_trace.add(new Point((int) x, (int) y));
 	}
 
 	/******************************
@@ -99,7 +100,7 @@ public class Ball {
 		Vector new_location = Vector.vectorSum(_location, _velocity);
 		set_location(new_location.getX(), new_location.getY());
 
-		if (_location.getX() != x0 || _location.getY() != y0)
+		if ((int) _location.getX() != (int) x0 || (int) _location.getY() != (int) y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));
 	}
 

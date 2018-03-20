@@ -120,8 +120,8 @@ public class Circuit {
 	private void importBallsXML(Document document) {
 		_balls.clear();
 		NodeList listeBilles = document.getElementsByTagName("BILLE");
-		NodeList xBilles = document.getElementsByTagName("X");
-		NodeList yBilles = document.getElementsByTagName("Y");
+		NodeList xBilles = document.getElementsByTagName("BX");
+		NodeList yBilles = document.getElementsByTagName("BY");
 		NodeList radiusBilles = document.getElementsByTagName("RADIUS");
 		NodeList massBilles = document.getElementsByTagName("MASS");
 		for (int i = 0; i < listeBilles.getLength(); i++) {
@@ -234,11 +234,11 @@ public class Circuit {
 			Element bille = doc.createElement("BILLE");
 			billes.appendChild(bille);
 
-			Element xBille = doc.createElement("X");
+			Element xBille = doc.createElement("BX");
 			xBille.setTextContent(String.valueOf(b.get_x()));
 			bille.appendChild(xBille);
 
-			Element yBille = doc.createElement("Y");
+			Element yBille = doc.createElement("BY");
 			yBille.setTextContent(String.valueOf(b.get_y()));
 			bille.appendChild(yBille);
 
@@ -254,14 +254,14 @@ public class Circuit {
 			bille.appendChild(trace);
 
 			for (Point p : b.get_trace()) {
-				Element pointTrace = doc.createElement("POINTTRACE");
+				Element pointTrace = doc.createElement("P");
 				trace.appendChild(pointTrace);
 
-				Element xTrace = doc.createElement("XTRACE");
+				Element xTrace = doc.createElement("X");
 				xTrace.setTextContent(String.valueOf(p.getX()));
 				pointTrace.appendChild(xTrace);
 
-				Element yTrace = doc.createElement("YTRACE");
+				Element yTrace = doc.createElement("Y");
 				yTrace.setTextContent(String.valueOf(p.getY()));
 				pointTrace.appendChild(yTrace);
 			}
