@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -215,5 +216,12 @@ public class DrawingPanel extends JPanel {
 
 	public void clearBufferedImage() {
 		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
+	}
+
+	public void repaintBufferedImage(ArrayList<ObstacleLine> lines) {
+		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
+		for (ObstacleLine o : lines)
+			drawLineBuffer(o);
+
 	}
 }

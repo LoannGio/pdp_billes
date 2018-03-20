@@ -81,11 +81,9 @@ public class PhysicalEngine {
 		double bx = b.get_x();
 		double by = b.get_y();
 		double br = b.get_radius();
-		int dpx = dp.getX();
-		int dpy = dp.getY();
 		int dpwidth = dp.getWidth();
 		int dpheight = dp.getHeight();
-		if (bx - br > dpx + dpwidth || bx + br < dpx || by - br > dpy + dpheight || by + br < dpy)
+		if (bx - br > dpwidth || bx + br < 0 || by - br > dpheight || by + br < 0)
 			return true;
 		return false;
 
