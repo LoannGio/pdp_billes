@@ -64,14 +64,14 @@ public class ParamLine extends AParamObject {
 				int idepartX, idepartY, iarriveeX, iarriveeY;
 
 				// Si il y a une erreur de typo, on ne fait pas l'operation
-				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX)
-						&& checkInt(arriveeY)) {
+				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX) && checkInt(arriveeY)) {
 					idepartX = Integer.parseInt(departX);
 					idepartY = Integer.parseInt(departY);
 					iarriveeX = Integer.parseInt(arriveeX);
 					iarriveeY = Integer.parseInt(arriveeY);
 
 					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY)) {
+						_drawingPan.repaintBufferedImage(_controller.get_lines());
 						_drawingPan.repaint();
 					}
 				}
@@ -87,7 +87,6 @@ public class ParamLine extends AParamObject {
 		_departConteneur.setLayout(new BoxLayout(_departConteneur, BoxLayout.LINE_AXIS));
 		_arriveeConteneur.setLayout(new BoxLayout(_arriveeConteneur, BoxLayout.LINE_AXIS));
 
-		
 		_buttonConteneur.add(_buttonChange);
 
 		_departConteneur.add(_departLabel);
