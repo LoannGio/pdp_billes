@@ -187,20 +187,12 @@ public class DrawingPanel extends JPanel {
 		return tmp;
 	}
 
-	public JFrame get_parent() {
-		return _parent;
-	}
-
 	public DrawingPanel getMyself() {
 		/*
 		 * On a besoin de cette fonction pour recuperer l'instance du
 		 * DrawingPannel dans les classes internes utilisees par les Listeners
 		 */
 		return this;
-	}
-
-	public BufferedImage get_buffer() {
-		return _buffer;
 	}
 
 	public void deleteObjectsOutOfBounds(int xMin, int xMax, int yMin, int yMax) {

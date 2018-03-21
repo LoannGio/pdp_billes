@@ -5,15 +5,12 @@ import model.Ball;
 import model.ObstacleLine;
 
 public class RightClickChooser {
-	private static IRightClickPopUpMenu _rightClick;
 
 	public static IRightClickPopUpMenu createRightClickPopUp(Ball b, Controller c, DrawingPanel dp) {
-		_rightClick = new RightClickPopUpBall(b, c, dp);
-		return _rightClick;
+		return new RightClickPopUpBall(b, c, dp);
 	}
 
 	public static IRightClickPopUpMenu createRightClickPopUp(ObstacleLine o, Controller c, DrawingPanel dp) {
-		_rightClick = new RightClickPopUpLine(o, c, dp);
-		return _rightClick;
+		return new RightClickPopUpLine(o, c, dp);
 	}
 }
