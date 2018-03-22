@@ -44,7 +44,7 @@ public class RightClickPopUpBall extends ARightClickPopUp {
 
 	@Override
 	public void parametre() {
-		ParamBall pb = new ParamBall(_ball, _controller, _drawingPan);
+		new ParamBall(_ball, _controller, _drawingPan);
 
 	}
 

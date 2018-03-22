@@ -24,7 +24,6 @@ import model.ObstacleLine;
 
 public class DrawingPanel extends JPanel {
 	private Controller _controller;
-	private JFrame _parent;
 	private Point _pressedLocation;
 	private Boolean _creatingLine;
 	private Shape _tmpDraw;
@@ -43,7 +42,6 @@ public class DrawingPanel extends JPanel {
 		_pressedLocation = null;
 		_creatingLine = false;
 		_tmpDraw = null;
-		_parent = parent;
 		_zoomFactor = 1;
 
 		double widthProportion = 0.8;
@@ -131,7 +129,7 @@ public class DrawingPanel extends JPanel {
 	public void drawTraceBuffer(Point p) {
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		gbuff.setColor(Color.red);
+		gbuff.setColor(Color.green);
 		gbuff.fillOval(p.x, p.y, 1, 1);
 		gbuff.dispose();
 	}

@@ -125,12 +125,11 @@ public class Circuit {
 		NodeList radiusBilles = document.getElementsByTagName("RADIUS");
 		NodeList massBilles = document.getElementsByTagName("MASS");
 		for (int i = 0; i < listeBilles.getLength(); i++) {
-			double x, y, mass, inclinaison;
+			double x, y, mass;
 			int radius;
 			x = Double.parseDouble(xBilles.item(i).getTextContent());
 			y = Double.parseDouble(yBilles.item(i).getTextContent());
 			mass = Double.parseDouble(massBilles.item(i).getTextContent());
-			inclinaison = _defaultInclinaison;
 			radius = Integer.parseInt(radiusBilles.item(i).getTextContent());
 			_balls.add(new Ball(x, y, radius, mass));
 		}

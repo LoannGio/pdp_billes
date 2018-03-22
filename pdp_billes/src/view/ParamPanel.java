@@ -72,6 +72,8 @@ public class ParamPanel extends JPanel {
 		// passee en parametre
 		addListneners(creationZone);
 	}
+	
+	
 
 	private void addListneners(DrawingPanel creationZone) {
 		_changeButton.addActionListener(new ActionListener() {
