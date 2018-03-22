@@ -46,6 +46,8 @@ public class ParamPanel extends JPanel {
 	private JButton _runButton = new JButton("Lancer");
 	private JButton _stopButton = new JButton("Arreter");
 	private JButton _resetButton = new JButton("Reinitialiser");
+	private JButton _clearBallsButton = new JButton("Suppr. billes");
+	private JButton _clearLinesButton = new JButton("Suppr. obstacles");
 	private JButton _exportButton = new JButton("Exporter");
 	private JButton _importButton = new JButton("Importer");
 
@@ -72,8 +74,6 @@ public class ParamPanel extends JPanel {
 		// passee en parametre
 		addListneners(creationZone);
 	}
-	
-	
 
 	private void addListneners(DrawingPanel creationZone) {
 		_changeButton.addActionListener(new ActionListener() {
@@ -128,6 +128,27 @@ public class ParamPanel extends JPanel {
 				if (!_controller.isRunningApp()) {
 					_controller.clearCircuit();
 					creationZone.clearBufferedImage();
+					creationZone.repaint();
+				}
+			}
+		});
+
+		_clearBallsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!_controller.isRunningApp()) {
+					_controller.clearBalls();
+					creationZone.repaint();
+				}
+			}
+		});
+
+		_clearLinesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!_controller.isRunningApp()) {
+					_controller.clearLines();
+					creationZone.repaintBufferedImageTraces(_controller.get_balls());
 					creationZone.repaint();
 				}
 			}
@@ -235,6 +256,8 @@ public class ParamPanel extends JPanel {
 		_conteneur.add(_runButton);
 		_conteneur.add(_stopButton);
 		_conteneur.add(_resetButton);
+		_conteneur.add(_clearBallsButton);
+		_conteneur.add(_clearLinesButton);
 		_conteneur.add(_importButton);
 		_conteneur.add(_exportButton);
 

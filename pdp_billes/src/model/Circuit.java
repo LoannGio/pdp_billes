@@ -53,7 +53,16 @@ public class Circuit {
 	}
 
 	public void clearAll() {
+		clearBalls();
+		clearLines();
+
+	}
+
+	public void clearBalls() {
 		_balls = new ArrayList<Ball>();
+	}
+
+	public void clearLines() {
 		_lines = new ArrayList<ObstacleLine>();
 	}
 

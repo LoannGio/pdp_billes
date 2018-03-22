@@ -208,10 +208,18 @@ public class DrawingPanel extends JPanel {
 		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	public void repaintBufferedImage(ArrayList<ObstacleLine> lines) {
+	public void repaintBufferedImageObstacles(ArrayList<ObstacleLine> lines) {
 		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 		for (ObstacleLine o : lines)
 			drawLineBuffer(o);
+
+	}
+
+	public void repaintBufferedImageTraces(ArrayList<Ball> balls) {
+		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
+		for (Ball b : balls)
+			for (Point p : b.get_trace())
+				drawTraceBuffer(p);
 
 	}
 }

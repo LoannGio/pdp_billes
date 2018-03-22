@@ -65,6 +65,14 @@ public class Controller {
 		_circuit.clearAll();
 	}
 
+	public void clearBalls() {
+		_circuit.clearBalls();
+	}
+
+	public void clearLines() {
+		_circuit.clearLines();
+	}
+
 	public Ball checkIfPointIsInBall(Point p) {
 		Ball ballContains = null;
 		for (Ball b : _circuit.get_balls()) {
@@ -235,7 +243,7 @@ public class Controller {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
 		creationZone.mySetBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
-		creationZone.repaintBufferedImage(_circuit.get_lines());
+		creationZone.repaintBufferedImageObstacles(_circuit.get_lines());
 	}
 
 	public Dimension getDimensionsPlan() {

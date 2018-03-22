@@ -71,7 +71,7 @@ public class ParamLine extends AParamObject {
 					iarriveeY = Integer.parseInt(arriveeY);
 
 					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY)) {
-						_drawingPan.repaintBufferedImage(_controller.get_lines());
+						_drawingPan.repaintBufferedImageObstacles(_controller.get_lines());
 						_drawingPan.repaint();
 					}
 				}
