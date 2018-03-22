@@ -37,7 +37,6 @@ public class PhysicalEngine {
 		timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Rectangle square;
 				// on vide le quadtree
 				_quad.clear();
 
