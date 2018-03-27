@@ -2,84 +2,107 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.Point;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import model.Ball;
+import model.Circuit;
+import model.Vector;
 
 public class BallTest {
-	Ball ball;
-
+	Ball ball1;
+	Ball ball2;
+	Circuit _circuit;
+	
 	@Before
 	public void setUp() throws Exception {
-		ball = new Ball(0, 0, 0, 1);
+		ball1 = new Ball(0, 0, 0, 1);
+		ball2 = new Ball(0, 0, 0, 1);
+		_circuit = new Circuit(1000,800);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		ball = null;
+		ball1 = null;
+		ball2 = null;
+		_circuit = null;
 	}
 
+	
 	@Test
-	public void test_ballLocation() {
-		assertEquals(new Point(0, 0), new Point((int) ball.get_x(), (int) ball.get_y()));
-		ball.set_init_location(10, 10);
-		assertEquals(new Point(10, 10), new Point((int) ball.get_x(), (int) ball.get_y()));
+	public void test_ballSetLocation() {
+		assert(ball1.get_x() == 0 && ball1.get_y()==0);
+		ball1.set_location(10, 10);
+		assert(ball1.get_x() == 10 && ball1.get_y() == 10);
 	}
 
+	
+	@Test
+	public void test_ballSetSpeed() {
+		assert(ball1.get_velocity().getX() == 0.0);
+		assert(ball1.get_velocity().getY() == 0.0);
+		ball1.set_speed(2.5, 4.0);
+		assert(ball1.get_velocity().getX() == 2.5);
+		assert(ball1.get_velocity().getY() == 4.0);
+	}
+	
+	
 	@Test
 	public void testStep() {
 		double x_init = 100;
 		double y_init = 100;
-		ball = new Ball(x_init, y_init, 3, 1);
-		ball.step();
-		ball.step();
-		boolean b1 = (x_init == ball.get_x());
-		boolean b2 = (y_init < ball.get_y());
+		ball1 = new Ball(x_init, y_init, 3, 1);
+		ball1.step(_circuit.get_acceleration());
+		boolean b1 = (x_init == ball1.get_x());
+		boolean b2 = (y_init < ball1.get_y());
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 	}
-
-	/*
-	 * @Test public void testResolveCollisionObstacle() {
-	 * 
-	 * ball.set_init_location(100, 100); ball.set_radius(3); Point p1 = new
-	 * Point(80, 140); Point p2 = new Point(300, 200); ObstacleLine obstacle =
-	 * new ObstacleLine(p1, p2);
-	 * Controller.getInstance().resolveCollisionBallObstacle(ball, obstacle);
-	 * assertEquals(0, ball.get_acceleration().getX(), 0.01); assertEquals(0,
-	 * ball.get_acceleration().getY(), 0.01);
-	 * 
-	 * }
-	 * 
-	 * @Test public void testResolveCollisionBall() {
-	 * 
-	 * ball.set_location(100, 100); ball.set_radius(10); Ball ball2 = new
-	 * Ball(120, 100, 10, 1);
-	 * Controller.getInstance().resolveCollisionBallBall(ball, ball2); boolean
-	 * ball_ay_is_null = (ball.get_acceleration().getY() == 0); boolean
-	 * ball2_ay_is_null = (ball2.get_acceleration().getY() == 0);
-	 * assertEquals(0, ball.get_acceleration().getX(), 0.01);
-	 * assertEquals(ball_ay_is_null, false); assertEquals(0,
-	 * ball2.get_acceleration().getX(), 0.01); assertEquals(ball2_ay_is_null,
-	 * false); ball.step(); ball2.step(); ball.set_speed(1,
-	 * ball.get_velocity().getY()); ball.set_init_speed(1,
-	 * ball.get_init_velocity().getY());
-	 * 
-	 * ball2.set_speed(-1, ball2.get_velocity().getY());
-	 * ball2.set_init_speed(-1, ball2.get_init_velocity().getY());
-	 * Controller.getInstance().resolveCollisionBallBall(ball, ball2); boolean
-	 * ball_vy0_is_positive = (ball.get_init_velocity().getY() > 0); boolean
-	 * ball2_vy0_is_positive = (ball2.get_init_velocity().getY() > 0); boolean
-	 * ball_vx0_is_negative = (ball.get_init_velocity().getX() < 0); boolean
-	 * ball2_vx0_is_positive = (ball2.get_init_velocity().getX() > 0);
-	 * assertEquals(ball_vx0_is_negative, true);
-	 * assertEquals(ball_vy0_is_positive, true);
-	 * assertEquals(ball2_vx0_is_positive, true);
-	 * assertEquals(ball2_vy0_is_positive, true); }
-	 */
-
+	
+	@Test
+	public void testStepLoop() {
+		double x_init = 100;
+		double y_init = 100;
+		double x_prec = x_init;
+		double y_prec = y_init; 
+		ball1 = new Ball(x_init, y_init, 3, 1);
+		for(int i=0; i<10; i++) {
+			ball1.step(_circuit.get_acceleration());
+			boolean b1 = (x_prec == ball1.get_x());
+			boolean b2 = (y_prec < ball1.get_y());
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+			x_prec = ball1.get_x();
+			y_prec = ball1.get_y();
+		}	
+	}
+	
+	@Test
+	public void testStepInclinaison() {
+		double x_init = 100;
+		double y_init = 100;
+		ball1 = new Ball(x_init, y_init, 3, 1);
+		ball2 = new Ball(x_init, y_init, 3, 1);
+		double angle1 = 20;
+		double angle2 = 35;
+		
+		_circuit.set_inclinaison(angle1);
+		Vector acceleration1 = new Vector(_circuit.get_acceleration().getX(),
+										  _circuit.get_acceleration().getY());
+		_circuit.set_inclinaison(angle2);
+		Vector acceleration2 = new Vector(_circuit.get_acceleration().getX(),
+				  _circuit.get_acceleration().getY());
+		
+		for(int i=0; i<10; i++) {
+			ball1.step(acceleration1);
+			ball2.step(acceleration2);
+			boolean b1 = (ball1.get_x() == ball2.get_x());
+			boolean b2 = (ball1.get_y() < ball2.get_y());
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+		}	
+	}
+	
 }

@@ -21,9 +21,6 @@ public class Ball {
 		_trace.add(new Point((int) x, (int) y));
 	}
 
-	/******************************
-	 * Part of physical engine
-	 *************************/
 
 	public void setAll(double x, double y, int radius, double mass) {
 		_location.setCartesian(x, y);
@@ -86,9 +83,11 @@ public class Ball {
 		return _trace;
 	}
 
-	/*******************************
-	 * Part of physical engine
-	 *****************************************/
+	/*
+	 * 
+	 * 
+	 * 
+	 */
 
 	public void step(Vector acceleration) {
 		double x0 = _location.getX();

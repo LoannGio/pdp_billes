@@ -246,8 +246,8 @@ public class ControllerTest {
 		Ball ball2 = new Ball(26, 13, 5, 1);
 		Point2D.Double p1 = new Point2D.Double(33.0, 10);
 		Point2D.Double p2 = new Point2D.Double(22.0, 10);
-		boolean b1 = c.collisionPointCerle(p1, p2, ball1);
-		boolean b2 = c.collisionPointCerle(p1, p2, ball2);
+		boolean b1 = c.collisionPointCercle(p1, p2, ball1);
+		boolean b2 = c.collisionPointCercle(p1, p2, ball2);
 		assertEquals(true, b1);
 		assertEquals(false, b2);
 	}
