@@ -127,13 +127,19 @@ public class Quadtree {
 	    	 }
 	    
 	    public List<Ball> retrieve(List<Ball> returnObjects, Ball ball) {
-	    	   int index = getIndex(ball);
-	    	   if (index != -1 && nodes[0] != null) {
-	    	     nodes[index].retrieve(returnObjects, ball);
-	    	   }
-	    	 
-	    	   returnObjects.addAll(objects);
-	    	 
-	    	   return returnObjects;
-	    	 }
+            int index = getIndex(ball);
+            if(index == -1 && nodes[0] != null) {
+                nodes[0].retrieve(returnObjects, ball);
+                nodes[1].retrieve(returnObjects, ball);
+                nodes[2].retrieve(returnObjects, ball);
+                nodes[3].retrieve(returnObjects, ball);
+            }
+            else if (index != -1 && nodes[0] != null) {
+              nodes[index].retrieve(returnObjects, ball);
+            }
+         
+            returnObjects.addAll(objects);
+         
+            return returnObjects;
+          }
 	}
