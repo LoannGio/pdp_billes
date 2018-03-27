@@ -165,30 +165,32 @@ public class PhysicalEngine {
 	 * * Ball - Obstacle
 	 ****************************/
 
-	/*private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-
-		
-		// new Velocity of two ball according to its direction
-		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
-		Vector N = new Vector();
-		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);
-		double normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX()));
-		angle = 2 * normalAngle - 180 - angle;
-		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
-		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed() * ObstacleLine.COR;
-		ball.set_speed(vx, vy);
-
-		
-		  //move the ball in the direction of its respective velocity until they have only one point of intersection
-		
-		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
-		double dist = _controller.distance(c, p);
-		if (dist < ball.get_radius()) {
-			ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
-		}
-
-	}*/
+	/*
+	 * private void resolveCollisionBallObstacle(Ball ball, ObstacleLine
+	 * obstacle) {
+	 * 
+	 * 
+	 * // new Velocity of two ball according to its direction Point2D.Double c =
+	 * new Point2D.Double(ball.get_x(), ball.get_y()); double angle =
+	 * Math.toDegrees(Math.atan2(ball.get_velocity().getY(),
+	 * ball.get_velocity().getX())); Vector N = new Vector(); N =
+	 * GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c); double
+	 * normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX())); angle = 2 *
+	 * normalAngle - 180 - angle; double vx = Math.cos(Math.toRadians(angle)) *
+	 * ball.get_speed(); double vy = Math.sin(Math.toRadians(angle)) *
+	 * ball.get_speed() * ObstacleLine.COR; ball.set_speed(vx, vy);
+	 * 
+	 * 
+	 * //move the ball in the direction of its respective velocity until they
+	 * have only one point of intersection
+	 * 
+	 * Point2D.Double p = ProjectionI(obstacle.get_depart(),
+	 * obstacle.get_arrivee(), c); double dist = _controller.distance(c, p); if
+	 * (dist < ball.get_radius()) { ball.set_location(ball.get_x(), ball.get_y()
+	 * - (ball.get_radius() - dist)); }
+	 * 
+	 * }
+	 */
 
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 

@@ -242,6 +242,8 @@ public class Controller {
 	public void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight) {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
+		creationZone.deleteObjectsOutOfBounds(creationZone.getX(), creationZone.getX() + newCreationZoneWidth,
+				creationZone.getY(), creationZone.getY() + newCreationZoneHeight);
 		creationZone.mySetBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
 		creationZone.repaintBufferedImageObstacles(_circuit.get_lines());
 	}
