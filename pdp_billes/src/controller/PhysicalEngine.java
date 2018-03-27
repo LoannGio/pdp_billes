@@ -227,6 +227,8 @@ public class PhysicalEngine {
 		N = new Vector(-u.getY() * (parenthesis), u.getX() * (parenthesis));
 		float norme = (float) Math.sqrt(Math.pow(N.getX(), 2) + Math.pow(N.getY(), 2));
 		N.setCartesian(N.getX() / norme, N.getY() / norme);
+		if (Double.isNaN(N.getX()) || Double.isNaN(N.getY()))
+			N.setCartesian(0, 0);
 		return N;
 	}
 
