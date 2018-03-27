@@ -49,7 +49,7 @@ public class PhysicalEngine {
 						_quad.insert(ball);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
-						
+
 						for (ObstacleLine obstacle : _circuit.get_lines()) {
 							if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
 								resolveCollisionBallObstacle(ball, obstacle);
@@ -76,7 +76,7 @@ public class PhysicalEngine {
 	public void stop() {
 		timer.stop();
 	}
-	
+
 	/*
 	 * 
 	 * 
@@ -126,13 +126,12 @@ public class PhysicalEngine {
 	 * 
 	 * 
 	 */
-	
-	
+
 	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
 
 		double collision_angle = angleCollisionBall(ball1, ball2);
 		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX());
-		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX()); 
+		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX());
 		Vector pos1 = ball1.get_location(); // position of ball 1
 		Vector pos2 = ball2.get_location(); // position of ball 2
 		double v1 = ball1.get_speed(); // speed of ball 1
@@ -194,30 +193,30 @@ public class PhysicalEngine {
 		angle = 2 * normalAngle - 180 - angle;
 		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
 		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed();
-		ball.set_speed(vx, vy * ObstacleLine.COR);
-		Point2D.Double p = ProjectionI(obstacle.get_depart(),obstacle.get_arrivee(), c);
-		double dist = _controller.distance(c, p); 
-		if(dist < ball.get_radius()) { ball.set_location(ball.get_x(), 
-				 ball.get_y()-(ball.get_radius() - dist));
+		ball.set_speed(vx, vy * obstacle.getCOR());
+
+		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		double dist = _controller.distance(c, p);
+		if (dist < ball.get_radius()) {
+			ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
 		}
 
 	}
 
-	/*private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-
-		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-		Vector N = new Vector();
-		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);
-		Vector v2 = new Vector();
-		v2 = CalculerVecteurV2(ball.get_velocity(), N);
-		ball.set_speed(v2.getX(), v2.getY() * ObstacleLine.COR);
-	}
-
-	/*private Vector CalculerVecteurV2(Vector v, Vector N) {
-		double pscal = Vector.dotProduct(v, N);
-		Vector v2 = new Vector(v.getX() - 2 * pscal * N.getX(), v.getY() - 2 * pscal * N.getY());
-		return v2;
-	}*/
+	/*
+	 * private void resolveCollisionBallObstacle(Ball ball, ObstacleLine
+	 * obstacle) {
+	 * 
+	 * Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y()); Vector
+	 * N = new Vector(); N = GetNormale(obstacle.get_depart(),
+	 * obstacle.get_arrivee(), c); Vector v2 = new Vector(); v2 =
+	 * CalculerVecteurV2(ball.get_velocity(), N); ball.set_speed(v2.getX(),
+	 * v2.getY() * ObstacleLine.COR); }
+	 * 
+	 * /*private Vector CalculerVecteurV2(Vector v, Vector N) { double pscal =
+	 * Vector.dotProduct(v, N); Vector v2 = new Vector(v.getX() - 2 * pscal *
+	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
+	 */
 
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 
@@ -239,5 +238,5 @@ public class PhysicalEngine {
 		Point2D.Double I = new Point2D.Double(A.x + ti * u.getX(), A.y + ti * u.getY());
 		return I;
 	}
-	
+
 }

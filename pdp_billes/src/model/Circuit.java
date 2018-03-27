@@ -31,6 +31,7 @@ public class Circuit {
 	private ArrayList<ObstacleLine> _lines = new ArrayList<ObstacleLine>();
 	private int _defaultBallRadius;
 	private double _defaultBallMass;
+	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
 	private static double _scale = 400;
 	private double _defaultInclinaison;
@@ -42,6 +43,7 @@ public class Circuit {
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
 		_defaultInclinaison = 45;
+		_defaultCOR = 0.5;
 		double _ax = 0;
 		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
 		_gravityAcceleration = new Vector(_ax / _scale, _ay / _scale);
@@ -115,7 +117,8 @@ public class Circuit {
 			xarr = Double.parseDouble(xArrivee.item(i).getTextContent());
 			yarr = Double.parseDouble(yArrivee.item(i).getTextContent());
 
-			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr)));
+			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr),
+					_defaultCOR));
 		}
 	}
 
@@ -369,6 +372,14 @@ public class Circuit {
 
 	public void set_gravityAcceleration(Vector _gravityAcceleration) {
 		this._gravityAcceleration = _gravityAcceleration;
+	}
+
+	public double get_defaultCOR() {
+		return _defaultCOR;
+	}
+
+	public void set_defaultCOR(double _defaultCOR) {
+		this._defaultCOR = _defaultCOR;
 	}
 
 }

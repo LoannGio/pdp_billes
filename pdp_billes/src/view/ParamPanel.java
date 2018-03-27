@@ -31,17 +31,21 @@ public class ParamPanel extends JPanel {
 	private JPanel _conteneurRadius = new JPanel();
 	private JPanel _conteneurMass = new JPanel();
 	private JPanel _conteneurInclinaison = new JPanel();
+	private JPanel _conteneurCOR = new JPanel();
 
 	private JLabel _labelLongueur = new JLabel("Longueur   ");
 	private JLabel _labelLargeur = new JLabel("Largeur      ");
 	private JLabel _labelRadius = new JLabel("Rayon des balles ");
 	private JLabel _labelMass = new JLabel("Masse des balles ");
 	private JLabel _labelInclinaison = new JLabel("Inclinaison ");
+	private JLabel _labelCOR = new JLabel("Coef. restitution d'obstacles ");
 
 	private JTextField _txtMass;
 	private JTextField _txtLongueur;
 	private JTextField _txtLargeur;
 	private JTextField _txtRadius;
+	private JTextField _txtCOR;
+
 	private JButton _changeButton = new JButton("Changer");
 	private JButton _runButton = new JButton("Lancer");
 	private JButton _stopButton = new JButton("Arreter");
@@ -105,6 +109,9 @@ public class ParamPanel extends JPanel {
 
 					if (checkDouble(_txtMass.getText()))
 						_controller.set_defaultBallMass(Double.parseDouble(_txtMass.getText()));
+
+					if (checkDouble(_txtCOR.getText()))
+						_controller.set_defaultCOR(Double.parseDouble(_txtCOR.getText()));
 				}
 			}
 		});
@@ -232,6 +239,7 @@ public class ParamPanel extends JPanel {
 		_conteneurRadius.setLayout(new BoxLayout(_conteneurRadius, BoxLayout.LINE_AXIS));
 		_conteneurMass.setLayout(new BoxLayout(_conteneurMass, BoxLayout.LINE_AXIS));
 		_conteneurInclinaison.setLayout(new BoxLayout(_conteneurInclinaison, BoxLayout.LINE_AXIS));
+		_conteneurCOR.setLayout(new BoxLayout(_conteneurCOR, BoxLayout.LINE_AXIS));
 
 		_conteneurLongueur.add(_labelLongueur);
 		_conteneurLongueur.add(_txtLongueur);
@@ -241,9 +249,12 @@ public class ParamPanel extends JPanel {
 		_conteneurRadius.add(_txtRadius);
 		_conteneurMass.add(_labelMass);
 		_conteneurMass.add(_txtMass);
+		_conteneurCOR.add(_labelCOR);
+		_conteneurCOR.add(_txtCOR);
 
 		_conteneur.add(_conteneurLongueur);
 		_conteneur.add(_conteneurLargeur);
+		_conteneur.add(_conteneurCOR);
 		_conteneur.add(_conteneurRadius);
 		_conteneur.add(_conteneurMass);
 
@@ -285,6 +296,7 @@ public class ParamPanel extends JPanel {
 		_txtLargeur = new JTextField(Integer.toString(panelHeight));
 		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass = new JTextField(Double.toString(_controller.get_defaultBallMass()));
+		_txtCOR = new JTextField(Double.toString(_controller.get_defaultCOR()));
 	}
 
 	private void updateLabels() {

@@ -50,7 +50,7 @@ public class RightClickPopUpLine extends ARightClickPopUp {
 	@Override
 	public void supprimer() {
 		_controller.removeLine(_line);
-		_drawingPan.repaintBufferedImageObstacles(_controller.get_lines());
+		_drawingPan.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 		_drawingPan.repaint();
 	}
 }

@@ -38,7 +38,7 @@ public class Controller {
 	}
 
 	public void addLine(Point depart, Point arrivee) {
-		_circuit.addLine(new ObstacleLine(depart, arrivee));
+		_circuit.addLine(new ObstacleLine(depart, arrivee, _circuit.get_defaultCOR()));
 	}
 
 	public void addLine(ObstacleLine o) {
@@ -162,6 +162,14 @@ public class Controller {
 		_circuit.set_defaultBallRadius(radius);
 	}
 
+	public double get_defaultCOR() {
+		return _circuit.get_defaultCOR();
+	}
+
+	public void set_defaultCOR(double COR) {
+		_circuit.set_defaultCOR(COR);
+	}
+
 	public double get_defaultBallMass() {
 		return _circuit.get_defaultBallMass();
 	}
@@ -222,20 +230,22 @@ public class Controller {
 		return false;
 	}
 
-	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX, int new_arriveeY) {
+	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX, int new_arriveeY,
+			double newCOR) {
 		Point oldDepart = line.get_depart();
 		Point oldArrivee = line.get_arrivee();
 		Point newDepart = new Point(new_departX, new_departY);
 		Point newArrivee = new Point(new_arriveeX, new_arriveeY);
 
-		line.setAll(newDepart, newArrivee);
+		line.setPositions(newDepart, newArrivee);
+		line.setCOR(newCOR);
 
 		if (!checkIfLineIsOnExistingBall(line) && !(new_departX > _circuit.get_width())
 				&& !(new_departY > _circuit.get_height()) && !(new_arriveeX > _circuit.get_width())
 				&& !(new_arriveeY > _circuit.get_height()))
 			return true;
 
-		line.setAll(oldDepart, oldArrivee);
+		line.setPositions(oldDepart, oldArrivee);
 		return false;
 	}
 

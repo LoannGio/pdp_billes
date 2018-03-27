@@ -51,6 +51,7 @@ public class RightClickPopUpBall extends ARightClickPopUp {
 	@Override
 	public void supprimer() {
 		_controller.removeBall(_ball);
+		_drawingPan.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 		_drawingPan.repaint();
 	}
 }

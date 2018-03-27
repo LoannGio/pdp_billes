@@ -3,13 +3,14 @@ package model;
 import java.awt.Point;
 
 public class ObstacleLine {
-	public static double COR = 0.5; // Coefficient of Restitution
+	private double _COR; // Coefficient of Restitution
 	private Point _depart;
 	private Point _arrivee;
 
-	public ObstacleLine(Point depart, Point arrivee) {
+	public ObstacleLine(Point depart, Point arrivee, double COR) {
 		_depart = depart;
 		_arrivee = arrivee;
+		_COR = COR;
 	}
 
 	public Boolean contains(Point p) {
@@ -46,8 +47,17 @@ public class ObstacleLine {
 		this._arrivee = _arrivee;
 	}
 
-	public void setAll(Point depart, Point arrivee) {
+	public void setPositions(Point depart, Point arrivee) {
 		_depart = depart;
 		_arrivee = arrivee;
 	}
+
+	public double getCOR() {
+		return _COR;
+	}
+
+	public void setCOR(double cOR) {
+		_COR = cOR;
+	}
+
 }

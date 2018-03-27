@@ -36,7 +36,7 @@ public class ObstacleLineTest {
 		o = new ObstacleLine(depart, arrivee);
 		assertEquals(o.contains(depart), true);
 		depart.setLocation(0, 20);
-		o.setAll(depart, arrivee);
+		o.setPositions(depart, arrivee);
 		p = new Point(-1, 25);
 		assertEquals(o.contains(p), false);
 	}

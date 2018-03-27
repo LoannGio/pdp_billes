@@ -98,7 +98,7 @@ public class DrawingPanel extends JPanel {
 								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
 							Point arrivee = new Point();
 							arrivee.setLocation(e.getX(), e.getY());
-							ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee);
+							ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee, _controller.get_defaultCOR());
 							if (!(_controller.checkIfLineIsOnExistingBall(o))) {
 								arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
 								o.set_arrivee(arrivee);
@@ -213,6 +213,15 @@ public class DrawingPanel extends JPanel {
 		for (ObstacleLine o : lines)
 			drawLineBuffer(o);
 
+	}
+
+	public void repaintBufferedImage(ArrayList<ObstacleLine> lines, ArrayList<Ball> balls) {
+		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
+		for (ObstacleLine o : lines)
+			drawLineBuffer(o);
+		for (Ball b : balls)
+			for (Point p : b.get_trace())
+				drawTraceBuffer(p);
 	}
 
 	public void repaintBufferedImageTraces(ArrayList<Ball> balls) {

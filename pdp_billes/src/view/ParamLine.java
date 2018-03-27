@@ -19,6 +19,7 @@ public class ParamLine extends AParamObject {
 	private JLabel _departLabel = new JLabel("Depart  ");
 	private JLabel _departXLabel = new JLabel("X ");
 	private JLabel _departYLabel = new JLabel("Y ");
+
 	private JTextField _departXText;
 	private JTextField _departYText;
 
@@ -28,6 +29,10 @@ public class ParamLine extends AParamObject {
 	private JLabel _arriveeYLabel = new JLabel("Y ");
 	private JTextField _arriveeXText;
 	private JTextField _arriveeYText;
+
+	private JPanel _CORConteneur = new JPanel();
+	private JLabel _CORlabel = new JLabel("Coef. de restitution ");
+	private JTextField _CORText;
 
 	public ParamLine(ObstacleLine ol, Controller c, DrawingPanel dp) {
 		super(c, dp);
@@ -60,17 +65,21 @@ public class ParamLine extends AParamObject {
 				String departY = _departYText.getText();
 				String arriveeX = _arriveeXText.getText();
 				String arriveeY = _arriveeYText.getText();
+				String COR = _CORText.getText();
 
 				int idepartX, idepartY, iarriveeX, iarriveeY;
+				double dCOR;
 
 				// Si il y a une erreur de typo, on ne fait pas l'operation
-				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX) && checkInt(arriveeY)) {
+				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX) && checkInt(arriveeY)
+						&& checkDouble(COR)) {
 					idepartX = Integer.parseInt(departX);
 					idepartY = Integer.parseInt(departY);
 					iarriveeX = Integer.parseInt(arriveeX);
 					iarriveeY = Integer.parseInt(arriveeY);
+					dCOR = Double.parseDouble(COR);
 
-					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY)) {
+					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY, dCOR)) {
 						_drawingPan.repaintBufferedImageObstacles(_controller.get_lines());
 						_drawingPan.repaint();
 					}
@@ -86,6 +95,7 @@ public class ParamLine extends AParamObject {
 		_buttonConteneur.setLayout(new BoxLayout(_buttonConteneur, BoxLayout.LINE_AXIS));
 		_departConteneur.setLayout(new BoxLayout(_departConteneur, BoxLayout.LINE_AXIS));
 		_arriveeConteneur.setLayout(new BoxLayout(_arriveeConteneur, BoxLayout.LINE_AXIS));
+		_CORConteneur.setLayout(new BoxLayout(_CORConteneur, BoxLayout.LINE_AXIS));
 
 		_buttonConteneur.add(_buttonChange);
 
@@ -101,13 +111,18 @@ public class ParamLine extends AParamObject {
 		_arriveeConteneur.add(_arriveeYLabel);
 		_arriveeConteneur.add(_arriveeYText);
 
+		_CORConteneur.add(_CORlabel);
+		_CORConteneur.add(_CORText);
+
 		_conteneur.add(_departConteneur);
 		_conteneur.add(_arriveeConteneur);
+		_conteneur.add(_CORConteneur);
 		_conteneur.add(_buttonConteneur);
 
 		_buttonConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 		_departConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 		_arriveeConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		_CORConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
 		_conteneur.setBorder(BorderFactory.createEmptyBorder(50, 30, 50, 30));
 
@@ -119,5 +134,7 @@ public class ParamLine extends AParamObject {
 		_departYText = new JTextField(Integer.toString((int) _line.get_depart().getY()));
 		_arriveeXText = new JTextField(Integer.toString((int) _line.get_arrivee().getX()));
 		_arriveeYText = new JTextField(Integer.toString((int) _line.get_arrivee().getY()));
+		_CORText = new JTextField(Double.toString((double) _line.getCOR()));
+
 	}
 }
