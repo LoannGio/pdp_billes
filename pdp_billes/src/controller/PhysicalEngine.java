@@ -195,10 +195,16 @@ public class PhysicalEngine {
 		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
 		double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed();
 		ball.set_speed(vx, vy * ObstacleLine.COR);
+		Point2D.Double p = ProjectionI(obstacle.get_depart(),obstacle.get_arrivee(), c);
+		double dist = _controller.distance(c, p); 
+		if(dist < ball.get_radius()) { ball.set_location(ball.get_x(), 
+				 ball.get_y()-(ball.get_radius() - dist));
+		}
 
 	}
 
 	/*private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		Vector N = new Vector();
 		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);
