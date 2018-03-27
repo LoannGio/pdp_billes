@@ -148,6 +148,7 @@ public class ParamPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
 					_controller.clearBalls();
+					creationZone.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 					creationZone.repaint();
 				}
 			}
@@ -158,7 +159,7 @@ public class ParamPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
 					_controller.clearLines();
-					creationZone.repaintBufferedImageTraces(_controller.get_balls());
+					creationZone.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 					creationZone.repaint();
 				}
 			}

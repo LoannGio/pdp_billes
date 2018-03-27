@@ -77,6 +77,7 @@ public class DrawingPanel extends JPanel {
 							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
 						} else {
+
 							Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
 									_controller.get_defaultBallMass());
 							if (!(_controller.checkIfBallIsOnExistingObject(b))) {
@@ -84,6 +85,7 @@ public class DrawingPanel extends JPanel {
 								_controller.addBall(b);
 							}
 							repaint();
+
 						}
 					}
 
@@ -208,13 +210,6 @@ public class DrawingPanel extends JPanel {
 		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	public void repaintBufferedImageObstacles(ArrayList<ObstacleLine> lines) {
-		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
-		for (ObstacleLine o : lines)
-			drawLineBuffer(o);
-
-	}
-
 	public void repaintBufferedImage(ArrayList<ObstacleLine> lines, ArrayList<Ball> balls) {
 		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
 		for (ObstacleLine o : lines)
@@ -222,13 +217,5 @@ public class DrawingPanel extends JPanel {
 		for (Ball b : balls)
 			for (Point p : b.get_trace())
 				drawTraceBuffer(p);
-	}
-
-	public void repaintBufferedImageTraces(ArrayList<Ball> balls) {
-		_buffer = new BufferedImage(_panelWidth, _panelHeight, BufferedImage.TYPE_INT_ARGB);
-		for (Ball b : balls)
-			for (Point p : b.get_trace())
-				drawTraceBuffer(p);
-
 	}
 }

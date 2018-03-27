@@ -80,7 +80,7 @@ public class ParamLine extends AParamObject {
 					dCOR = Double.parseDouble(COR);
 
 					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY, dCOR)) {
-						_drawingPan.repaintBufferedImageObstacles(_controller.get_lines());
+						_drawingPan.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 						_drawingPan.repaint();
 					}
 				}

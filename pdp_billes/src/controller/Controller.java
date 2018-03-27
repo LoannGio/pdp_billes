@@ -255,7 +255,7 @@ public class Controller {
 		creationZone.deleteObjectsOutOfBounds(creationZone.getX(), creationZone.getX() + newCreationZoneWidth,
 				creationZone.getY(), creationZone.getY() + newCreationZoneHeight);
 		creationZone.mySetBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
-		creationZone.repaintBufferedImageObstacles(_circuit.get_lines());
+		creationZone.repaintBufferedImage(_circuit.get_lines(), _circuit.get_balls());
 	}
 
 	public Dimension getDimensionsPlan() {
