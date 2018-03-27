@@ -199,7 +199,6 @@ public class PhysicalEngine {
 	}
 
 	/*private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		Vector N = new Vector();
 		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);

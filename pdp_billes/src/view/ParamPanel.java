@@ -92,9 +92,12 @@ public class ParamPanel extends JPanel {
 							newCreationZoneHeight = _maxCreationZoneHeight;
 							_txtLargeur.setText(Integer.toString(newCreationZoneHeight));
 						}
-						creationZone.deleteObjectsOutOfBounds(creationZone.getX(),
-								creationZone.getX() + newCreationZoneWidth, creationZone.getY(),
-								creationZone.getY() + newCreationZoneHeight);
+						/*
+						 * creationZone.deleteObjectsOutOfBounds(creationZone.
+						 * getX(), creationZone.getX() + newCreationZoneWidth,
+						 * creationZone.getY(), creationZone.getY() +
+						 * newCreationZoneHeight);
+						 */
 						_controller.setDimensionsPlan(creationZone, newCreationZoneWidth, newCreationZoneHeight);
 					}
 					if (checkInt(_txtRadius.getText()))

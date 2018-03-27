@@ -1,5 +1,8 @@
 package model;
 
+import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
@@ -117,8 +120,20 @@ public class Circuit {
 	}
 
 	private void importCircuitXML(Document document) {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
+		Dimension screenSize = new Dimension(dm.getWidth(), dm.getHeight());
+		double widthProportion = 0.8;
+		double heightProportion = 0.92;
+		double panelMaxWidth = (int) Math.round(widthProportion * screenSize.width);
+		double panelMaxHeight = (int) Math.round(heightProportion * screenSize.height);
+
 		_width = Integer.parseInt(document.getElementsByTagName("LONGUEUR").item(0).getTextContent());
+		if (_width > panelMaxWidth)
+			_width = (int) panelMaxWidth;
 		_height = Integer.parseInt(document.getElementsByTagName("HAUTEUR").item(0).getTextContent());
+		if (_height > panelMaxHeight)
+			_height = (int) panelMaxHeight;
 		_defaultInclinaison = Double.parseDouble(document.getElementsByTagName("INCLINAISON").item(0).getTextContent());
 		_defaultBallRadius = Integer
 				.parseInt(document.getElementsByTagName("DEFAULTBALLRADIUS").item(0).getTextContent());
