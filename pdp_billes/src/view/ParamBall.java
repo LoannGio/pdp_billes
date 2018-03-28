@@ -37,6 +37,10 @@ public class ParamBall extends AParamObject {
 		initialize();
 	}
 
+	public ParamBall(Controller c, DrawingPanel dp) {
+		super(c, dp);
+	}
+
 	@Override
 	protected void initialize() {
 		super.initialize();

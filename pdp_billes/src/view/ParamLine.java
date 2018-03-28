@@ -43,6 +43,10 @@ public class ParamLine extends AParamObject {
 		this.setVisible(true);
 	}
 
+	public ParamLine(Controller c, DrawingPanel dp) {
+		super(c, dp);
+	}
+
 	@Override
 	protected void initialize() {
 		super.initialize();
