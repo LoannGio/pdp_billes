@@ -148,7 +148,7 @@ public class ControllerTest {
 		Ball b = new Ball(10, 10, 0, 1);
 
 		c.addBall(b);
-		assertEquals(1, b.get_mass(), 0.001);
+		assertEquals(1, b.get_mass(), 1E-10);
 		assertEquals(0, b.get_radius());
 
 		// *** Test update valide
