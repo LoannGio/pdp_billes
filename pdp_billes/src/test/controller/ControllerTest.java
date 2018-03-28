@@ -86,10 +86,14 @@ public class ControllerTest {
 		Point arrivee = new Point(400, 150);
 		ObstacleLine o = new ObstacleLine(depart, arrivee, 0.5);
 		c.addLine(o);
+		
+		//L'obstacle est toujours dans le circuit
 		circuit.set_width(450);
 		circuit.set_height(500);
 		c.removeLinesOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_lines().size(), 1, 0);
+		
+		//L'obstacle est hors du circuit
 		circuit.set_width(300);
 		c.removeLinesOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_lines().size(), 0, 0);
@@ -99,10 +103,12 @@ public class ControllerTest {
 	public void test_removeBallsOutOfBounds() {
 		Ball b = new Ball(400, 150, 10, 0);
 		c.addBall(b);
+		//La balle est toujours dans le circuit
 		circuit.set_width(450);
 		circuit.set_height(500);
 		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 1, 0);
+		//La balle est hors du circuit
 		circuit.set_width(402);
 		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 0, 0);
@@ -114,8 +120,11 @@ public class ControllerTest {
 		Point arrivee = new Point(400, 150);
 		ObstacleLine o = new ObstacleLine(depart, arrivee, 0.5);
 		c.addLine(o);
+		//La balle n'est pas sur la ligne
 		Ball b = new Ball(50, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b), false);
+		
+		//La balle est sur la ligne
 		Ball b2 = new Ball(200, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b2), true);
 	}
@@ -124,9 +133,12 @@ public class ControllerTest {
 	public void test_checkIfBallIsOnExistingBall() {
 		Ball b = new Ball(50, 150, 10, 0);
 		c.addBall(b);
+		//La balle est sur une autre balle
 		Ball b2 = new Ball(52, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b2), true);
 		Ball b3 = new Ball(71, 150, 10, 0);
+		
+		//La balle n'est pas sur une autre balle
 		assertEquals(c.checkIfBallIsOnExistingBall(b3), false);
 
 	}
@@ -258,7 +270,11 @@ public class ControllerTest {
 		ObstacleLine obstacle = new ObstacleLine(p1, p2, 0.5);
 		boolean b1 = controller.collisionSegment(ball1, obstacle);
 		boolean b2 = controller.collisionSegment(ball2, obstacle);
+		
+		//La balle est en collision avec l'obstacle
 		assertEquals(true, b1);
+		
+		//La balle n'est pas en collision avec l'obstacle
 		assertEquals(false, b2);
 	}
 
@@ -270,7 +286,11 @@ public class ControllerTest {
 		Point2D.Double p2 = new Point2D.Double(22.0, 10);
 		boolean b1 = c.collisionPointCercle(p1, p2, ball1);
 		boolean b2 = c.collisionPointCercle(p1, p2, ball2);
+		
+		//La balle est en collision avec le point
 		assertEquals(true, b1);
+		
+		//La balle n'est pas en collision avec le point
 		assertEquals(false, b2);
 	}
 
@@ -279,7 +299,12 @@ public class ControllerTest {
 		Point2D.Double p1 = new Point2D.Double(33.0, 5);
 		Point2D.Double p2 = new Point2D.Double(22.0, 5);
 		double dist = c.distance(p1, p2);
+		
+		//Distance valide
 		assertEquals(11, dist, 0);
+		
+		//Distance invalide
+		assertEquals(12, dist, 0);
 	}
 
 	@Test
@@ -289,7 +314,11 @@ public class ControllerTest {
 		Ball ball3 = new Ball(200, 300, 8, 1);
 		boolean b1 = c.checkCollisionBallBall(ball1, ball2);
 		boolean b2 = c.checkCollisionBallBall(ball1, ball3);
+		
+		//Les balles entrent en collision
 		assertEquals(true, b1);
+		
+		//Les balles n'entrent pas en collision
 		assertEquals(false, b2);
 	}
 	
@@ -297,12 +326,12 @@ public class ControllerTest {
 	public void testSetDimensionsPlan() {
 		DrawingPanel _dp = new DrawingPanel(new Dimension(500, 500), new JFrame());
 		c.setDimensionsPlan(_dp, 300, 200);
+		
+		//Les dimensions du circuit et du panel sont correctement modifiees
 		assertEquals(getControllerCircuit().get_width(), 300, 0);
 		assertEquals(getControllerCircuit().get_height(), 200, 0);
 		assertEquals(_dp.getWidth(), 300, 0);
 		assertEquals(_dp.getHeight(), 200, 0);
 	}
-	
-	
 
 }

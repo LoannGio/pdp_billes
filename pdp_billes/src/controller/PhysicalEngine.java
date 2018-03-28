@@ -167,20 +167,17 @@ public class PhysicalEngine {
 	}
 
 	/*
-	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-	 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y()); 
-	 		Vector N = new Vector(); N = GetNormale(obstacle.get_depart(),obstacle.get_arrivee(), c); 
-	 		Vector v2 = new Vector(); 
-	 		v2 = CalculerVecteurV2(ball.get_velocity(), N); 
-	 		ball.set_speed(v2.getX(), v2.getY() * ObstacleLine.COR); 
-	  }
-	  
-	  private Vector CalculerVecteurV2(Vector v, Vector N) { 
-	  		double pscal = Vector.dotProduct(v, N); 
-	  		Vector v2 = new Vector(v.getX() - 2 * pscal * N.getX(), v.getY() - 2 * pscal * N.getY()); 
-	  		return v2; 
-	  }
-	  
+	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine
+	 * obstacle) { Point2D.Double c = new Point2D.Double(ball.get_x(),
+	 * ball.get_y()); Vector N = new Vector(); N =
+	 * GetNormale(obstacle.get_depart(),obstacle.get_arrivee(), c); Vector v2 =
+	 * new Vector(); v2 = CalculerVecteurV2(ball.get_velocity(), N);
+	 * ball.set_speed(v2.getX(), v2.getY() * ObstacleLine.COR); }
+	 * 
+	 * private Vector CalculerVecteurV2(Vector v, Vector N) { double pscal =
+	 * Vector.dotProduct(v, N); Vector v2 = new Vector(v.getX() - 2 * pscal *
+	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
+	 * 
 	 */
 
 	/*
@@ -191,7 +188,7 @@ public class PhysicalEngine {
 	 * 
 	 * 
 	 */
-	
+
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		ReplaceBall(obstacle, ball, c);
@@ -205,7 +202,7 @@ public class PhysicalEngine {
 		ball.set_speed(vx, vy * obstacle.getCOR());
 
 	}
-	
+
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 		Vector u, AC, N;
 		u = new Vector(B.x - A.x, B.y - A.y);

@@ -106,19 +106,20 @@ public class Circuit {
 	private void importObstaclesXML(Document document) {
 		_lines.clear();
 		NodeList listeObstacles = document.getElementsByTagName("OBSTACLE");
+		NodeList COR = document.getElementsByTagName("COR");
 		NodeList xDepart = document.getElementsByTagName("XOBSDEPART");
 		NodeList yDepart = document.getElementsByTagName("YOBSDEPART");
 		NodeList xArrivee = document.getElementsByTagName("XOBSARRIVEE");
 		NodeList yArrivee = document.getElementsByTagName("YOBSARRIVEE");
 		for (int i = 0; i < listeObstacles.getLength(); i++) {
-			double xdep, ydep, xarr, yarr;
+			double xdep, ydep, xarr, yarr, cor;
+			cor = Double.parseDouble(COR.item(i).getTextContent());
 			xdep = Double.parseDouble(xDepart.item(i).getTextContent());
 			ydep = Double.parseDouble(yDepart.item(i).getTextContent());
 			xarr = Double.parseDouble(xArrivee.item(i).getTextContent());
 			yarr = Double.parseDouble(yArrivee.item(i).getTextContent());
 
-			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr),
-					_defaultCOR));
+			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr), cor));
 		}
 	}
 
@@ -142,6 +143,7 @@ public class Circuit {
 				.parseInt(document.getElementsByTagName("DEFAULTBALLRADIUS").item(0).getTextContent());
 		_defaultBallMass = Double
 				.parseDouble(document.getElementsByTagName("DEFAULTBALLMASS").item(0).getTextContent());
+		_defaultCOR = Double.parseDouble(document.getElementsByTagName("DEFAULTCOR").item(0).getTextContent());
 	}
 
 	private void importBallsXML(Document document) {
@@ -212,6 +214,10 @@ public class Circuit {
 			Element obstacle = doc.createElement("OBSTACLE");
 			obstacles.appendChild(obstacle);
 
+			Element COR = doc.createElement("COR");
+			COR.setTextContent(String.valueOf(o.getCOR()));
+			obstacle.appendChild(COR);
+
 			Element xObsDepart = doc.createElement("XOBSDEPART");
 			xObsDepart.setTextContent(String.valueOf(o.get_depart().getX()));
 			obstacle.appendChild(xObsDepart);
@@ -239,6 +245,10 @@ public class Circuit {
 		height.setTextContent(String.valueOf(_height));
 		rootElement.appendChild(height);
 
+		Element defCOR = doc.createElement("DEFAULTCOR");
+		defCOR.setTextContent(String.valueOf(_defaultCOR));
+		rootElement.appendChild(defCOR);
+
 		Element incl = doc.createElement("INCLINAISON");
 		incl.setTextContent(String.valueOf(_defaultInclinaison));
 		rootElement.appendChild(incl);
@@ -247,9 +257,9 @@ public class Circuit {
 		defBallRadius.setTextContent(String.valueOf(_defaultBallRadius));
 		rootElement.appendChild(defBallRadius);
 
-		Element defdefBallMass = doc.createElement("DEFAULTBALLMASS");
-		defdefBallMass.setTextContent(String.valueOf(_defaultBallMass));
-		rootElement.appendChild(defdefBallMass);
+		Element defBallMass = doc.createElement("DEFAULTBALLMASS");
+		defBallMass.setTextContent(String.valueOf(_defaultBallMass));
+		rootElement.appendChild(defBallMass);
 	}
 
 	private void saveBallsXML(Document doc, Element rootElement) {

@@ -8,12 +8,12 @@ import java.lang.reflect.Method;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import controller.PhysicalEngine;
 import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
 import model.Vector;
+import view.AParamObject;
 
 public class PhysicalEngineTest {
 	Ball ball1, ball2;
@@ -352,6 +352,49 @@ public class PhysicalEngineTest {
 	@Test
 	public void testProjectionI() {
 		
+	}
+	
+
+	
+	@Test
+	public void testBallIsOutOfCircuit() {
+		Ball ball = new Ball(635,200,10,1);
+		
+		//Balle dedans
+		Boolean result = null;
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, false);
+		
+		//Balle sortie en X
+		ball.set_location(651, 200);
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, true);
+		
+		//Balle sortie en Y
+		ball.set_location(640, 211);
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, true);
 	}
 
 }
