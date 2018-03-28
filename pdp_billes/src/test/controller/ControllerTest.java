@@ -149,7 +149,7 @@ public class ControllerTest {
 
 		c.addBall(b);
 		assertEquals(1, b.get_mass(), 1E-10);
-		assertEquals(0, b.get_radius());
+		assertEquals(1, b.get_radius());
 
 		// *** Test update valide
 		c.updateBall(b, 1, 2, 20, 20);
