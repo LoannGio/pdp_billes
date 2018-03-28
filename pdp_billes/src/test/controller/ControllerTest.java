@@ -145,11 +145,11 @@ public class ControllerTest {
 
 	@Test
 	public void test_updateBall() {
-		Ball b = new Ball(10, 10, 0, 1);
+		Ball b = new Ball(10, 10, 1, 1);
 
 		c.addBall(b);
 		assertEquals(1, b.get_mass(), 0.001);
-		assertEquals(0, b.get_radius());
+		assertEquals(1, b.get_radius());
 
 		// *** Test update valide
 		c.updateBall(b, 1, 2, 20, 20);
@@ -196,6 +196,8 @@ public class ControllerTest {
 	private void testBallPosition(Ball b) {
 		assertEquals(2, b.get_mass(), 0.001);
 		assertEquals(1, b.get_radius());
+		assertEquals(20, b.get_location().getX(), 1E-5);
+		assertEquals(20, b.get_location().getY(), 1E-5);
 	}
 
 	@Test
@@ -206,7 +208,7 @@ public class ControllerTest {
 		// ** Update valide
 		c.updateLine(o, 0, 20, 20, 20, 0.5);
 		testLinePosition(o);
-		
+
 		// ** Update invalide
 		// La modification ne peut pas se faire, l obstacle doit revenir dans
 		// l'etat dans lequel elle etait avant l update
@@ -228,7 +230,6 @@ public class ControllerTest {
 		// * Conflit avec une bille
 		Ball b = new Ball(30, 20, 2, 1);
 		c.addBall(b);
-
 		c.updateLine(o, 0, 20, 60, 20, 0.5);
 		testLinePosition(o);
 	}
