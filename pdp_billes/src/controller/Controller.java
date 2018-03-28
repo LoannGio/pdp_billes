@@ -75,6 +75,11 @@ public class Controller {
 		_circuit.clearLines();
 	}
 
+	/*
+	 * Savoir si un point est dans une Bille. Si oui, retourne la bille en
+	 * question. Sinon, retourne null. Cette fonction est utilisee pour savoir
+	 * si un clic de souris est sur une balle
+	 */
 	public Ball checkIfPointIsInBall(Point p) {
 		Ball ballContains = null;
 		for (Ball b : _circuit.get_balls()) {
@@ -84,16 +89,11 @@ public class Controller {
 		return ballContains;
 	}
 
-	public ObstacleLine checkIfPointIsInLine(Point p) {
-		ObstacleLine lineContains = null;
-
-		for (ObstacleLine o : _circuit.get_lines()) {
-			if (o.contains(p))
-				lineContains = o;
-		}
-		return lineContains;
-	}
-
+	/*
+	 * Savoir si un point est sur un ObstacleLine. Si oui, retourne l obsacle en
+	 * question. Sinon, retourne null. Cette fonction est utilisee pour savoir
+	 * si un clic de souris est sur (ou presque sur) un obstacle
+	 */
 	public ObstacleLine checkIfPointIsNearLine(Point p) {
 		ObstacleLine lineContains = null;
 
@@ -104,6 +104,10 @@ public class Controller {
 		return lineContains;
 	}
 
+	/*
+	 * Supprime les obstacles en dehors du circuit. Utilisee lors d une
+	 * redimension du circuit.
+	 */
 	public void removeLinesOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
 		Point depart, arrivee;
 		Iterator<ObstacleLine> iterObstacleLine = get_lines().iterator();
@@ -120,6 +124,10 @@ public class Controller {
 		iterObstacleLine = null;
 	}
 
+	/*
+	 * Supprime les billes en dehors du circuit. Utilisee lors d une redimension
+	 * du circuit.
+	 */
 	public void removeBallsOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
 		int x, y, rad;
 		Iterator<Ball> iterBall = get_balls().iterator();
@@ -135,14 +143,15 @@ public class Controller {
 		iterBall = null;
 	}
 
+	/* Demarre la simulation. Les forces s appliquent sur les billes */
 	public void runSimulation(DrawingPanel creationZone) {
 		_isRunning = true;
-		// PhysicalEngine pe = new PhysicalEngine(creationZone, _circuit);
 		if (_pe == null)
 			_pe = new PhysicalEngine(_circuit);
 		_pe.run(creationZone);
 	}
 
+	/* Met en pause la simulation */
 	public void stopSimulation() {
 		_isRunning = false;
 		_pe.stop();
@@ -193,6 +202,11 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Savoir si une balle (centre + rayon) est superposee avec un obstacle.
+	 * Utilisee lors de la creation de bille : si une bille va etre cree sur un
+	 * obstacle, on refuse la creation
+	 */
 	public Boolean checkIfBallIsOnExistingLine(Ball b) {
 		for (ObstacleLine o : _circuit.get_lines()) {
 			if (checkCollisionBallObstacle(b, o))
@@ -201,6 +215,11 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Savoir si une balle (centre + rayon) est superposee avec une autre.
+	 * Utilisee lors de la creation de bille : si une bille va etre cree sur une
+	 * autre, on refuse la creation
+	 */
 	public Boolean checkIfBallIsOnExistingBall(Ball b) {
 		for (Ball b2 : _circuit.get_balls()) {
 			if (checkCollisionBallBall(b, b2) && !b.equals(b2))
@@ -209,6 +228,11 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Savoir si un obstacle est superposee avec une bille. Utilisee lors de la
+	 * creation d un obstacle : si un obstacle va etre cree sur une bille, on
+	 * refuse la creation
+	 */
 	public boolean checkIfLineIsOnExistingBall(ObstacleLine o) {
 		for (Ball b : _circuit.get_balls()) {
 			if (checkCollisionBallObstacle(b, o))
@@ -217,6 +241,11 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Met a jour les attributs d une bille. Si les attributs ne sont pas
+	 * valides (ex : nouvelle position en dehors de l ecran ou superpose avec un
+	 * autre objet) on defait la modification
+	 */
 	public Boolean updateBall(Ball b, int new_radius, double new_mass, int new_centreX, int new_centreY) {
 		int oldRadius = b.get_radius();
 		double oldMass = b.get_mass();
@@ -232,6 +261,11 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Met a jour les attributs d un obstacle. Si les attributs ne sont pas
+	 * valides (ex : nouvelle position en dehors de l ecran ou superpose avec un
+	 * autre objet) on defait la modification
+	 */
 	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX, int new_arriveeY,
 			double newCOR) {
 		Point oldDepart = line.get_depart();
@@ -252,6 +286,10 @@ public class Controller {
 		return false;
 	}
 
+	/*
+	 * Modifie les dimensions du plan (circuit du modele + panneau de dessin) et
+	 * supprime les objets en dehors du nouveau plan
+	 */
 	public void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight) {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
@@ -290,18 +328,14 @@ public class Controller {
 				obstacle.get_depart().getY() - obstacle.get_arrivee().getY());
 		Vector AC = new Vector(ball.get_x() - obstacle.get_arrivee().getX(),
 				ball.get_y() - obstacle.get_arrivee().getY());
-		double numerateur = u.getX() * AC.getY() - u.getY() * AC.getX(); // norme
-																			// du
-																			// vecteur
-																			// v
-		if (numerateur < 0)
-			numerateur = -numerateur; // valeur absolue ; si c'est negatif,
-										// on prend l'opposé.
+
+		/* Norme du vecteur u */
+		double numerateur = Math.abs(u.getX() * AC.getY() - u.getY() * AC.getX());
 		double denominateur = Math.sqrt(Math.pow(u.getX(), 2) + Math.pow(u.getY(), 2));
 		double CI = numerateur / denominateur;
-		if (CI < ball.get_radius()) {
+		if (CI < ball.get_radius())
 			return collisionSegment(ball, obstacle);
-		} else
+		else
 			return false;
 	}
 
