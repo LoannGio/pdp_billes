@@ -3,6 +3,8 @@ package test.controller;
 import static org.junit.Assert.*;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.lang.reflect.Method;
 
 import org.junit.After;
@@ -32,6 +34,11 @@ public class PhysicalEngineTest {
 
 	@After
 	public void tearDown() throws Exception {
+		ball1 = null;
+		ball2 = null;
+		obstacle = null;
+		circuit = null;
+		physical_engine = null;
 	}
 
 	@Test
@@ -340,18 +347,85 @@ public class PhysicalEngineTest {
 		
 	}
 	
-		
+	/* Ce test permet de verifier que le calcul de la 
+	 * normale d'un point par rapport a une droite est correct.
+	 * On verifie si l'angle entre le vecteur normal et la droite
+	 * est egal a 90.
+	 */
 	@Test 
 	public void testGetNormale() {
-		
+		try {
+			/* normale sur une droite horizontale */	
+			Method normale = PhysicalEngine.class.getDeclaredMethod(
+					"GetNormale", Point.class, Point.class, Point2D.Double.class);	
+			normale.setAccessible(true);
+			Point2D.Double center = new Point2D.Double(140, 70);
+			Point A = new Point(100, 100);
+			Point B = new Point(200, 100);
+			Vector norm = (Vector) normale.invoke(physical_engine, A, B, center);
+			Vector AB = new Vector(B.x - A.x, B.y - A.y);
+			double sizeAB = Math.sqrt(Math.pow(AB.getX(), 2) + Math.pow(AB.getY(), 2));
+			double sizeNorm = Math.sqrt(Math.pow(norm.getX(), 2) + Math.pow(norm.getY(), 2));
+			double cosAngle = Vector.dotProduct(AB, norm)/(sizeAB*sizeNorm);
+			assertEquals(true, Math.abs(cosAngle) < 1E-10);
+			/* normale sur une droite diagonale */	
+			center.setLocation(100, 200);
+			A.setLocation(100, 300);
+			B.setLocation(200, 200);
+			norm = (Vector) normale.invoke(physical_engine, A, B, center);
+			AB = new Vector(B.x - A.x, B.y - A.y);
+			sizeAB = Math.sqrt(Math.pow(AB.getX(), 2) + Math.pow(AB.getY(), 2));
+			sizeNorm = Math.sqrt(Math.pow(norm.getX(), 2) + Math.pow(norm.getY(), 2));
+			cosAngle = Vector.dotProduct(AB, norm)/(sizeAB*sizeNorm);
+			assertEquals(true, Math.abs(cosAngle) < 1E-10);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
 
-
+	/*	Ce test permet de verifier que le calcul du point de projection
+	 * d'un point par rapport a une droite est correct.
+	 * On a calcule la position du point de projection pour different cas,
+	 * on verifie que notre fonction renvoie la meme valeur.
+	 */
 	@Test
 	public void testProjectionI() {
-		
+		try {
+		/* projection sur une droite horizontale */	
+		Method projection = PhysicalEngine.class.getDeclaredMethod(
+				"ProjectionI", Point.class, Point.class, Point2D.Double.class);
+		projection.setAccessible(true);
+		Point2D.Double center = new Point2D.Double(140, 70);
+		Point A = new Point(100, 100);
+		Point B = new Point(200, 100);
+		Point2D.Double proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+		boolean b1 = Math.abs(proj.getX() - center.getX()) < 1E-10;
+		boolean b2 = Math.abs(proj.getY() - 100) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		/* projection sur une droite verticale */
+		center.setLocation(60, 150);
+		A.setLocation(100, 100);
+		B.setLocation(100, 200);
+		proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+		b1 = Math.abs(proj.getX() - 100) < 1E-10;
+		b2 = Math.abs(proj.getY() - center.getY() ) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		/* projection sur une droite diagonale */
+		center.setLocation(100, 200);
+		A.setLocation(100, 300);
+		B.setLocation(200, 200);
+		proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+		b1 = Math.abs(proj.getX() - 150) < 1E-10;
+		b2 = Math.abs(proj.getY() - 250 ) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 

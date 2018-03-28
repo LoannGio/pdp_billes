@@ -14,18 +14,18 @@ public class QuadtreeTest {
     Quadtree _quad;
 
     /* PARTIE 1:
-     * On crée 4 billes qu'on ajoute au QuadTree.
-     * On considère que le circuit est de taille 400x400.
-     * Chaque bille est positionnée dans un coin de l'écran.
-     * A l'aide la fonction retrieve on vérifie que chaque balle
-     * est dans la même région que les 3 autres, c'est-à-dire qu'elles
-     * sont toutes des feuilles du même noeud.
+     * On cree 4 billes qu'on ajoute au QuadTree.
+     * On considere que le circuit est de taille 400x400.
+     * Chaque bille est positionnee dans un coin de l'ecran.
+     * A l'aide la fonction retrieve on verifie que chaque balle
+     * est dans la meme region que les 3 autres, c'est-a-dire qu'elles
+     * sont toutes des feuilles du meme noeud.
      *
      * PARTIE 2:
-     * On crée une 5ème bille juste à côté de la balle 4 et on l'ajoute au QuadTree.
-     * A l'aide de la fonction retrieve, on vérifie que le partionnement de l'espace
-     * (fonction split) est correct. Les balles 1,2 et 3 se retrouve seules dans leur région
-     * (feuille unique d'un nouveau noeud). Les balles 4 et 5 sont toutes les 2 dans la même region.
+     * On cree une 5eme bille juste a cote de la balle 4 et on l'ajoute au QuadTree.
+     * A l'aide de la fonction retrieve, on verifie que le partitionnement de l'espace
+     * (fonction split) est correct. Les balles 1,2 et 3 se retrouve seules dans leur region
+     * (feuille unique d'un nouveau noeud). Les balles 4 et 5 sont toutes les 2 dans la meme region.
      */
     
     @Test
@@ -95,11 +95,11 @@ public class QuadtreeTest {
      * Idem que Cas1
      *
      * PARTIE 2:
-     * On crée une 5ème bille de gros rayon au centre du circuit et on l'ajoute au QuadTree.
-     * La 5ème bille doit appartenir aux
-     * A l'aide de la fonction retrieve, on vérifie que le partionnement de l'espace
-     * (fonction split) est correct. Les balles 1,2 et 3 se retrouve seules dans leur région
-     * (feuille unique d'un nouveau noeud). Les balles 4 et 5 sont toutes les 2 dans la même region.
+     * On cree une 5eme bille de gros rayon au centre du circuit et on l'ajoute au QuadTree.
+     * La 5�me bille doit appartenir aux
+     * A l'aide de la fonction retrieve, on verifie que le partitionnement de l'espace
+     * (fonction split) est correct. Les balles 1,2 et 3 se retrouve seules dans leur region
+     * (feuille unique d'un nouveau noeud). Les balles 4 et 5 sont toutes les 2 dans la meme region.
      */
     @Test
     public void testCas2() {

@@ -3,9 +3,14 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 
+/* Une bille est caracterisee par :
+ * - la position de son centre : vecteur _location
+ * - une vitesse : vecteur _velocity
+ * - une masse : _mass
+ * - un rayon : _radius
+ * - une trace : un historique de positions
+ */
 public class Ball {
-
-	public static double COR = 1; // Coefficient of Restitution
 	private Vector _location;
 	private Vector _velocity;
 	private double _mass;
@@ -22,7 +27,6 @@ public class Ball {
 		_trace = new ArrayList<Point>();
 		_trace.add(new Point((int) x, (int) y));
 	}
-
 
 	public void setAll(double x, double y, int radius, double mass) {
 		_location.setCartesian(x, y);
@@ -75,8 +79,7 @@ public class Ball {
 	}
 
 	public double get_speed() {
-		double speed = Math.sqrt(Math.pow(_velocity.getX(), 2) + Math.pow(_velocity.getY(), 2));
-		return speed;
+		return Math.sqrt(Math.pow(_velocity.getX(), 2) + Math.pow(_velocity.getY(), 2));
 	}
 
 	public double get_mass() {
@@ -91,12 +94,9 @@ public class Ball {
 		return _trace;
 	}
 
-	/*
-	 * 
-	 * 
-	 * 
+	/* On calcule la nouvelle vitesse : ancienne vitesse + acceleration
+	 * Puis on calcule la nouvelle position : ancienne position + nouvelle vitesse
 	 */
-
 	public void step(Vector acceleration) {
 		double x0 = _location.getX();
 		double y0 = _location.getY();
@@ -110,5 +110,4 @@ public class Ball {
 		if ((int) _location.getX() != (int) x0 || (int) _location.getY() != (int) y0)
 			_trace.add(new Point((int) _location.getX(), (int) _location.getY()));
 	}
-
 }
