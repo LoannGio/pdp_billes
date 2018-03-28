@@ -3,6 +3,7 @@ package test.model;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
+import java.io.File;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class CircuitTest {
 	public void setUp() throws Exception {
 		c = new Circuit(500, 500);
 		b = new Ball(0, 0, 1, 1);
-		o = new ObstacleLine(new Point(10, 10), new Point(20, 20));
+		o = new ObstacleLine(new Point(10, 10), new Point(20, 20), 0.5);
 	}
 
 	@After
@@ -29,6 +30,7 @@ public class CircuitTest {
 		c = null;
 		b = null;
 		o = null;
+
 	}
 
 	@Test
@@ -72,4 +74,18 @@ public class CircuitTest {
 		assertEquals(0, c.get_lines().size());
 	}
 
+	@Test
+	public void test_importer() {
+
+	}
+
+	@Test
+	public void test_exporter() {
+		c.addBall(new Ball(10, 10, 1, 1));
+		c.addBall(new Ball(10, 10, 1, 1));
+		c.addLine(new ObstacleLine(new Point(10, 10), new Point(20, 10), 0.5));
+		File f = new File("TUexport.pdp");
+		c.exporter(f);
+		// System.out.println(f.);
+	}
 }

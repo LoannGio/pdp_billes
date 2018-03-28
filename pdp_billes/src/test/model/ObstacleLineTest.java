@@ -3,7 +3,6 @@ package test.model;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
-import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +32,7 @@ public class ObstacleLineTest {
 	public void test_contains() {
 		depart = new Point(50, 50);
 		arrivee = new Point(50, 53);
-		o = new ObstacleLine(depart, arrivee);
+		o = new ObstacleLine(depart, arrivee, 0.5);
 		assertEquals(o.contains(depart), true);
 		depart.setLocation(0, 20);
 		o.setPositions(depart, arrivee);
