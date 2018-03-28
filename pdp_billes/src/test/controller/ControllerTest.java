@@ -2,9 +2,12 @@ package test.controller;
 
 import static org.junit.Assert.assertEquals;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Field;
+
+import javax.swing.JFrame;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +17,7 @@ import controller.Controller;
 import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
+import view.DrawingPanel;
 
 public class ControllerTest {
 	Controller c;
@@ -22,13 +26,18 @@ public class ControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		c = Controller.getInstance();
+		circuit = getControllerCircuit();
+	}
+	
+	public Circuit getControllerCircuit() {
 		try {
 			Field fcircuit = Controller.class.getDeclaredField("_circuit");
 			fcircuit.setAccessible(true);
-			circuit = (Circuit) fcircuit.get(c);
+			return (Circuit) fcircuit.get(c);
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -92,10 +101,10 @@ public class ControllerTest {
 		c.addBall(b);
 		circuit.set_width(450);
 		circuit.set_height(500);
-		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 1, 0);
 		circuit.set_width(402);
-		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 0, 0);
 	}
 
@@ -117,7 +126,7 @@ public class ControllerTest {
 		c.addBall(b);
 		Ball b2 = new Ball(52, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b2), true);
-		Ball b3 = new Ball(150, 150, 10, 0);
+		Ball b3 = new Ball(71, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b3), false);
 
 	}
@@ -188,16 +197,16 @@ public class ControllerTest {
 		c.updateBall(b, 1, 2, 30, 30);
 		testBallPosition(b);
 
-		// Centre de la bille sur l'obstacle en prenant en compte son epaisseur
-		c.updateBall(b, 1, 2, 35, 30);
+		// Centre de la bille pas sur l'obstacle mais touche avec son rayon
+		c.updateBall(b, 1, 2, 30, 31);
 		testBallPosition(b);
 	}
 
 	private void testBallPosition(Ball b) {
-		assertEquals(2, b.get_mass(), 0.001);
+		assertEquals(2, b.get_mass(), 1E-10);
 		assertEquals(1, b.get_radius());
-		assertEquals(20, b.get_location().getX(), 1E-5);
-		assertEquals(20, b.get_location().getY(), 1E-5);
+		assertEquals(20, b.get_location().getX(), 1E-10);
+		assertEquals(20, b.get_location().getY(), 1E-10);
 	}
 
 	@Test
@@ -283,5 +292,17 @@ public class ControllerTest {
 		assertEquals(true, b1);
 		assertEquals(false, b2);
 	}
+	
+	@Test
+	public void testSetDimensionsPlan() {
+		DrawingPanel _dp = new DrawingPanel(new Dimension(500, 500), new JFrame());
+		c.setDimensionsPlan(_dp, 300, 200);
+		assertEquals(getControllerCircuit().get_width(), 300, 0);
+		assertEquals(getControllerCircuit().get_height(), 200, 0);
+		assertEquals(_dp.getWidth(), 300, 0);
+		assertEquals(_dp.getHeight(), 200, 0);
+	}
+	
+	
 
 }
