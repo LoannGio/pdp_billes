@@ -309,7 +309,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void testSetDimensionsPlan() {
+	public void test_setDimensionsPlan() {
 		DrawingPanel _dp = new DrawingPanel(new Dimension(500, 500), new JFrame());
 		c.setDimensionsPlan(_dp, 300, 200);
 
