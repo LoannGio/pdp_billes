@@ -39,13 +39,9 @@ public class PhysicalEngineTest {
 		
 	}
 	
-	@Test
-	public void testAngleCollisionBall() {
-		
-	}
 	
 	/* Ce test permet de verifier que la trajectoire et la vitesse des billes 
-	 * sont correctement modifiées lors d'une collision.
+	 * sont correctement modifiees lors d'une collision.
 	 * On cree deux billes de meme masse, leur vitesse est la meme et leur
 	 * trajectoire est opposee au moment de la collision.
 	 */
@@ -54,7 +50,8 @@ public class PhysicalEngineTest {
 	public void testResolveCollisionBallBallSameMass() {
 		/* Cas  Collision horizontal*/
 		try {
-		Method resolveCollBallBall = PhysicalEngine.class.getMethod("resolveCollisionBallBall", Ball.class, Ball.class);
+		Method resolveCollBallBall = PhysicalEngine.class.getMethod(
+				"resolveCollisionBallBall", Ball.class, Ball.class);
 		resolveCollBallBall.setAccessible(true);
 		ball1.setAll(50, 100, 10, 2);
 		ball2.setAll(70, 100, 10, 2);
@@ -83,8 +80,10 @@ public class PhysicalEngineTest {
 		ball1.set_speed(1, 1);
 		ball2.set_speed(-1, -1);
 		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		b1 = ( Math.abs(ball1.get_velocity().getX()+1) < 1E-10 ) && ( Math.abs(ball1.get_velocity().getY()-1) < 1E-10);
-		b2 = ( Math.abs(ball2.get_velocity().getX()-1) < 1E-10 ) && ( Math.abs(ball2.get_velocity().getY()+1) < 1E-10);
+		b1 = ( Math.abs(ball1.get_velocity().getX()+1) < 1E-10 ) && 
+			 ( Math.abs(ball1.get_velocity().getY()-1) < 1E-10);
+		b2 = ( Math.abs(ball2.get_velocity().getX()-1) < 1E-10 ) && 
+			 ( Math.abs(ball2.get_velocity().getY()+1) < 1E-10);
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		}catch(Exception e) {
@@ -103,7 +102,8 @@ public class PhysicalEngineTest {
 	@Test
 	public void testResolveCollisionBallBallDifferentMass() {
 		try {
-		Method resolveCollBallBall = PhysicalEngine.class.getMethod("resolveCollisionBallBall", Ball.class, Ball.class);
+		Method resolveCollBallBall = PhysicalEngine.class.getDeclaredMethod(
+						"resolveCollisionBallBall", Ball.class, Ball.class);
 		resolveCollBallBall.setAccessible(true);
 		/* Cas meme vitesse */
 		
@@ -206,22 +206,141 @@ public class PhysicalEngineTest {
 		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
 	
+	/* Ce test permet de verifier que la trajectoire et la vitesse d'une bille
+	 * sont correctement modifiees lors d'une collision avec un obstacle.
+	 * Le coefficient de rebond est egal a 1 (la quantite de mouvement et l'energie cinetique est conservee)
+	 * choc elestique
+	 */
+	
 	@Test
 	public void testResolveCollisionBallObstacle() {
+		
+		try {
+		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
+				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
+		resolveCollBallObstacle.setAccessible(true);
+		obstacle.setCOR(1);
+		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
 		obstacle.set_depart(new Point(20,100));
 		obstacle.set_arrivee(new Point(100,100));
-		ball1.setAll(50, 100, 10, 2);
-		ball1.set_speed(1, 1);
-		//physical_engine.resolveCollisionBallObstacle(ball1, obstacle);
+		ball1.setAll(50, 90, 10, 2);
+		ball1.set_speed(0, 6);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+		boolean b2 = Math.abs(ball1.get_velocity().getY()+6) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
 		
+		/* Cas collision obstacle horizontal, bille direction vers le haut */ 
+		ball1.set_location(50, 110);
+		ball1.set_speed(0, -5);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()-5) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		/* Cas collision obstacle vertical, bille direction vers la droite */
+		obstacle.set_depart(new Point(100,100));
+		obstacle.set_arrivee(new Point(100,200));
+		ball1.set_location(90, 150);
+		ball1.set_speed(3, 0);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()+3) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		/* Cas collision obstacle vertical, bille direction vers la gauche */
+		obstacle.set_depart(new Point(100,100));
+		obstacle.set_arrivee(new Point(100,200));
+		ball1.set_location(110, 150);
+		ball1.set_speed(-4, 0);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()-4) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
+		obstacle.set_depart(new Point(100,300));
+		obstacle.set_arrivee(new Point(200,200));
+		ball1.set_location(145, 245);
+		ball1.set_speed(1, 1);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()+1) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()+1) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		/* Cas collision obstacle 45+180 degres, bille direction perpendiculaire*/
+		obstacle.set_depart(new Point(100,100));
+		obstacle.set_arrivee(new Point(200,200));
+		ball1.set_location(155, 145);
+		ball1.set_speed(-1, 1);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()-1) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()+1) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	/*
+	 * Ce test permet de verifier que la collision fonctionne toujours
+	 * lorsqu'on modifie le coefficient de rebond.
+	 * On verifie que vitesse apres le rebond diminue correctement selon l'axe Y
+	 * ce qui diminue la quantite de mouvement et l'energie cinetique (choc non elastique)
+	 */
+	@Test
+	public void testResolveCollisionBallObstacleCOR() {
+		
+		try {
+		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
+				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
+		resolveCollBallObstacle.setAccessible(true);	
+		obstacle.setCOR(0.5);
+		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
+		obstacle.set_depart(new Point(20,100));
+		obstacle.set_arrivee(new Point(100,100));
+		ball1.setAll(50, 90, 10, 2);
+		ball1.set_speed(0, 6);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+		boolean b2 = Math.abs(ball1.get_velocity().getY()+3) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		
+		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
+		obstacle.set_depart(new Point(100,300));
+		obstacle.set_arrivee(new Point(200,200));
+		ball1.set_location(145, 245);
+		ball1.set_speed(8, 8);	
+		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+		b1 = Math.abs(ball1.get_velocity().getX()+8) < 1E-10;
+		b2 = Math.abs(ball1.get_velocity().getY()+4) < 1E-10;
+		assertEquals(true, b1);
+		assertEquals(true, b2);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
+	
+	@Test
+	public void testAngleCollisionBall() {
 		
 	}
 	
+		
 	@Test 
 	public void testGetNormale() {
 		
