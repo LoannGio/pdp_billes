@@ -119,11 +119,16 @@ public class Controller {
 	}
 
 	public void removeBallsOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
+		int x, y, rad;
 		Iterator<Ball> iterBall = get_balls().iterator();
 		while (iterBall.hasNext()) {
 			Ball b = iterBall.next();
-			if (ballIsOutOfCircuit(b, _circuit))
+			x = (int) b.get_x();
+			y = (int) b.get_y();
+			rad = b.get_radius();
+			if (x + rad > xMax || x < xMin || y + rad > yMax || y < yMin) {
 				iterBall.remove();
+			}
 		}
 		iterBall = null;
 	}
@@ -335,17 +340,5 @@ public class Controller {
 
 	public boolean isRunningApp() {
 		return isRunning;
-	}
-
-	public boolean ballIsOutOfCircuit(Ball b, Circuit c) {
-		double bx = b.get_x();
-		double by = b.get_y();
-		double br = b.get_radius();
-		int dpwidth = c.get_width();
-		int dpheight = c.get_height();
-		if (bx - br > dpwidth || bx + br < 0 || by - br > dpheight || by + br < 0)
-			return true;
-		return false;
-
 	}
 }
