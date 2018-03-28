@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Ball;
+
 public class PhysicalEngineTest {
 
 	@Before
@@ -60,6 +62,16 @@ public class PhysicalEngineTest {
 	@Test
 	public void testProjectionI() {
 		
+	}
+	
+
+	
+	@Test
+	public void testBallIsOutOfCircuit() {
+		Ball ball = new Ball(495,400,10,1);
+		assertEquals(c.ballIsOutOfCircuit(ball), false);
+		ball.set_location(510, 500);
+		assertEquals(c.ballIsOutOfCircuit(ball), true);
 	}
 
 }

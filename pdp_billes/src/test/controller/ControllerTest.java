@@ -302,7 +302,5 @@ public class ControllerTest {
 		assertEquals(_dp.getWidth(), 300, 0);
 		assertEquals(_dp.getHeight(), 200, 0);
 	}
-	
-	
 
 }
