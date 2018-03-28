@@ -45,7 +45,7 @@ public class PhysicalEngine {
 				_quad.clear();
 				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
 				for (Ball ball : _circuit.get_balls()) {
-					if (!ballIsOutOfPanel(ball, dp)) {
+					if (!_controller.ballIsOutOfCircuit(ball, _circuit)) {
 						_quad.insert(ball);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
@@ -53,7 +53,6 @@ public class PhysicalEngine {
 							if (ball2 != ball) {
 								if (_controller.checkCollisionBallBall(ball, ball2)) {
 									resolveCollisionBallBall(ball, ball2);
-									
 								}
 							}
 						}
@@ -83,26 +82,8 @@ public class PhysicalEngine {
 	 * 
 	 * 
 	 */
-	public boolean ballIsOutOfPanel(Ball b, DrawingPanel dp) {
-		double bx = b.get_x();
-		double by = b.get_y();
-		double br = b.get_radius();
-		int dpwidth = dp.getWidth();
-		int dpheight = dp.getHeight();
-		if (bx - br > dpwidth || bx + br < 0 || by - br > dpheight || by + br < 0)
-			return true;
-		return false;
 
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-
-	public double angleCollisionBall(Ball ball1, Ball ball2) {
+	private double angleCollisionBall(Ball ball1, Ball ball2) {
 		Vector v;
 		double d1 = Math.sqrt(Math.pow(ball1.get_x(), 2) + Math.pow(ball1.get_y(), 2));
 		double d2 = Math.sqrt(Math.pow(ball2.get_x(), 2) + Math.pow(ball2.get_y(), 2));
@@ -127,8 +108,7 @@ public class PhysicalEngine {
 	 * 
 	 */
 
-	public void resolveCollisionBallBall(Ball ball1, Ball ball2) {
-
+	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
 		double collision_angle = angleCollisionBall(ball1, ball2);
 		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX());
 		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX());
@@ -172,35 +152,35 @@ public class PhysicalEngine {
 				pos1.getY() + mtd.getY() * (im1 / (im1 + im2)));
 		ball2.set_location(pos2.getX() - mtd.getX() * (im2 / (im1 + im2)),
 				pos2.getY() - mtd.getY() * (im2 / (im1 + im2)));
-
 	}
 
-	
 	/*
-	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine
-	 * obstacle) {
-	 * 
-	 * Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y()); Vector
-	 * N = new Vector(); N = GetNormale(obstacle.get_depart(),
-	 * obstacle.get_arrivee(), c); Vector v2 = new Vector(); v2 =
-	 * CalculerVecteurV2(ball.get_velocity(), N); ball.set_speed(v2.getX(),
-	 * v2.getY() * ObstacleLine.COR); }
-	 * 
-	 * /*private Vector CalculerVecteurV2(Vector v, Vector N) { double pscal =
-	 * Vector.dotProduct(v, N); Vector v2 = new Vector(v.getX() - 2 * pscal *
-	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
+	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+	 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y()); 
+	 		Vector N = new Vector(); N = GetNormale(obstacle.get_depart(),obstacle.get_arrivee(), c); 
+	 		Vector v2 = new Vector(); 
+	 		v2 = CalculerVecteurV2(ball.get_velocity(), N); 
+	 		ball.set_speed(v2.getX(), v2.getY() * ObstacleLine.COR); 
+	  }
+	  
+	  private Vector CalculerVecteurV2(Vector v, Vector N) { 
+	  		double pscal = Vector.dotProduct(v, N); 
+	  		Vector v2 = new Vector(v.getX() - 2 * pscal * N.getX(), v.getY() - 2 * pscal * N.getY()); 
+	  		return v2; 
+	  }
+	  
 	 */
-	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	public void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
+	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		ReplaceBall(obstacle, ball, c);
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
@@ -214,40 +194,7 @@ public class PhysicalEngine {
 
 	}
 	
-	public void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
-		
-		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
-		double dist = _controller.distance(c, p);
-		if(dist < ball.get_radius()) { 
-			if(p.getX()==c.getX() && p.getY() == c.getY()) {
-				ball.set_location(ball.get_x()-(ball.get_radius() - dist), ball.get_y());
-			}
-			else {
-				if(p.getY()>c.getY())
-					if(p.getX()==c.getX())
-						ball.set_location(ball.get_x(), ball.get_y()-(ball.get_radius() - dist));
-					else
-						if(p.getX()>c.getX())
-							ball.set_location(ball.get_x()-(ball.get_radius()-dist), ball.get_y()-(ball.get_radius()-dist));
-						else 
-							ball.set_location(ball.get_x()+(ball.get_radius()-dist), ball.get_y()-(ball.get_radius()-dist));
-
-				else 
-					if(p.getX()==c.getX())
-						ball.set_location(ball.get_x(), ball.get_y()+(ball.get_radius() - dist));
-					else
-						if(p.getX()>c.getX())
-							ball.set_location(ball.get_x()-(ball.get_radius()-dist), ball.get_y()+(ball.get_radius()-dist));
-						else 
-							ball.set_location(ball.get_x()+(ball.get_radius()-dist), ball.get_y()+(ball.get_radius()-dist));
-			}
-			
-
-		}
-	}
-
-	public Vector GetNormale(Point A, Point B, Point2D.Double C) {
-
+	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 		Vector u, AC, N;
 		u = new Vector(B.x - A.x, B.y - A.y);
 		AC = new Vector(C.x - A.x, C.y - A.y);
@@ -260,8 +207,7 @@ public class PhysicalEngine {
 		return N;
 	}
 
-	public Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
-
+	private Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
 		Vector u = new Vector(B.x - A.x, B.y - A.y);
 		Vector AC = new Vector(C.x - A.x, C.y - A.y);
 		double ti = (u.getX() * AC.getX() + u.getY() * AC.getY()) / (u.getX() * u.getX() + u.getY() * u.getY());
@@ -269,4 +215,33 @@ public class PhysicalEngine {
 		return I;
 	}
 
+	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
+		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		double dist = _controller.distance(c, p);
+		if (dist < ball.get_radius()) {
+			if (p.getX() == c.getX() && p.getY() == c.getY()) {
+				ball.set_location(ball.get_x() - (ball.get_radius() - dist), ball.get_y());
+			} else {
+				if (p.getY() > c.getY())
+					if (p.getX() == c.getX())
+						ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
+					else if (p.getX() > c.getX())
+						ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
+					else
+						ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
+
+				else if (p.getX() == c.getX())
+					ball.set_location(ball.get_x(), ball.get_y() + (ball.get_radius() - dist));
+				else if (p.getX() > c.getX())
+					ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
+				else
+					ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
+			}
+
+		}
+	}
 }
