@@ -45,7 +45,7 @@ public class PhysicalEngine {
 				_quad.clear();
 				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
 				for (Ball ball : _circuit.get_balls()) {
-					if (!_controller.ballIsOutOfCircuit(ball, _circuit)) {
+					if (!ballIsOutOfCircuit(ball)) {
 						_quad.insert(ball);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
@@ -74,6 +74,18 @@ public class PhysicalEngine {
 
 	public void stop() {
 		timer.stop();
+	}
+
+	private boolean ballIsOutOfCircuit(Ball b) {
+		double bx = b.get_x();
+		double by = b.get_y();
+		double br = b.get_radius();
+		int dpwidth = _circuit.get_width();
+		int dpheight = _circuit.get_height();
+		if (bx - br > dpwidth || bx + br < 0 || by - br > dpheight || by + br < 0)
+			return true;
+		return false;
+
 	}
 
 	/*
