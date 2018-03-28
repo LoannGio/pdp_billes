@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Field;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,12 +22,21 @@ public class ControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		c = Controller.getInstance();
+		try {
+			Field fcircuit = Controller.class.getDeclaredField("_circuit");
+			fcircuit.setAccessible(true);
+			circuit = (Circuit) fcircuit.get(c);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		circuit = null;
+		c.clearCircuit();
 		c = null;
+		circuit = null;
 	}
 
 	@Test
@@ -150,6 +160,7 @@ public class ControllerTest {
 		// l'etat dans lequel elle etait avant l update
 
 		// ** Test en updatant avec des coordonnees hors de l ecran
+
 		c.updateBall(b, 1, 2, circuit.get_width() + 1, 20);
 		testBallPosition(b);
 
@@ -201,6 +212,7 @@ public class ControllerTest {
 		// l'etat dans lequel elle etait avant l update
 
 		// * Modification des positions hors du circuit
+
 		c.updateLine(o, circuit.get_width() + 1, 20, 20, 20, 0.5);
 		testLinePosition(o);
 
