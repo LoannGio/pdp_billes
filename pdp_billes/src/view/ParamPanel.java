@@ -73,9 +73,11 @@ public class ParamPanel extends JPanel {
 
 		initializeContainers();
 
-		// Les boutons agissent sur la zone de dessin, on a donc besoin de la
-		// connaitre dans la gestion des listneners, c'est pour ca qu'elle est
-		// passee en parametre
+		/*
+		 * Les boutons agissent sur la zone de dessin, on a donc besoin de la
+		 * connaitre dans la gestion des listneners, c'est pour ca qu'elle est
+		 * passee en parametre
+		 */
 		addListneners(creationZone);
 	}
 
@@ -84,6 +86,10 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
+					/*
+					 * Si les dimension entrees du panneau sont correctes, faire
+					 * les modifications necessaires
+					 */
 					if (checkInt(_txtLongueur.getText()) && checkInt(_txtLargeur.getText())) {
 						int newCreationZoneWidth = Integer.parseInt(_txtLongueur.getText());
 						if (newCreationZoneWidth > _maxCreationZoneWidth) {
@@ -96,14 +102,15 @@ public class ParamPanel extends JPanel {
 							newCreationZoneHeight = _maxCreationZoneHeight;
 							_txtLargeur.setText(Integer.toString(newCreationZoneHeight));
 						}
-						/*
-						 * creationZone.deleteObjectsOutOfBounds(creationZone.
-						 * getX(), creationZone.getX() + newCreationZoneWidth,
-						 * creationZone.getY(), creationZone.getY() +
-						 * newCreationZoneHeight);
-						 */
+
 						_controller.setDimensionsPlan(creationZone, newCreationZoneWidth, newCreationZoneHeight);
 					}
+
+					/*
+					 * Pour les tests suivant, on verifie si la valeur
+					 * renseignee est correcte et, le cas echeant, on modifie la
+					 * variable correspondante
+					 */
 					if (checkInt(_txtRadius.getText()))
 						_controller.set_defaultBallRadius(Integer.parseInt(_txtRadius.getText()));
 
@@ -170,6 +177,7 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
+					/* On ouvre une fenetre de selection de fichier */
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
@@ -177,6 +185,10 @@ public class ParamPanel extends JPanel {
 
 					int retValue = chooser.showOpenDialog(null);
 					if (retValue == JFileChooser.APPROVE_OPTION) {
+						/*
+						 * On lance la fonction d import en lui passant en
+						 * parametre le fichier selectionne
+						 */
 						_controller.importerCircuit(creationZone, chooser.getSelectedFile());
 					}
 
@@ -189,12 +201,18 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
+					/* On ouvre une fenetre de selection de fichier */
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
 					chooser.setFileFilter(filter);
 
 					int retValue = chooser.showSaveDialog(null);
+					/*
+					 * Si on a selectionne un fichier et que celui ci est
+					 * valide, on lance la fonction exporter avec le fichier
+					 * selectionne
+					 */
 					if (retValue == JFileChooser.APPROVE_OPTION) {
 						File f = null;
 						if (!chooser.getSelectedFile().getName().endsWith(".pdp"))
@@ -218,10 +236,18 @@ public class ParamPanel extends JPanel {
 		});
 	}
 
+	/*
+	 * Prend un string en entree. Par une expression reguliere, retourne si oui
+	 * ou non ce string est un entier positif ou nul
+	 */
 	private Boolean checkInt(String s) {
 		return s.matches("[0-9]+");
 	}
 
+	/*
+	 * Prend un string en entree. Par une expression reguliere, retourne si oui
+	 * ou non ce string est un double positif ou nul
+	 */
 	private Boolean checkDouble(String s) {
 		Boolean isDouble = false;
 		if (checkInt(s))
@@ -293,6 +319,10 @@ public class ParamPanel extends JPanel {
 	}
 
 	private void initializeLabels(int panelWidth, int panelHeight) {
+		/*
+		 * Initialise le contenu des zones de texte a la valeur actuelle du
+		 * champ qui leur correspond
+		 */
 		_txtLongueur = new JTextField(Integer.toString(panelWidth));
 		_txtLargeur = new JTextField(Integer.toString(panelHeight));
 		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
@@ -301,6 +331,10 @@ public class ParamPanel extends JPanel {
 	}
 
 	private void updateLabels() {
+		/*
+		 * Fonction appelee lors d un import de circuit afin d actualiser les
+		 * valeurs des champs aux nouvelles valeurs presentes en memoire
+		 */
 		Dimension creationZoneDim = _controller.getDimensionsPlan();
 		_txtLongueur.setText(Integer.toString(creationZoneDim.width));
 		_txtLargeur.setText(Integer.toString(creationZoneDim.height));

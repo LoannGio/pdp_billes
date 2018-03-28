@@ -13,6 +13,10 @@ public class ObstacleLine {
 		_COR = COR;
 	}
 
+	/*
+	 * Savoir si un point C appartient a une droite AB. Utilise l inegalite
+	 * triangulaire. si AC + CB = AB, alors C appartient a AB
+	 */
 	public Boolean contains(Point p) {
 		double distDepartPoint = p.distance(_depart);
 		double distPointArrivee = _arrivee.distance(p);
@@ -22,6 +26,13 @@ public class ObstacleLine {
 		return false;
 	}
 
+	/*
+	 * Savoir si un point est pres d une droite. Moins stricte que la fonction
+	 * contains(). Cette fonction est utilisee pour detecter si le point donne
+	 * lors d un click de souris est pres de cet obstacle. En utilisant la
+	 * fonction contains, il faudrait cliquer exactement sur un point de la
+	 * droite ce qui, au vu de la finesse de nos obstacle, serait complique.
+	 */
 	public Boolean isNearPoint(Point p) {
 		double distDepartPoint = p.distance(_depart);
 		double distPointArrivee = _arrivee.distance(p);

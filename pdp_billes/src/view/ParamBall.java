@@ -56,6 +56,10 @@ public class ParamBall extends AParamObject {
 	}
 
 	private void initializeComponents() {
+		/*
+		 * Initialise le contenu des zones de texte a la valeur actuelle du
+		 * champ qui leur correspond
+		 */
 		_radiusText = new JTextField(Integer.toString(_ball.get_radius()));
 		_massText = new JTextField(Double.toString(_ball.get_mass()));
 		_centreXText = new JTextField(Integer.toString((int) _ball.get_x()));
@@ -73,13 +77,20 @@ public class ParamBall extends AParamObject {
 				int iradius, icentreX, icentreY;
 				double imass;
 
-				// Si il y a une erreur de typo, on ne fait pas l'operation
+				/*
+				 * Si au moins un champ n est pas valide, on annule la
+				 * modification
+				 */
 				if (checkInt(radius) && checkDouble(mass) && checkInt(centreX) && checkInt(centreY)) {
 					iradius = Integer.parseInt(radius);
 					imass = Double.parseDouble(mass);
 					icentreX = Integer.parseInt(centreX);
 					icentreY = Integer.parseInt(centreY);
 
+					/*
+					 * Si la modification reussit, on actualise le panneau de
+					 * dessin
+					 */
 					if (_controller.updateBall(_ball, iradius, imass, icentreX, icentreY)) {
 						_drawingPan.repaint();
 					}

@@ -21,7 +21,7 @@ public class Ball {
 		_location = new Vector(x, y);
 		_velocity = new Vector(0, 0);
 		_radius = radius;
-		if(_radius <= 0)
+		if (_radius <= 0)
 			_radius = 1;
 		_mass = mass;
 		_trace = new ArrayList<Point>();
@@ -70,7 +70,7 @@ public class Ball {
 
 	public void set_radius(int radius) {
 		_radius = radius;
-		if(_radius <= 0)
+		if (_radius <= 0)
 			_radius = 1;
 	}
 
@@ -85,7 +85,7 @@ public class Ball {
 	public double get_mass() {
 		return _mass;
 	}
-	
+
 	public void set_mass(double mass) {
 		_mass = mass;
 	}

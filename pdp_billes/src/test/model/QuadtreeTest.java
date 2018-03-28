@@ -1,6 +1,6 @@
 package test.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -161,7 +161,4 @@ public class QuadtreeTest {
         _quad.retrieve(returnObjects, b5);
         assertEquals(returnObjects.size(),5);        
     }
-
 }
-
-

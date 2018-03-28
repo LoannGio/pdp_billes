@@ -5,6 +5,10 @@ import model.Ball;
 import model.ObstacleLine;
 
 public class RightClickChooser {
+	/*
+	 * Cette classe implémente la classe Visiteure correspondant au Design
+	 * Pattern du meme nom
+	 */
 
 	public static IRightClickPopUpMenu createRightClickPopUp(Ball b, Controller c, DrawingPanel dp) {
 		return new RightClickPopUpBall(b, c, dp);

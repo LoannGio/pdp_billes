@@ -24,6 +24,10 @@ public abstract class AParamObject extends JDialog {
 	}
 
 	protected void initialize() {
+		/*
+		 * On recupere l information de la taille de l ecran de l utilisateur
+		 * pour adapter la taille du panel a son ecran.
+		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
 		Dimension screenSize = new Dimension(dm.getWidth(), dm.getHeight());
@@ -34,10 +38,18 @@ public abstract class AParamObject extends JDialog {
 
 	}
 
+	/*
+	 * Prend un string en entree. Par une expression reguliere, retourne si oui
+	 * ou non ce string est un entier positif ou nul
+	 */
 	protected Boolean checkInt(String s) {
 		return s.matches("[0-9]+");
 	}
 
+	/*
+	 * Prend un string en entree. Par une expression reguliere, retourne si oui
+	 * ou non ce string est un double positif ou nul
+	 */
 	protected Boolean checkDouble(String s) {
 		Boolean isDouble = false;
 		if (checkInt(s))
