@@ -33,6 +33,10 @@ public class Circuit {
 	private double _defaultBallMass;
 	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
+	/*
+	 * Echelle de vitesse de notre application. Permet d eviter que nos objets
+	 * bougent trop vite
+	 */
 	private static double _scale = 400;
 	private double _defaultInclinaison;
 	private Vector _gravityAcceleration;
@@ -44,9 +48,9 @@ public class Circuit {
 		_defaultBallRadius = 10;
 		_defaultInclinaison = 45;
 		_defaultCOR = 0.5;
-		double _ax = 0;
-		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration = new Vector(_ax / _scale, _ay / _scale);
+		double ax = 0;
+		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
+		_gravityAcceleration = new Vector(ax / _scale, ay / _scale);
 	}
 
 	public void addBall(Ball b) {
@@ -79,6 +83,13 @@ public class Circuit {
 		_lines.add(ol);
 	}
 
+	/*
+	 * Importe les donnees du circuit au format XML du fichier f passe en
+	 * parametre. Lors de l import, on ne verifie pas la validite de notre
+	 * fichier pour l application. Un fichier importe a forcement une extension
+	 * .pdp. On part du principe qu un fichier ayant cette extension a forcement
+	 * la structure adequate pour l import.
+	 */
 	public void importer(File f) {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder;
@@ -124,6 +135,11 @@ public class Circuit {
 	}
 
 	private void importCircuitXML(Document document) {
+		/*
+		 * On recupere la taille de l ecran de l utilisateur. Si la taille de
+		 * celui ci ne permet pas d afficher le circuit qu on esaye d importer,
+		 * on rogne le dit circuit (a droite et en bas)
+		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
 		Dimension screenSize = new Dimension(dm.getWidth(), dm.getHeight());
@@ -138,6 +154,7 @@ public class Circuit {
 		_height = Integer.parseInt(document.getElementsByTagName("HAUTEUR").item(0).getTextContent());
 		if (_height > panelMaxHeight)
 			_height = (int) panelMaxHeight;
+
 		_defaultInclinaison = Double.parseDouble(document.getElementsByTagName("INCLINAISON").item(0).getTextContent());
 		_defaultBallRadius = Integer
 				.parseInt(document.getElementsByTagName("DEFAULTBALLRADIUS").item(0).getTextContent());
@@ -164,6 +181,10 @@ public class Circuit {
 		}
 	}
 
+	/*
+	 * Exporte les donnees de notre circuit au format XML dans un fichier f
+	 * passe en parametre
+	 */
 	public void exporter(File f) {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
@@ -180,6 +201,7 @@ public class Circuit {
 
 			saveBallsXML(doc, rootElement);
 
+			/* Mise en page du fichier */
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			try {
 				Transformer transformer = transformerFactory.newTransformer();
@@ -317,11 +339,16 @@ public class Circuit {
 		return _defaultInclinaison;
 	}
 
+	/*
+	 * Mutateur de l inclinaison. Lorsqu on modifie l inclinaison, on doit
+	 * recalculer la valeur de l acceleration verticale de la bille qui depend
+	 * de la gravite et de l inclinaison du plan
+	 */
 	public void set_inclinaison(double inclinaison) {
 		_defaultInclinaison = inclinaison;
-		double _ax = 0;
-		double _ay = Circuit.get_gravitation() * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration.setCartesian(_ax / _scale, _ay / _scale);
+		double ax = 0;
+		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
+		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
 	}
 
 	public Vector get_acceleration() {

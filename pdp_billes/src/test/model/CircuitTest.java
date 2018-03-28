@@ -101,6 +101,7 @@ public class CircuitTest {
 		 */
 		c.addBall(ball);
 		c.addLine(new ObstacleLine(new Point(10, 10), new Point(20, 10), 0.8));
+		c.addLine(new ObstacleLine(new Point(20, 10), new Point(20, 10), 0.8));
 
 		/*
 		 * On modifie toutes les valeurs modifiables par defaut afin de tester

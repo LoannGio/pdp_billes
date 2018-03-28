@@ -13,16 +13,18 @@ import model.ObstacleLine;
 import model.Vector;
 import view.DrawingPanel;
 
+/*Pattern singleton : il n y a qu une seule instance de cette classe et fournit un point d acces de type global a cette classe */
 public class Controller {
 	private Circuit _circuit;
 	private static Controller instance = new Controller();
-	private boolean isRunning;
-	private PhysicalEngine pe;
+	/* isRunning est un boolean indiquant si une execution est en cours */
+	private boolean _isRunning;
+	private PhysicalEngine _pe;
 
 	private Controller() {
 		_circuit = new Circuit(500, 500);
-		isRunning = false;
-		pe = null;
+		_isRunning = false;
+		_pe = null;
 	}
 
 	public static Controller getInstance() {
@@ -134,16 +136,16 @@ public class Controller {
 	}
 
 	public void runSimulation(DrawingPanel creationZone) {
-		isRunning = true;
+		_isRunning = true;
 		// PhysicalEngine pe = new PhysicalEngine(creationZone, _circuit);
-		if (pe == null)
-			pe = new PhysicalEngine(_circuit);
-		pe.run(creationZone);
+		if (_pe == null)
+			_pe = new PhysicalEngine(_circuit);
+		_pe.run(creationZone);
 	}
 
 	public void stopSimulation() {
-		isRunning = false;
-		pe.stop();
+		_isRunning = false;
+		_pe.stop();
 	}
 
 	public ArrayList<Ball> get_balls() {
@@ -339,6 +341,6 @@ public class Controller {
 	}
 
 	public boolean isRunningApp() {
-		return isRunning;
+		return _isRunning;
 	}
 }

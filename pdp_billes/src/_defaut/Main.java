@@ -5,7 +5,7 @@ import view.MainFrame;
 public class Main {
 
 	public static void main(String[] args) {
-		// Initialiser l'instance du controller qui instancie le model
+		// Lancer la fenetre principale pour lancer l application
 		new MainFrame();
 	}
 }

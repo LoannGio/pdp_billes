@@ -15,6 +15,10 @@ public class MainFrame extends JFrame {
 	}
 
 	public void initialize() {
+		/*
+		 * Recuperation de la taille de l ecran de l utilisateur pour afficher
+		 * une fenetre de la bonne taille
+		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
 		Dimension screenSize = new Dimension(dm.getWidth(), dm.getHeight());
@@ -31,7 +35,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initializeComponents(Dimension frameSize) {
-		_panel = new DrawingPanel(frameSize, this);
-		_paramZone = new ParamPanel(frameSize, _panel);
+		_panel = new DrawingPanel(frameSize, this); // Cree panneau de dessin
+		_paramZone = new ParamPanel(frameSize, _panel); // Cree panneau de param
 	}
 }

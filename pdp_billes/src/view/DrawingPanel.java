@@ -26,10 +26,24 @@ public class DrawingPanel extends JPanel {
 	private Controller _controller;
 	private Point _pressedLocation;
 	private Boolean _creatingLine;
+
+	/*
+	 * tmpDraw est un petit rectangle qui sera affiche au point d origine
+	 * potentiel d un obstacle pendant le drag de la souris lors de la creation
+	 * d un obstacle
+	 */
 	private Shape _tmpDraw;
 	private double _zoomFactor;
 	private int _panelWidth, _panelHeight;
 	private IRightClickPopUpMenu _rightClickPopUp;
+
+	/*
+	 * Image memoire contenant les obstacle et les traces des billes a tout
+	 * temps de l execution. Cette image permet d eviter d avoir a reparcourir
+	 * 1)la liste des traces de chaque bile et de tous les repeindre a chaque
+	 * fois 2) la liste des obstacles qui, de toute facon, ne changera jamais
+	 * pendant une execution
+	 */
 	private BufferedImage _buffer;
 
 	public DrawingPanel(Dimension frameSize, JFrame parent) {
@@ -44,8 +58,12 @@ public class DrawingPanel extends JPanel {
 		_tmpDraw = null;
 		_zoomFactor = 1;
 
+		/*
+		 * Proportions du panneau de dessin dans la fenetre
+		 */
 		double widthProportion = 0.8;
 		double heightProportion = 0.92;
+
 		_panelWidth = (int) Math.round(widthProportion * frameSize.width);
 		_panelHeight = (int) Math.round(heightProportion * frameSize.height);
 		_controller.setDimensionsPlan(this, _panelWidth, _panelHeight);
@@ -59,6 +77,10 @@ public class DrawingPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (!_controller.isRunningApp()) {
+					/*
+					 * Si on fait un clic gauche, on commence a creer un
+					 * obstacle
+					 */
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						_pressedLocation = new Point((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor));
 						_creatingLine = true;
@@ -66,6 +88,11 @@ public class DrawingPanel extends JPanel {
 								10);
 						repaint();
 					} else if (e.getButton() == MouseEvent.BUTTON3) {
+						/*
+						 * Clic droit, on verifie si on a clique sur un objet.
+						 * Si oui, on ouvre le popUp correspondant a l objet
+						 * sujet
+						 */
 						Object o = null;
 						if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
 							_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller,
@@ -77,7 +104,10 @@ public class DrawingPanel extends JPanel {
 							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
 						} else {
-
+							/*
+							 * On n a pas clique sur un objet existant, on va
+							 * donc creer une bille
+							 */
 							Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
 									_controller.get_defaultBallMass());
 							if (!(_controller.checkIfBallIsOnExistingObject(b))) {
@@ -96,6 +126,15 @@ public class DrawingPanel extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				if (!_controller.isRunningApp()) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
+						/*
+						 * Si on relache le clique gauche (donc il a forcement
+						 * deja ete presse) et on essaie de creer un obstacle
+						 * entre le point ou la souris a ete enfoncee et celui
+						 * ou elle a ete relachee La creation echoue si 1) le
+						 * point d origine est le meme que le point d arrivee 2)
+						 * le point d arrivee est en dehors du panneau de dessin
+						 * 3) l obstacle traverse une bille
+						 */
 						if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
 								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
 							Point arrivee = new Point();
@@ -120,6 +159,7 @@ public class DrawingPanel extends JPanel {
 	}
 
 	public void drawLineBuffer(ObstacleLine o) {
+		/* Peindre un obstacle sur l image bufferisee */
 		Line2D line = new Line2D.Double(o.get_depart(), o.get_arrivee());
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -129,6 +169,7 @@ public class DrawingPanel extends JPanel {
 	}
 
 	public void drawTraceBuffer(Point p) {
+		/* Peindre un point (une trace de bille) sur l image bufferisee */
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		gbuff.setColor(Color.green);
@@ -136,9 +177,16 @@ public class DrawingPanel extends JPanel {
 		gbuff.dispose();
 	}
 
+	/*
+	 * Efface ce qui est present sur le panneau de dessin et repeint par dessus.
+	 * Dans un premier temps, on affiche l image bufferisse ; puis, on peint les
+	 * billes par dessus
+	 * 
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(Color.red);
@@ -150,6 +198,10 @@ public class DrawingPanel extends JPanel {
 					b.get_radius() * 2);
 		}
 
+		/*
+		 * Si on est en train de creer une ligne (clique gauche enfonce), on
+		 * affiche un petit carre a titre indicatif
+		 */
 		if (_creatingLine) {
 			g2.setColor(Color.BLACK);
 			g2.draw(_tmpDraw);

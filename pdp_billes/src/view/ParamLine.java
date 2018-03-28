@@ -74,7 +74,10 @@ public class ParamLine extends AParamObject {
 				int idepartX, idepartY, iarriveeX, iarriveeY;
 				double dCOR;
 
-				// Si il y a une erreur de typo, on ne fait pas l'operation
+				/*
+				 * Si au moins un champ n est pas valide, on annule la
+				 * modification
+				 */
 				if (checkInt(departX) && checkInt(departY) && checkInt(arriveeX) && checkInt(arriveeY)
 						&& checkDouble(COR)) {
 					idepartX = Integer.parseInt(departX);
@@ -83,6 +86,10 @@ public class ParamLine extends AParamObject {
 					iarriveeY = Integer.parseInt(arriveeY);
 					dCOR = Double.parseDouble(COR);
 
+					/*
+					 * Si la modification reussit, on actualise le panneau de
+					 * dessin
+					 */
 					if (_controller.updateLine(_line, idepartX, idepartY, iarriveeX, iarriveeY, dCOR)) {
 						_drawingPan.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 						_drawingPan.repaint();
@@ -134,6 +141,10 @@ public class ParamLine extends AParamObject {
 	}
 
 	private void initializeComponents() {
+		/*
+		 * Initialise le contenu des zones de texte a la valeur actuelle du
+		 * champ qui leur correspond
+		 */
 		_departXText = new JTextField(Integer.toString((int) _line.get_depart().getX()));
 		_departYText = new JTextField(Integer.toString((int) _line.get_depart().getY()));
 		_arriveeXText = new JTextField(Integer.toString((int) _line.get_arrivee().getX()));

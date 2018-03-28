@@ -43,7 +43,7 @@ public class RightClickPopUpLine extends ARightClickPopUp {
 
 	@Override
 	public void parametre() {
-		ParamLine pl = new ParamLine(_line, _controller, _drawingPan);
+		new ParamLine(_line, _controller, _drawingPan);
 
 	}
 
