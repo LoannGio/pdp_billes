@@ -16,6 +16,8 @@ public class Ball {
 		_location = new Vector(x, y);
 		_velocity = new Vector(0, 0);
 		_radius = radius;
+		if(_radius <= 0)
+			_radius = 1;
 		_mass = mass;
 		_trace = new ArrayList<Point>();
 		_trace.add(new Point((int) x, (int) y));
@@ -24,8 +26,8 @@ public class Ball {
 
 	public void setAll(double x, double y, int radius, double mass) {
 		_location.setCartesian(x, y);
-		_radius = radius;
-		_mass = mass;
+		set_radius(radius);
+		set_mass(mass);
 	}
 
 	public Boolean contains(Point p) {
@@ -64,6 +66,8 @@ public class Ball {
 
 	public void set_radius(int radius) {
 		_radius = radius;
+		if(_radius <= 0)
+			_radius = 1;
 	}
 
 	public Vector get_velocity() {
@@ -77,6 +81,10 @@ public class Ball {
 
 	public double get_mass() {
 		return _mass;
+	}
+	
+	public void set_mass(double mass) {
+		_mass = mass;
 	}
 
 	public ArrayList<Point> get_trace() {
