@@ -79,10 +79,10 @@ public class ControllerTest {
 		c.addLine(o);
 		circuit.set_width(450);
 		circuit.set_height(500);
-		c.removeLinesOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeLinesOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_lines().size(), 1, 0);
 		circuit.set_width(300);
-		c.removeLinesOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeLinesOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_lines().size(), 0, 0);
 	}
 
@@ -92,10 +92,10 @@ public class ControllerTest {
 		c.addBall(b);
 		circuit.set_width(450);
 		circuit.set_height(500);
-		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 1, 0);
 		circuit.set_width(402);
-		c.removeBallsOutOfBounds(10, circuit.get_width(), 10, circuit.get_height());
+		c.removeBallsOutOfBounds(0, circuit.get_width(), 0, circuit.get_height());
 		assertEquals(c.get_balls().size(), 0, 0);
 	}
 
@@ -188,8 +188,8 @@ public class ControllerTest {
 		c.updateBall(b, 1, 2, 30, 30);
 		testBallPosition(b);
 
-		// Centre de la bille sur l'obstacle en prenant en compte son epaisseur
-		c.updateBall(b, 1, 2, 35, 30);
+		// Bille sur l'obstacle en prenant en compte son rayon
+		c.updateBall(b, 1, 2, 30, 31);
 		testBallPosition(b);
 	}
 
@@ -240,7 +240,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void testCollisionSegment() {
+	public void test_collisionSegment() {
 		Controller controller = Controller.getInstance();
 		Ball ball1 = new Ball(120, 189, 10, 1);
 		Ball ball2 = new Ball(300, 400, 10, 1);
@@ -254,7 +254,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void testCollisionPointCerle() {
+	public void test_collisionPointCercle() {
 		Ball ball1 = new Ball(29, 26, 15, 1);
 		Ball ball2 = new Ball(26, 13, 5, 1);
 		Point2D.Double p1 = new Point2D.Double(33.0, 10);
@@ -266,7 +266,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void testDistance() {
+	public void test_distance() {
 		Point2D.Double p1 = new Point2D.Double(33.0, 5);
 		Point2D.Double p2 = new Point2D.Double(22.0, 5);
 		double dist = c.distance(p1, p2);
@@ -274,7 +274,7 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void testCollisionBall() {
+	public void test_checkCollisionBallBall() {
 		Ball ball1 = new Ball(120, 180, 10, 1);
 		Ball ball2 = new Ball(110, 185, 6, 1);
 		Ball ball3 = new Ball(200, 300, 8, 1);
