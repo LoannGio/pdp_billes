@@ -45,17 +45,16 @@ public class PhysicalEngine {
 				_quad.clear();
 				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
 				for (Ball ball : _circuit.get_balls()) {
-					if (!ballIsOutOfPanel(ball, dp)) {
+					if (!_controller.ballIsOutOfCircuit(ball, _circuit)) {
 						_quad.insert(ball);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
-
 
 						for (Ball ball2 : returnObjects) {
 							if (ball2 != ball) {
 								if (_controller.checkCollisionBallBall(ball, ball2)) {
 									resolveCollisionBallBall(ball, ball2);
-									
+
 								}
 							}
 						}
@@ -77,24 +76,6 @@ public class PhysicalEngine {
 
 	public void stop() {
 		timer.stop();
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	public boolean ballIsOutOfPanel(Ball b, DrawingPanel dp) {
-		double bx = b.get_x();
-		double by = b.get_y();
-		double br = b.get_radius();
-		int dpwidth = dp.getWidth();
-		int dpheight = dp.getHeight();
-		if (bx - br > dpwidth || bx + br < 0 || by - br > dpheight || by + br < 0)
-			return true;
-		return false;
-
 	}
 
 	/*
@@ -177,7 +158,6 @@ public class PhysicalEngine {
 
 	}
 
-	
 	/*
 	 * private void resolveCollisionBallObstacle(Ball ball, ObstacleLine
 	 * obstacle) {
@@ -192,7 +172,7 @@ public class PhysicalEngine {
 	 * Vector.dotProduct(v, N); Vector v2 = new Vector(v.getX() - 2 * pscal *
 	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
 	 */
-	
+
 	/*
 	 * 
 	 * 
@@ -215,35 +195,34 @@ public class PhysicalEngine {
 		ball.set_speed(vx, vy * obstacle.getCOR());
 
 	}
-	
+
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
-		
+
 		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
 		double dist = _controller.distance(c, p);
-		if(dist < ball.get_radius()) { 
-			if(p.getX()==c.getX() && p.getY() == c.getY()) {
-				ball.set_location(ball.get_x()-(ball.get_radius() - dist), ball.get_y());
-			}
-			else {
-				if(p.getY()>c.getY())
-					if(p.getX()==c.getX())
-						ball.set_location(ball.get_x(), ball.get_y()-(ball.get_radius() - dist));
+		if (dist < ball.get_radius()) {
+			if (p.getX() == c.getX() && p.getY() == c.getY()) {
+				ball.set_location(ball.get_x() - (ball.get_radius() - dist), ball.get_y());
+			} else {
+				if (p.getY() > c.getY())
+					if (p.getX() == c.getX())
+						ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
+					else if (p.getX() > c.getX())
+						ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
 					else
-						if(p.getX()>c.getX())
-							ball.set_location(ball.get_x()-(ball.get_radius()-dist), ball.get_y()-(ball.get_radius()-dist));
-						else 
-							ball.set_location(ball.get_x()+(ball.get_radius()-dist), ball.get_y()-(ball.get_radius()-dist));
+						ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
 
-				else 
-					if(p.getX()==c.getX())
-						ball.set_location(ball.get_x(), ball.get_y()+(ball.get_radius() - dist));
-					else
-						if(p.getX()>c.getX())
-							ball.set_location(ball.get_x()-(ball.get_radius()-dist), ball.get_y()+(ball.get_radius()-dist));
-						else 
-							ball.set_location(ball.get_x()+(ball.get_radius()-dist), ball.get_y()+(ball.get_radius()-dist));
+				else if (p.getX() == c.getX())
+					ball.set_location(ball.get_x(), ball.get_y() + (ball.get_radius() - dist));
+				else if (p.getX() > c.getX())
+					ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
+				else
+					ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
 			}
-			
 
 		}
 	}
