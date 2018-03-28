@@ -242,9 +242,10 @@ public class Controller {
 
 		if (!checkIfLineIsOnExistingBall(line) && !(new_departX > _circuit.get_width())
 				&& !(new_departY > _circuit.get_height()) && !(new_arriveeX > _circuit.get_width())
-				&& !(new_arriveeY > _circuit.get_height()))
+				&& !(new_arriveeY > _circuit.get_height())) {
 			return true;
-
+		}
+		
 		line.setPositions(oldDepart, oldArrivee);
 		return false;
 	}

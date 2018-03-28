@@ -26,7 +26,7 @@ public class ControllerTest {
 	@After
 	public void tearDown() throws Exception {
 		circuit = null;
-		c = null;
+		c.clearCircuit();
 	}
 
 	@Test
@@ -195,7 +195,7 @@ public class ControllerTest {
 		// ** Update valide
 		c.updateLine(o, 0, 20, 20, 20, 0.5);
 		testLinePosition(o);
-
+		
 		// ** Update invalide
 		// La modification ne peut pas se faire, l obstacle doit revenir dans
 		// l'etat dans lequel elle etait avant l update
