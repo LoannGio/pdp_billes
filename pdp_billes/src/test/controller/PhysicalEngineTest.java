@@ -13,6 +13,7 @@ import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
 import model.Vector;
+import view.AParamObject;
 
 public class PhysicalEngineTest {
 	Ball ball1, ball2;
@@ -238,10 +239,43 @@ public class PhysicalEngineTest {
 	
 	@Test
 	public void testBallIsOutOfCircuit() {
-		Ball ball = new Ball(495,400,10,1);
-		assertEquals(c.ballIsOutOfCircuit(ball), false);
-		ball.set_location(510, 500);
-		assertEquals(c.ballIsOutOfCircuit(ball), true);
+		Ball ball = new Ball(635,200,10,1);
+		
+		//Balle dedans
+		Boolean result = null;
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, false);
+		
+		//Balle sortie en X
+		ball.set_location(651, 200);
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, true);
+		
+		//Balle sortie en Y
+		ball.set_location(640, 211);
+		try {
+			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
+			ballIsOutOfCircuit.setAccessible(true);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(result, true);
 	}
 
 }
