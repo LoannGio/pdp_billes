@@ -18,8 +18,8 @@ public class BallTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		ball1 = new Ball(0, 0, 0, 1);
-		ball2 = new Ball(0, 0, 0, 1);
+		ball1 = new Ball(0, 0, 10, 1);
+		ball2 = new Ball(0, 0, 10, 1);
 		_circuit = new Circuit(1000,800);
 	}
 
