@@ -143,56 +143,6 @@ public class ControllerTest {
 		assertEquals(false, c.checkIfLineIsOnExistingBall(o));
 	}
 
-	@Test
-	public void test_updateBall() {
-		Ball b = new Ball(10, 10, 1, 1);
-
-		c.addBall(b);
-		assertEquals(1, b.get_mass(), 0.001);
-		assertEquals(1, b.get_radius());
-
-		// *** Test update valide
-		c.updateBall(b, 1, 2, 20, 20);
-		testBallPosition(b);
-
-		// *** Test update invalide
-		// La modification ne peut pas se faire, la bille doit revenir dans
-		// l'etat dans lequel elle etait avant l update
-
-		// ** Test en updatant avec des coordonnees hors de l ecran
-
-		c.updateBall(b, 1, 2, circuit.get_width() + 1, 20);
-		testBallPosition(b);
-
-		c.updateBall(b, 1, 2, 20, circuit.get_height() + 1);
-		testBallPosition(b);
-
-		// ** Test en updatant sur un autre objet (ball ou line)
-		// * Conflit avec une bille
-		Ball b2 = new Ball(30, 30, 2, 1);
-		c.addBall(b2);
-		// Centres identiques
-		c.updateBall(b, 1, 2, 30, 30);
-
-		testBallPosition(b);
-
-		// Centres differents mais b et b2 se chevauchent
-		c.updateBall(b, 1, 2, 29, 30);
-		testBallPosition(b);
-
-		// * Conflit avec un obstacle
-		ObstacleLine o = new ObstacleLine(new Point(0, 30), new Point(60, 30), 0.5);
-		c.addLine(o);
-
-		// Centre de la bille sur la droite
-		c.updateBall(b, 1, 2, 30, 30);
-		testBallPosition(b);
-
-		// Centre de la bille sur l'obstacle en prenant en compte son epaisseur
-		c.updateBall(b, 1, 2, 35, 30);
-		testBallPosition(b);
-	}
-
 	private void testBallPosition(Ball b) {
 		assertEquals(2, b.get_mass(), 0.001);
 		assertEquals(1, b.get_radius());
