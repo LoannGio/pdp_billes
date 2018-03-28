@@ -45,5 +45,15 @@ public class Vector {
 															// multibly
 		return (A.getX() * B.getX() + A.getY() * B.getY());
 	}
+	
+	public static Vector vectorProductConstant(Vector A, double val) {
+		Vector vector = new Vector(val*A.getX(), val*A.getY());
+		return vector;
+	}
+	
+	public static Vector Product(Vector A, Vector B) {
+		Vector vector = new Vector(A.getX()*B.getX(), A.getY()*B.getY());
+		return vector;
+	}
 
 }

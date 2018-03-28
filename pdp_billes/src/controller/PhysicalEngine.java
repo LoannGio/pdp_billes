@@ -49,8 +49,6 @@ public class PhysicalEngine {
 						_quad.insert(ball);
 						returnObjects.clear();
 						_quad.retrieve(returnObjects, ball);
-
-
 						for (Ball ball2 : returnObjects) {
 							if (ball2 != ball) {
 								if (_controller.checkCollisionBallBall(ball, ball2)) {
@@ -129,7 +127,7 @@ public class PhysicalEngine {
 	 * 
 	 */
 
-	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
+	public void resolveCollisionBallBall(Ball ball1, Ball ball2) {
 
 		double collision_angle = angleCollisionBall(ball1, ball2);
 		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX());
@@ -179,7 +177,7 @@ public class PhysicalEngine {
 
 	
 	/*
-	 * private void resolveCollisionBallObstacle(Ball ball, ObstacleLine
+	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine
 	 * obstacle) {
 	 * 
 	 * Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y()); Vector
@@ -201,7 +199,7 @@ public class PhysicalEngine {
 	 * 
 	 * 
 	 */
-	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
+	public void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		ReplaceBall(obstacle, ball, c);
@@ -216,7 +214,7 @@ public class PhysicalEngine {
 
 	}
 	
-	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
+	public void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
 		
 		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
 		double dist = _controller.distance(c, p);
@@ -248,7 +246,7 @@ public class PhysicalEngine {
 		}
 	}
 
-	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
+	public Vector GetNormale(Point A, Point B, Point2D.Double C) {
 
 		Vector u, AC, N;
 		u = new Vector(B.x - A.x, B.y - A.y);
@@ -262,7 +260,7 @@ public class PhysicalEngine {
 		return N;
 	}
 
-	Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
+	public Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
 
 		Vector u = new Vector(B.x - A.x, B.y - A.y);
 		Vector AC = new Vector(C.x - A.x, C.y - A.y);
