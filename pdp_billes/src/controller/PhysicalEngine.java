@@ -30,11 +30,11 @@ public class PhysicalEngine {
 				(int) _controller.getDimensionsPlan().getHeight()));
 	}
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
+	/* Cette fonction permet de deplacer les billes 
+	 * Verifier et resoudre les collisions entre deux billes 
+	 * en utilisant un quadTree pour le voisinage  
+	 * Verifier et resoudre les collisions entre bille obstacle 
+	 * actualiser la vue du programme.
 	 */
 
 	public void run(DrawingPanel dp) {
@@ -71,7 +71,7 @@ public class PhysicalEngine {
 		});
 		timer.start();
 	}
-
+	
 	public void stop() {
 		timer.stop();
 	}
@@ -202,7 +202,11 @@ public class PhysicalEngine {
 		ball.set_speed(vx, vy * obstacle.getCOR());
 
 	}
-
+	
+	/*
+	 * On calcule le vecteur orthogonal a la tangente 
+	 * d'un point a projeter 
+	 */
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 		Vector u, AC, N;
 		u = new Vector(B.x - A.x, B.y - A.y);
@@ -216,6 +220,10 @@ public class PhysicalEngine {
 		return N;
 	}
 
+	/*
+	 * Cette fonction renvoie la projection perpondiculaire d'un point 
+	 * par rapport a une droite 
+	 */
 	private Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
 		Vector u = new Vector(B.x - A.x, B.y - A.y);
 		Vector AC = new Vector(C.x - A.x, C.y - A.y);
@@ -224,6 +232,13 @@ public class PhysicalEngine {
 		return I;
 	}
 
+	/*On replace la bille selon leur distance avec l'obstacle 
+	 * On gère les cas ou l'obstacle est verticale, horizontale, diagonale 
+	 * On decale la bille selon la position du center par rapport à sa projection   
+	 * perpondiculaire sur l'obstacle.
+	 * On obtien un seul point de contacte ou la distance entre la bille et l'obstacle 
+	 * est egale rayon 
+	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
 		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
 		double dist = _controller.distance(c, p);
