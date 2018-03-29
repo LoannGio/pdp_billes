@@ -37,7 +37,7 @@ public class Circuit {
 	 * Echelle de vitesse de notre application. Permet d eviter que nos objets
 	 * bougent trop vite
 	 */
-	private static double _scale = 400;
+	private static double _scale = 800;
 	private double _defaultInclinaison;
 	private Vector _gravityAcceleration;
 

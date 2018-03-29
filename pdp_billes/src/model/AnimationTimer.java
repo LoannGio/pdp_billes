@@ -18,7 +18,7 @@ public class AnimationTimer extends Timer {
 		MSSTEP = mSSTEP;
 	}
 
-	public AnimationTimer(ActionListener actionListener){
+	public AnimationTimer(ActionListener actionListener) {
 		super(STEP, actionListener);
 
 	}
