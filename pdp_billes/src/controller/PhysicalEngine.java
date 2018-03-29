@@ -75,6 +75,11 @@ public class PhysicalEngine {
 		timer.stop();
 	}
 
+	/*
+	 * Cette fonction permet de determiner si une bille est completement en dehors du circuit.
+	 * Pour cela, elle compare la position de la bille (en prenant en compte son rayon) avec 
+	 * la hauteur et la largeur du circuit.
+	 */
 	private boolean ballIsOutOfCircuit(Ball b) {
 		double bx = b.get_x();
 		double by = b.get_y();
@@ -85,27 +90,6 @@ public class PhysicalEngine {
 			return true;
 		return false;
 
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-
-	private double angleCollisionBall(Ball ball1, Ball ball2) {
-		Vector v;
-		double d1 = Math.sqrt(Math.pow(ball1.get_x(), 2) + Math.pow(ball1.get_y(), 2));
-		double d2 = Math.sqrt(Math.pow(ball2.get_x(), 2) + Math.pow(ball2.get_y(), 2));
-		Vector loc1 = ball1.get_location();
-		Vector loc2 = ball2.get_location();
-		if (d1 > d2)
-			v = Vector.vectorSubtract(loc1, loc2);
-		else
-			v = Vector.vectorSubtract(loc2, loc1);
-		double angle = Math.atan2(v.getY(), v.getX());
-		return angle;
 	}
 
 	/*
