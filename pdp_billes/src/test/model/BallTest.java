@@ -34,7 +34,7 @@ public class BallTest {
 	}
 
 	/* On verifie que le x et le y d'une bille sont correctement 
-	 * modifies après un appel a setLocaltion. 
+	 * modifies apres un appel a setLocaltion. 
 	 */
 	@Test
 	public void test_ballSetLocation() {
@@ -44,7 +44,7 @@ public class BallTest {
 	}
 
 	/* On verifie que la vitesse d'une bille est correctement 
-	 * modifie après un appel a setSpeed. 
+	 * modifie apres un appel a setSpeed. 
 	 */
 	@Test
 	public void test_ballSetSpeed() {
@@ -61,7 +61,7 @@ public class BallTest {
 	 * sur l'axe Y.
 	 */
 	@Test
-	public void testStep() {
+	public void test_step() {
 		double x_init = 100;
 		double y_init = 100;
 		ball1 = new Ball(x_init, y_init, 3, 1);
@@ -77,7 +77,7 @@ public class BallTest {
 	 * position.
 	 */
 	@Test
-	public void testStepLoop() {
+	public void test_stepLoop() {
 		double x_init = 100;
 		double y_init = 100;
 		double x_prec = x_init;
@@ -102,7 +102,7 @@ public class BallTest {
 	 * On verifie que cette bille ne bouge pas.
 	 */
 	@Test
-	public void testStepInclinaison() {
+	public void test_stepInclinaison() {
 		double x_init = 100;
 		double y_init = 100;
 		ball1 = new Ball(x_init, y_init, 3, 1);

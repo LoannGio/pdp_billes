@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.lang.reflect.Method;
 
 import org.junit.After;
@@ -15,7 +14,6 @@ import model.Ball;
 import model.Circuit;
 import model.ObstacleLine;
 import model.Vector;
-import view.AParamObject;
 
 public class PhysicalEngineTest {
 	Ball ball1, ball2;
@@ -54,7 +52,7 @@ public class PhysicalEngineTest {
 	 */
 	
 	@Test
-	public void testResolveCollisionBallBallSameMass() {
+	public void test_resolveCollisionBallBallSameMass() {
 		/* Cas  Collision horizontal*/
 		try {
 		Method resolveCollBallBall = PhysicalEngine.class.getMethod(
@@ -107,7 +105,7 @@ public class PhysicalEngineTest {
 	 * conversation de la quantite de mouvement et conversation de l'energie cinetique. 
 	 */
 	@Test
-	public void testResolveCollisionBallBallDifferentMass() {
+	public void test_resolveCollisionBallBallDifferentMass() {
 		try {
 		Method resolveCollBallBall = PhysicalEngine.class.getDeclaredMethod(
 						"resolveCollisionBallBall", Ball.class, Ball.class);
@@ -225,7 +223,7 @@ public class PhysicalEngineTest {
 	 */
 	
 	@Test
-	public void testResolveCollisionBallObstacle() {
+	public void test_resolveCollisionBallObstacle() {
 		
 		try {
 		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
@@ -308,7 +306,7 @@ public class PhysicalEngineTest {
 	 * ce qui diminue la quantite de mouvement et l'energie cinetique (choc non elastique)
 	 */
 	@Test
-	public void testResolveCollisionBallObstacleCOR() {
+	public void test_resolveCollisionBallObstacleCOR() {
 		
 		try {
 		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
@@ -353,7 +351,7 @@ public class PhysicalEngineTest {
 	 * est egal a 90.
 	 */
 	@Test 
-	public void testGetNormale() {
+	public void test_getNormale() {
 		try {
 			/* normale sur une droite horizontale */	
 			Method normale = PhysicalEngine.class.getDeclaredMethod(
@@ -391,7 +389,7 @@ public class PhysicalEngineTest {
 	 * on verifie que notre fonction renvoie la meme valeur.
 	 */
 	@Test
-	public void testProjectionI() {
+	public void test_projectionI() {
 		try {
 		/* projection sur une droite horizontale */	
 		Method projection = PhysicalEngine.class.getDeclaredMethod(
@@ -431,7 +429,7 @@ public class PhysicalEngineTest {
 
 	
 	@Test
-	public void testBallIsOutOfCircuit() {
+	public void test_ballIsOutOfCircuit() {
 		Ball ball = new Ball(635,200,10,1);
 		
 		//Balle dedans
