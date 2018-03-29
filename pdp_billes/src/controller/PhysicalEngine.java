@@ -41,7 +41,6 @@ public class PhysicalEngine {
 		timer = new AnimationTimer(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// on vide le quadtree
 				_quad.clear();
 				ArrayList<Ball> returnObjects = new ArrayList<Ball>();
 				for (Ball ball : _circuit.get_balls()) {
@@ -110,32 +109,28 @@ public class PhysicalEngine {
 	}
 
 	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 * Cette fonction permet de calculer les vitesses des deux billes 
+	 * après une collsision en utilisant les formules du choc elastique 
+	 * elle replace les billes selon une distance minimum et selon leur masse
+	 * A partir des directions des deux billes et l'angle de collision 
+	 * on trouve les nouveaux vecteurs de vitesse des billes. 
 	 */
 
 	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
-		double collision_angle = angleCollisionBall(ball1, ball2);
+		// Variables pour le calcul des vitesses 
+		double collision_angle = Math.atan2((ball2.get_y()-ball1.get_y()), (ball2.get_x()-ball1.get_x()));
 		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX());
 		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX());
-		Vector pos1 = ball1.get_location(); // position of ball 1
-		Vector pos2 = ball2.get_location(); // position of ball 2
-		double v1 = ball1.get_speed(); // speed of ball 1
-		double v2 = ball2.get_speed(); // speed of ball 2
-		double m1 = ball1.get_mass(); // mass of ball 1
-		double m2 = ball2.get_mass(); // mass of ball 2
-		double r1 = ball1.get_radius(); // raduis of ball 2
-		double r2 = ball2.get_radius(); // raduis of ball 1
+		Vector pos1 = ball1.get_location(); 
+		Vector pos2 = ball2.get_location(); 
+		double v1 = ball1.get_speed(); 
+		double v2 = ball2.get_speed(); 
+		double m1 = ball1.get_mass(); 
+		double m2 = ball2.get_mass(); 
+		double r1 = ball1.get_radius(); 
+		double r2 = ball2.get_radius(); 
 
-		/***************
-		 * new Velocity of two ball according to their directions
-		 **************/
+		// On calcule les vitesses après le choc selon les directions et l'angle de collision du deux billes 
 		Vector new_v1 = new Vector(v1 * Math.cos(direction_1 - collision_angle),
 				v1 * Math.sin(direction_1 - collision_angle));
 		Vector new_v2 = new Vector(v2 * Math.cos(direction_2 - collision_angle),
@@ -149,46 +144,26 @@ public class PhysicalEngine {
 		ball2.set_speed(cosAngle * final_v2.getX() - sinAngle * final_v2.getY(),
 				sinAngle * final_v2.getX() + cosAngle * final_v2.getY());
 
-		/**************
-		 * minimum translation distance to push balls apart after
-		 *************/
-
+		// La distance minimum pour decaler les billes dans le bon endroit
 		Vector posDiff = Vector.vectorSubtract(pos1, pos2);
 		double d = Math.sqrt(Math.pow(posDiff.getX(), 2) + Math.pow(posDiff.getY(), 2));
 		Vector mtd = new Vector(posDiff.getX() * (((r1 + r2) - d) / d), posDiff.getY() * (((r1 + r2) - d) / d));
-		// computing inverse mass quantities
 		double im1 = 1 / m1;
 		double im2 = 1 / m2;
-		// push-pull them apart based off their mass
 		ball1.set_location(pos1.getX() + mtd.getX() * (im1 / (im1 + im2)),
 				pos1.getY() + mtd.getY() * (im1 / (im1 + im2)));
 		ball2.set_location(pos2.getX() - mtd.getX() * (im2 / (im1 + im2)),
 				pos2.getY() - mtd.getY() * (im2 / (im1 + im2)));
 	}
 
-	/*
-	 * public void resolveCollisionBallObstacle(Ball ball, ObstacleLine
-	 * obstacle) { Point2D.Double c = new Point2D.Double(ball.get_x(),
-	 * ball.get_y()); Vector N = new Vector(); N =
-	 * GetNormale(obstacle.get_depart(),obstacle.get_arrivee(), c); Vector v2 =
-	 * new Vector(); v2 = CalculerVecteurV2(ball.get_velocity(), N);
-	 * ball.set_speed(v2.getX(), v2.getY() * ObstacleLine.COR); }
-	 * 
-	 * private Vector CalculerVecteurV2(Vector v, Vector N) { double pscal =
-	 * Vector.dotProduct(v, N); Vector v2 = new Vector(v.getX() - 2 * pscal *
-	 * N.getX(), v.getY() - 2 * pscal * N.getY()); return v2; }
-	 * 
-	 */
+    /* Cette fonction gere la collision entre une bille et un obstacle.
+     * Bien souvent on detecte la collision alors que la bille chevauche l'obstacle,
+     * on la replace donc sur l'obstacle. A partir de l'angle d'arrivee et la normale,
+     * on trouve l'angle de rebond. Ce denier nous permet de calculer le nouveau vecteur vitesse.
+     * Enfin on met a jour le vecteur vitesse de la balle avec set_speed.
+     */
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-
+	
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		ReplaceBall(obstacle, ball, c);
