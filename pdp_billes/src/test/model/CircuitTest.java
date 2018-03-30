@@ -176,10 +176,10 @@ public class CircuitTest {
 		c.set_height(1000);
 		Ball b;
 		/*
-		 * On ajoute environ 99*99 billes au circuit pour faire un gros fichier
-		 * a importer
+		 * On ajoute environ 500*100 billes au circuit pour faire un gros
+		 * fichier a importer
 		 */
-		for (int i = 10; i < 1000; i = i + 10) {
+		for (int i = 10; i < 5000; i = i + 10) {
 			for (int j = 10; j < 1000; j = j + 10) {
 				b = new Ball(i, j, 3, 4);
 				c.addBall(b);
