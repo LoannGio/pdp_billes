@@ -49,47 +49,6 @@ public class CircuitTest {
 	}
 
 	@Test
-	public void test_AddRemoveBall() {
-		assertEquals(0, c.get_balls().size());
-		int nbBalls = 10;
-		for (int i = 0; i < nbBalls; i++)
-			c.addBall(b);
-		assertEquals(nbBalls, c.get_balls().size());
-		c.removeBall(b);
-		assertEquals(nbBalls - 1, c.get_balls().size());
-	}
-
-	@Test
-	public void test_AddRemoveLine() {
-		assertEquals(0, c.get_lines().size());
-		int nbLines = 20;
-		for (int i = 0; i < nbLines; i++)
-			c.addLine(o);
-		assertEquals(nbLines, c.get_lines().size());
-		c.removeLine(o);
-		assertEquals(nbLines - 1, c.get_lines().size());
-	}
-
-	@Test
-	public void test_clearAll() {
-		assertEquals(0, c.get_balls().size());
-		assertEquals(0, c.get_lines().size());
-		int nbBalls = 10;
-		int nbLines = 20;
-
-		for (int i = 0; i < nbBalls; i++)
-			c.addBall(b);
-		for (int i = 0; i < nbLines; i++)
-			c.addLine(o);
-
-		assertEquals(nbBalls, c.get_balls().size());
-		assertEquals(nbLines, c.get_lines().size());
-		c.clearAll();
-		assertEquals(0, c.get_balls().size());
-		assertEquals(0, c.get_lines().size());
-	}
-
-	@Test
 	public void test_importExport() {
 		/* On cree une balle avec une trace */
 		Ball ball = new Ball(10, 10, 7, 4);

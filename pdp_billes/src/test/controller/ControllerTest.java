@@ -126,8 +126,8 @@ public class ControllerTest {
 		// La balle est sur une autre balle
 		Ball b2 = new Ball(52, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingBall(b2), true);
-		Ball b3 = new Ball(71, 150, 10, 0);
 
+		Ball b3 = new Ball(71, 150, 10, 0);
 		// La balle n'est pas sur une autre balle
 		assertEquals(c.checkIfBallIsOnExistingBall(b3), false);
 
