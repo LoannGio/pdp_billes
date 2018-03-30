@@ -110,9 +110,13 @@ public class ControllerTest {
 		Ball b = new Ball(50, 150, 10, 0);
 		assertEquals(c.checkIfBallIsOnExistingLine(b), false);
 
-		// La balle est sur la ligne
-		Ball b2 = new Ball(200, 150, 10, 0);
-		assertEquals(c.checkIfBallIsOnExistingLine(b2), true);
+		// La balle est sur la ligne en comptant son radius
+		b = new Ball(200, 145, 10, 0);
+		assertEquals(c.checkIfBallIsOnExistingLine(b), true);
+
+		// La balle est exatement sur la ligne
+		b = new Ball(200, 150, 10, 0);
+		assertEquals(c.checkIfBallIsOnExistingLine(b), true);
 	}
 
 	@Test
@@ -256,9 +260,9 @@ public class ControllerTest {
 		ObstacleLine obstacle = new ObstacleLine(p1, p2, 0.5);
 		boolean b1 = controller.collisionSegment(ball1, obstacle);
 		boolean b2 = controller.collisionSegment(ball2, obstacle);
-		//La balle est en collision avec l'obstacle
+		// La balle est en collision avec l'obstacle
 		assertEquals(true, b1);
-		//La balle n'est pas en collision avec l'obstacle
+		// La balle n'est pas en collision avec l'obstacle
 		assertEquals(false, b2);
 	}
 
@@ -270,32 +274,33 @@ public class ControllerTest {
 		Point2D.Double p2 = new Point2D.Double(22.0, 10);
 		boolean b1 = c.collisionPointCercle(p1, p2, ball1);
 		boolean b2 = c.collisionPointCercle(p1, p2, ball2);
-		//La balle est en collision avec le point
+		// La balle est en collision avec le point
 		assertEquals(true, b1);
-		//La balle n'est pas en collision avec le point
+		// La balle n'est pas en collision avec le point
 		assertEquals(false, b2);
 	}
-	/* On place deux points a distance 11 l'un de l'autre.
-	 * On verifie que la fonction distance pour ces 2 points
-	 * renvoie 11.
+
+	/*
+	 * On place deux points a distance 11 l'un de l'autre. On verifie que la
+	 * fonction distance pour ces 2 points renvoie 11.
 	 */
 	@Test
 	public void test_distance() {
 		Point2D.Double p1 = new Point2D.Double(33.0, 5);
 		Point2D.Double p2 = new Point2D.Double(22.0, 5);
 		double dist = c.distance(p1, p2);
-		//Distance valide
-		assertEquals(true, Math.abs(dist-11) < 1E-10);
-		//Distance invalide
-		assertEquals(false, Math.abs(dist-12) < 1E-10);
+		// Distance valide
+		assertEquals(true, Math.abs(dist - 11) < 1E-10);
+		// Distance invalide
+		assertEquals(false, Math.abs(dist - 12) < 1E-10);
 	}
 
-	/* On cree deux billes qui se chevauchent et on
-	 * verifie qu'elles sont bien en collision.
-	 * On cree une autre bille plus loin et on verifie qu'elle
-	 * n'est pas en collision avec les premieres billes.
-	 * Pour finir, on place deux billes qui ont un seul point
-	 * de contact et on verifie que la collision est bien detectee. 
+	/*
+	 * On cree deux billes qui se chevauchent et on verifie qu'elles sont bien
+	 * en collision. On cree une autre bille plus loin et on verifie qu'elle
+	 * n'est pas en collision avec les premieres billes. Pour finir, on place
+	 * deux billes qui ont un seul point de contact et on verifie que la
+	 * collision est bien detectee.
 	 */
 	@Test
 	public void test_checkCollisionBallBall() {
@@ -304,15 +309,15 @@ public class ControllerTest {
 		Ball ball3 = new Ball(200, 300, 8, 1);
 		boolean b1 = c.checkCollisionBallBall(ball1, ball2);
 		boolean b2 = c.checkCollisionBallBall(ball1, ball3);
-		//Les balles entrent en collision
+		// Les balles entrent en collision
 		assertEquals(true, b1);
-		//Les balles n'entrent pas en collision
+		// Les balles n'entrent pas en collision
 		assertEquals(false, b2);
 		ball2.setAll(140, 180, 10, 1);
 		b1 = c.checkCollisionBallBall(ball1, ball2);
 		assertEquals(true, b1);
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -320,7 +325,7 @@ public class ControllerTest {
 	public void test_setDimensionsPlan() {
 		DrawingPanel _dp = new DrawingPanel(new Dimension(500, 500), new JFrame());
 		c.setDimensionsPlan(_dp, 300, 200);
-		//Les dimensions du circuit et du panel sont correctement modifiees
+		// Les dimensions du circuit et du panel sont correctement modifiees
 		assertEquals(getControllerCircuit().get_width(), 300, 0);
 		assertEquals(getControllerCircuit().get_height(), 200, 0);
 		assertEquals(_dp.getWidth(), 300, 0);
