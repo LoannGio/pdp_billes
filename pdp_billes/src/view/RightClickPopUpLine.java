@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import controller.Controller;
 import model.ObstacleLine;
 
+@SuppressWarnings("serial")
 public class RightClickPopUpLine extends ARightClickPopUp {
 	private ObstacleLine _line;
 	private JMenuItem _suppr;

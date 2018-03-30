@@ -22,6 +22,7 @@ import controller.Controller;
 import model.Ball;
 import model.ObstacleLine;
 
+@SuppressWarnings("serial")
 public class DrawingPanel extends JPanel {
 	private Controller _controller;
 	private Point _pressedLocation;

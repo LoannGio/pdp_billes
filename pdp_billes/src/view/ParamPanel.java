@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
 
+@SuppressWarnings("serial")
 public class ParamPanel extends JPanel {
 
 	private Controller _controller;

@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import controller.Controller;
 import model.Ball;
 
+@SuppressWarnings("serial")
 public class ParamBall extends AParamObject {
 	private Ball _ball;
 
