@@ -34,8 +34,9 @@ public class Circuit {
 	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
 	/*
-	 * Echelle de vitesse de notre application. Permet d eviter que nos objets
-	 * bougent trop vite
+	 * Echelle de vitesse de notre application. De gere le pas de temps de la
+	 * simulation. Augmenter cet attribut améliore la précision de la simulation
+	 * mais diminue sa vitesse d'exécution
 	 */
 	private double _scale;
 	private double _defaultInclinaison;
