@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import controller.Controller;
 import model.Ball;
 
+@SuppressWarnings("serial")
 public class RightClickPopUpBall extends ARightClickPopUp {
 	private Ball _ball;
 	private JMenuItem _suppr;

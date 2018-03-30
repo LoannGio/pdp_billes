@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 
+@SuppressWarnings("serial")
 public abstract class AParamObject extends JDialog {
 	protected Controller _controller;
 	protected DrawingPanel _drawingPan;

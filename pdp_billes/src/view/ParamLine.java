@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import controller.Controller;
 import model.ObstacleLine;
 
+@SuppressWarnings("serial")
 public class ParamLine extends AParamObject {
 	private ObstacleLine _line;
 

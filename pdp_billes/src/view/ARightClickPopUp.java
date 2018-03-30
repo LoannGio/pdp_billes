@@ -6,6 +6,7 @@ import javax.swing.JPopupMenu;
 
 import controller.Controller;
 
+@SuppressWarnings("serial")
 public abstract class ARightClickPopUp extends JPopupMenu implements IRightClickPopUpMenu {
 	protected Controller _controller;
 	protected DrawingPanel _drawingPan;
