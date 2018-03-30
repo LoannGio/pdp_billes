@@ -133,16 +133,23 @@ public class ParamPanel extends JPanel {
 		_runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!_controller.isRunningApp())
+				if (!_controller.isRunningApp()) {
+					_runButton.setBackground(Color.green);
+					_stopButton.setBackground(null);
 					_controller.runSimulation(_dp);
+				}
 			}
 		});
 
 		_stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (_controller.isRunningApp())
+				if (_controller.isRunningApp()) {
+					_runButton.setBackground(null);
+					_stopButton.setBackground(Color.red);
 					_controller.stopSimulation();
+				}
+
 			}
 		});
 
@@ -267,6 +274,7 @@ public class ParamPanel extends JPanel {
 	}
 
 	private void initializeContainers() {
+
 		_conteneur.setLayout(new BoxLayout(_conteneur, BoxLayout.PAGE_AXIS));
 		_conteneurLongueur.setLayout(new BoxLayout(_conteneurLongueur, BoxLayout.LINE_AXIS));
 		_conteneurLargeur.setLayout(new BoxLayout(_conteneurLargeur, BoxLayout.LINE_AXIS));
