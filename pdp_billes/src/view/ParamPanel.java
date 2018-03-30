@@ -32,6 +32,7 @@ public class ParamPanel extends JPanel {
 	private JPanel _conteneurMass = new JPanel();
 	private JPanel _conteneurInclinaison = new JPanel();
 	private JPanel _conteneurCOR = new JPanel();
+	private JPanel _conteneurScale = new JPanel();
 
 	private JLabel _labelLongueur = new JLabel("Longueur   ");
 	private JLabel _labelLargeur = new JLabel("Largeur      ");
@@ -39,12 +40,14 @@ public class ParamPanel extends JPanel {
 	private JLabel _labelMass = new JLabel("Masse des balles ");
 	private JLabel _labelInclinaison = new JLabel("Inclinaison ");
 	private JLabel _labelCOR = new JLabel("Coef. restitution d'obstacles ");
+	private JLabel _labelScale = new JLabel("Précision   ");
 
 	private JTextField _txtMass;
 	private JTextField _txtLongueur;
 	private JTextField _txtLargeur;
 	private JTextField _txtRadius;
 	private JTextField _txtCOR;
+	private JTextField _txtScale;
 
 	private JButton _changeButton = new JButton("Changer");
 	private JButton _runButton = new JButton("Lancer");
@@ -119,6 +122,9 @@ public class ParamPanel extends JPanel {
 
 					if (checkDouble(_txtCOR.getText()))
 						_controller.set_defaultCOR(Double.parseDouble(_txtCOR.getText()));
+
+					if (checkDouble(_txtScale.getText()))
+						_controller.set_defaultScale(Double.parseDouble(_txtScale.getText()));
 				}
 			}
 		});
@@ -267,6 +273,7 @@ public class ParamPanel extends JPanel {
 		_conteneurMass.setLayout(new BoxLayout(_conteneurMass, BoxLayout.LINE_AXIS));
 		_conteneurInclinaison.setLayout(new BoxLayout(_conteneurInclinaison, BoxLayout.LINE_AXIS));
 		_conteneurCOR.setLayout(new BoxLayout(_conteneurCOR, BoxLayout.LINE_AXIS));
+		_conteneurScale.setLayout(new BoxLayout(_conteneurScale, BoxLayout.LINE_AXIS));
 
 		_conteneurLongueur.add(_labelLongueur);
 		_conteneurLongueur.add(_txtLongueur);
@@ -278,12 +285,15 @@ public class ParamPanel extends JPanel {
 		_conteneurMass.add(_txtMass);
 		_conteneurCOR.add(_labelCOR);
 		_conteneurCOR.add(_txtCOR);
+		_conteneurScale.add(_labelScale);
+		_conteneurScale.add(_txtScale);
 
 		_conteneur.add(_conteneurLongueur);
 		_conteneur.add(_conteneurLargeur);
 		_conteneur.add(_conteneurCOR);
 		_conteneur.add(_conteneurRadius);
 		_conteneur.add(_conteneurMass);
+		_conteneur.add(_conteneurScale);
 
 		_conteneurInclinaison.add(_labelInclinaison);
 		_inclinaisonSlider.setMajorTickSpacing(10);
@@ -318,23 +328,24 @@ public class ParamPanel extends JPanel {
 		return panelWidth;
 	}
 
+	/*
+	 * Initialise le contenu des zones de texte a la valeur actuelle du champ
+	 * qui leur correspond
+	 */
 	private void initializeLabels(int panelWidth, int panelHeight) {
-		/*
-		 * Initialise le contenu des zones de texte a la valeur actuelle du
-		 * champ qui leur correspond
-		 */
 		_txtLongueur = new JTextField(Integer.toString(panelWidth));
 		_txtLargeur = new JTextField(Integer.toString(panelHeight));
 		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
 		_txtMass = new JTextField(Double.toString(_controller.get_defaultBallMass()));
 		_txtCOR = new JTextField(Double.toString(_controller.get_defaultCOR()));
+		_txtScale = new JTextField(Double.toString(_controller.getdefaultScale()));
 	}
 
+	/*
+	 * Fonction appelee lors d un import de circuit afin d actualiser les
+	 * valeurs des champs aux nouvelles valeurs presentes en memoire
+	 */
 	private void updateLabels() {
-		/*
-		 * Fonction appelee lors d un import de circuit afin d actualiser les
-		 * valeurs des champs aux nouvelles valeurs presentes en memoire
-		 */
 		Dimension creationZoneDim = _controller.getDimensionsPlan();
 		_txtLongueur.setText(Integer.toString(creationZoneDim.width));
 		_txtLargeur.setText(Integer.toString(creationZoneDim.height));
@@ -342,6 +353,7 @@ public class ParamPanel extends JPanel {
 		_txtMass.setText(Double.toString(_controller.get_defaultBallMass()));
 		_inclinaisonSlider.setValue((int) _controller.get_defaultInclinaison());
 		_txtCOR.setText(Double.toString(_controller.get_defaultCOR()));
+		_txtScale.setText(Double.toString(_controller.getdefaultScale()));
 	}
 
 }
