@@ -377,4 +377,12 @@ public class Controller {
 	public boolean isRunningApp() {
 		return _isRunning;
 	}
+
+	public double getdefaultScale() {
+		return _circuit.get_scale();
+	}
+
+	public void set_defaultScale(double scale) {
+		_circuit.set_scale(scale);
+	}
 }

@@ -37,7 +37,7 @@ public class Circuit {
 	 * Echelle de vitesse de notre application. Permet d eviter que nos objets
 	 * bougent trop vite
 	 */
-	private static double _scale = 800;
+	private double _scale;
 	private double _defaultInclinaison;
 	private Vector _gravityAcceleration;
 
@@ -48,6 +48,7 @@ public class Circuit {
 		_defaultBallRadius = 10;
 		_defaultInclinaison = 45;
 		_defaultCOR = 0.5;
+		_scale = 800;
 		double ax = 0;
 		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
 		_gravityAcceleration = new Vector(ax / _scale, ay / _scale);
@@ -161,6 +162,7 @@ public class Circuit {
 		_defaultBallMass = Double
 				.parseDouble(document.getElementsByTagName("DEFAULTBALLMASS").item(0).getTextContent());
 		_defaultCOR = Double.parseDouble(document.getElementsByTagName("DEFAULTCOR").item(0).getTextContent());
+		_scale = Double.parseDouble(document.getElementsByTagName("SCALE").item(0).getTextContent());
 	}
 
 	private void importBallsXML(Document document) {
@@ -282,6 +284,10 @@ public class Circuit {
 		Element defBallMass = doc.createElement("DEFAULTBALLMASS");
 		defBallMass.setTextContent(String.valueOf(_defaultBallMass));
 		rootElement.appendChild(defBallMass);
+
+		Element defScale = doc.createElement("SCALE");
+		defScale.setTextContent(String.valueOf(_scale));
+		rootElement.appendChild(defScale);
 	}
 
 	private void saveBallsXML(Document doc, Element rootElement) {
@@ -346,9 +352,7 @@ public class Circuit {
 	 */
 	public void set_inclinaison(double inclinaison) {
 		_defaultInclinaison = inclinaison;
-		double ax = 0;
-		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
+		computeGravitation();
 	}
 
 	public Vector get_acceleration() {
@@ -359,16 +363,16 @@ public class Circuit {
 		return _width;
 	}
 
-	public void set_width(int _width) {
-		this._width = _width;
+	public void set_width(int width) {
+		this._width = width;
 	}
 
 	public int get_height() {
 		return _height;
 	}
 
-	public void set_height(int _height) {
-		this._height = _height;
+	public void set_height(int height) {
+		this._height = height;
 	}
 
 	public ArrayList<Ball> get_balls() {
@@ -383,24 +387,28 @@ public class Circuit {
 		return _defaultBallRadius;
 	}
 
-	public void set_defaultBallRadius(int _ballRadius) {
-		this._defaultBallRadius = _ballRadius;
+	public void set_defaultBallRadius(int ballRadius) {
+		this._defaultBallRadius = ballRadius;
 	}
 
 	public double get_defaultBallMass() {
 		return _defaultBallMass;
 	}
 
-	public void set_defaultBallMass(double _ballMass) {
-		this._defaultBallMass = _ballMass;
+	public void set_defaultBallMass(double ballMass) {
+		this._defaultBallMass = ballMass;
 	}
 
-	public static double get_scale() {
+	public double get_scale() {
 		return _scale;
 	}
 
-	public static void set_scale(double _scale) {
-		Circuit._scale = _scale;
+	public void set_scale(double scale) {
+		for (Ball b : _balls) {
+			b.set_speed(b.get_velocity().getX() * _scale / scale, b.get_velocity().getY() * _scale / scale);
+		}
+		_scale = scale;
+		computeGravitation();
 	}
 
 	public Vector get_gravityAcceleration() {
@@ -415,8 +423,14 @@ public class Circuit {
 		return _defaultCOR;
 	}
 
-	public void set_defaultCOR(double _defaultCOR) {
-		this._defaultCOR = _defaultCOR;
+	public void set_defaultCOR(double defaultCOR) {
+		this._defaultCOR = defaultCOR;
+	}
+
+	private void computeGravitation() {
+		double ax = 0;
+		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
+		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
 	}
 
 }
