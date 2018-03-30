@@ -30,11 +30,11 @@ public class PhysicalEngine {
 				(int) _controller.getDimensionsPlan().getHeight()));
 	}
 
-	/* Cette fonction permet de deplacer les billes 
-	 * Verifier et resoudre les collisions entre deux billes 
-	 * en utilisant un quadTree pour le voisinage  
-	 * Verifier et resoudre les collisions entre bille obstacle 
-	 * actualiser la vue du programme.
+	/*
+	 * Cette fonction permet de deplacer les billes Verifier et resoudre les
+	 * collisions entre deux billes en utilisant un quadTree pour le voisinage
+	 * Verifier et resoudre les collisions entre bille obstacle actualiser la
+	 * vue du programme.
 	 */
 
 	public void run(DrawingPanel dp) {
@@ -70,15 +70,15 @@ public class PhysicalEngine {
 		});
 		timer.start();
 	}
-	
+
 	public void stop() {
 		timer.stop();
 	}
 
 	/*
-	 * Cette fonction permet de determiner si une bille est completement en dehors du circuit.
-	 * Pour cela, elle compare la position de la bille (en prenant en compte son rayon) avec 
-	 * la hauteur et la largeur du circuit.
+	 * Cette fonction permet de determiner si une bille est completement en
+	 * dehors du circuit. Pour cela, elle compare la position de la bille (en
+	 * prenant en compte son rayon) avec la hauteur et la largeur du circuit.
 	 */
 	private boolean ballIsOutOfCircuit(Ball b) {
 		double bx = b.get_x();
@@ -93,28 +93,29 @@ public class PhysicalEngine {
 	}
 
 	/*
-	 * Cette fonction permet de calculer les vitesses des deux billes 
-	 * après une collsision en utilisant les formules du choc elastique 
-	 * elle replace les billes selon une distance minimum et selon leur masse
-	 * A partir des directions des deux billes et l'angle de collision 
-	 * on trouve les nouveaux vecteurs de vitesse des billes. 
+	 * Cette fonction permet de calculer les vitesses des deux billes après une
+	 * collsision en utilisant les formules du choc elastique elle replace les
+	 * billes selon une distance minimum et selon leur masse A partir des
+	 * directions des deux billes et l'angle de collision on trouve les nouveaux
+	 * vecteurs de vitesse des billes.
 	 */
 
 	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
-		// Variables pour le calcul des vitesses 
-		double collision_angle = Math.atan2((ball2.get_y()-ball1.get_y()), (ball2.get_x()-ball1.get_x()));
+		// Variables pour le calcul des vitesses
+		double collision_angle = Math.atan2((ball2.get_y() - ball1.get_y()), (ball2.get_x() - ball1.get_x()));
 		double direction_1 = Math.atan2(ball1.get_velocity().getY(), ball1.get_velocity().getX());
 		double direction_2 = Math.atan2(ball2.get_velocity().getY(), ball2.get_velocity().getX());
-		Vector pos1 = ball1.get_location(); 
-		Vector pos2 = ball2.get_location(); 
-		double v1 = ball1.get_speed(); 
-		double v2 = ball2.get_speed(); 
-		double m1 = ball1.get_mass(); 
-		double m2 = ball2.get_mass(); 
-		double r1 = ball1.get_radius(); 
-		double r2 = ball2.get_radius(); 
+		Vector pos1 = ball1.get_location();
+		Vector pos2 = ball2.get_location();
+		double v1 = ball1.get_speed();
+		double v2 = ball2.get_speed();
+		double m1 = ball1.get_mass();
+		double m2 = ball2.get_mass();
+		double r1 = ball1.get_radius();
+		double r2 = ball2.get_radius();
 
-		// On calcule les vitesses après le choc selon les directions et l'angle de collision du deux billes 
+		// On calcule les vitesses après le choc selon les directions et
+		// l'angle de collision du deux billes
 		Vector new_v1 = new Vector(v1 * Math.cos(direction_1 - collision_angle),
 				v1 * Math.sin(direction_1 - collision_angle));
 		Vector new_v2 = new Vector(v2 * Math.cos(direction_2 - collision_angle),
@@ -140,14 +141,15 @@ public class PhysicalEngine {
 				pos2.getY() - mtd.getY() * (im2 / (im1 + im2)));
 	}
 
-    /* Cette fonction gere la collision entre une bille et un obstacle.
-     * Bien souvent on detecte la collision alors que la bille chevauche l'obstacle,
-     * on la replace donc sur l'obstacle. A partir de l'angle d'arrivee et la normale,
-     * on trouve l'angle de rebond. Ce denier nous permet de calculer le nouveau vecteur vitesse.
-     * Enfin on met a jour le vecteur vitesse de la balle avec set_speed.
-     */
+	/*
+	 * Cette fonction gere la collision entre une bille et un obstacle. Bien
+	 * souvent on detecte la collision alors que la bille chevauche l'obstacle,
+	 * on la replace donc sur l'obstacle. A partir de l'angle d'arrivee et la
+	 * normale, on trouve l'angle de rebond. Ce denier nous permet de calculer
+	 * le nouveau vecteur vitesse. Enfin on met a jour le vecteur vitesse de la
+	 * balle avec set_speed.
+	 */
 
-	
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		ReplaceBall(obstacle, ball, c);
@@ -161,10 +163,9 @@ public class PhysicalEngine {
 		ball.set_speed(vx, vy * obstacle.getCOR());
 
 	}
-	
+
 	/*
-	 * On calcule le vecteur orthogonal a la tangente 
-	 * d'un point a projeter 
+	 * On calcule le vecteur orthogonal a la tangente d'un point a projeter
 	 */
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
 		Vector u, AC, N;
@@ -180,8 +181,8 @@ public class PhysicalEngine {
 	}
 
 	/*
-	 * Cette fonction renvoie la projection perpondiculaire d'un point 
-	 * par rapport a une droite 
+	 * Cette fonction renvoie la projection perpondiculaire d'un point par
+	 * rapport a une droite
 	 */
 	private Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C) {
 		Vector u = new Vector(B.x - A.x, B.y - A.y);
@@ -191,12 +192,12 @@ public class PhysicalEngine {
 		return I;
 	}
 
-	/*On replace la bille selon leur distance avec l'obstacle 
-	 * On gère les cas ou l'obstacle est verticale, horizontale, diagonale 
-	 * On decale la bille selon la position du center par rapport à sa projection   
-	 * perpondiculaire sur l'obstacle.
-	 * On obtien un seul point de contacte ou la distance entre la bille et l'obstacle 
-	 * est egale rayon 
+	/*
+	 * On replace la bille selon leur distance avec l'obstacle On gère les cas
+	 * ou l'obstacle est verticale, horizontale, diagonale On decale la bille
+	 * selon la position du center par rapport à sa projection perpondiculaire
+	 * sur l'obstacle. On obtien un seul point de contacte ou la distance entre
+	 * la bille et l'obstacle est egale rayon
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
 		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);

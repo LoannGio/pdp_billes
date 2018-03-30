@@ -24,6 +24,7 @@ public class CircuitTest {
 	Circuit c;
 	Ball b;
 	ObstacleLine o;
+	File f;
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,6 +38,13 @@ public class CircuitTest {
 		c = null;
 		b = null;
 		o = null;
+		try {
+			if (f.exists())
+				f.delete();
+
+		} catch (Exception e) {
+
+		}
 
 	}
 
@@ -124,7 +132,7 @@ public class CircuitTest {
 		ArrayList<ObstacleLine> exportedLines = c.get_lines();
 
 		/* On cree un fichier et on exporte notre circuit dedans */
-		File f = new File("TUexport.pdp");
+		f = new File("TUexport.pdp");
 		c.exporter(f);
 
 		/*
@@ -201,6 +209,34 @@ public class CircuitTest {
 			e.printStackTrace();
 
 		}
+	}
+
+	@Test
+	public void tes_import_runtime() {
+		c.set_width(1000);
+		c.set_height(1000);
+		Ball b;
+		/*
+		 * On ajoute environ 99*99 billes au circuit pour faire un gros fichier
+		 * a importer
+		 */
+		for (int i = 10; i < 1000; i = i + 10) {
+			for (int j = 10; j < 1000; j = j + 10) {
+				b = new Ball(i, j, 3, 4);
+				c.addBall(b);
+			}
+		}
+		f = new File("TUimport.pdp");
+		c.exporter(f);
+
+		long debutImport = System.currentTimeMillis();
+		c.importer(f);
+		long finImport = System.currentTimeMillis();
+
+		long tempsImport = finImport - debutImport;
+
+		assertEquals(true, tempsImport < 2000);
+
 	}
 
 }
