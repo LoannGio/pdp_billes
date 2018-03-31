@@ -263,20 +263,6 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void test_collisionPointCercle() {
-		Ball ball1 = new Ball(29, 26, 15, 1);
-		Ball ball2 = new Ball(26, 13, 5, 1);
-		Point2D.Double p1 = new Point2D.Double(33.0, 10);
-		Point2D.Double p2 = new Point2D.Double(22.0, 10);
-		boolean b1 = c.collisionPointCercle(p1, p2, ball1);
-		boolean b2 = c.collisionPointCercle(p1, p2, ball2);
-		// Point is in the ball
-		assertEquals(true, b1);
-		// Point isn't in the ball
-		assertEquals(false, b2);
-	}
-
-	@Test
 	public void test_distance() {
 		Point2D.Double p1 = new Point2D.Double(33.0, 5);
 		Point2D.Double p2 = new Point2D.Double(22.0, 5);
