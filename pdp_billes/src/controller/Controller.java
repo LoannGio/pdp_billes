@@ -229,15 +229,9 @@ public class Controller {
 		if (pscal1 >= 0 && pscal2 >= 0)
 			return true;
 
-		if (collisionPointCercle(A, C, ball))
+		if (ball.contains(A))
 			return true;
-		if (collisionPointCercle(B, C, ball))
-			return true;
-		return false;
-	}
-
-	public boolean collisionPointCercle(Point2D.Double a, Point2D.Double b, Ball ball) {
-		if (distance(a, b) <= ball.get_radius())
+		if (ball.contains(B))
 			return true;
 		return false;
 	}
