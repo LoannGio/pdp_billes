@@ -70,7 +70,8 @@ public class ParamPanel extends JPanel {
 	}
 
 	private void initialize(Dimension frameSize, DrawingPanel creationZone) {
-		int panelWidth = initializeComponents(frameSize, creationZone);
+		int panelWidth = creationZone.getWidth();
+		initializeComponents(frameSize, creationZone);
 		setBounds(panelWidth + 20, 10, _paramZoneWidth, _paramZoneHeight);
 		setBackground(new Color(255, 255, 255));
 		setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
@@ -320,7 +321,7 @@ public class ParamPanel extends JPanel {
 		add(_container);
 	}
 
-	private int initializeComponents(Dimension frameSize, DrawingPanel creationZone) {
+	private void initializeComponents(Dimension frameSize, DrawingPanel creationZone) {
 		_maxCreationZoneWidth = creationZone.getWidth();
 		_maxCreationZoneHeight = creationZone.getHeight();
 		int panelWidth = creationZone.getWidth();
@@ -330,7 +331,6 @@ public class ParamPanel extends JPanel {
 		_paramZoneWidth = (int) Math.round(widthProportion * frameSize.width);
 		_paramZoneHeight = (int) Math.round(heightProportion * frameSize.height);
 		initializeLabels(panelWidth, panelHeight);
-		return panelWidth;
 	}
 
 	/*
