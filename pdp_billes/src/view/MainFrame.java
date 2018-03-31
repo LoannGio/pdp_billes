@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
 		initialize();
 	}
 
-	public void initialize() {
+	private void initialize() {
 		/*
 		 * Getting user's screen dimensions to display a well sized window
 		 */
