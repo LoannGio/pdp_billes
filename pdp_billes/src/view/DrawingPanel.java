@@ -46,11 +46,11 @@ public class DrawingPanel extends JPanel {
 	private BufferedImage _buffer;
 
 	public DrawingPanel(Dimension frameSize, JFrame parent) {
-		initialize(frameSize, parent);
+		initialize(frameSize);
 		addListneners();
 	}
 
-	private void initialize(Dimension frameSize, JFrame parent) {
+	private void initialize(Dimension frameSize) {
 		_controller = Controller.getInstance();
 		_pressedLocation = null;
 		_creatingLine = false;
