@@ -140,7 +140,7 @@ public class PhysicalEngine {
 	}
 
 	/**
-	 * This method resolved the collision between a ball and an obstacle. The
+	 * This method resolves the collision between a ball and an obstacle. The
 	 * collision is detected often when ball is overlapping on the obstacle, so
 	 * the ball is correctly repositioned. Based on the incident angle and the
 	 * perpendicular angle, the bouncing angle is calculated. This angle allows
