@@ -55,36 +55,6 @@ public class Circuit {
 		_gravityAcceleration = new Vector(ax / _scale, ay / _scale);
 	}
 
-	public void addBall(Ball b) {
-		_balls.add(b);
-	}
-
-	public Boolean removeBall(Ball b) {
-		return _balls.remove(b);
-	}
-
-	public void clearAll() {
-		clearBalls();
-		clearLines();
-
-	}
-
-	public void clearBalls() {
-		_balls = new ArrayList<Ball>();
-	}
-
-	public void clearLines() {
-		_lines = new ArrayList<ObstacleLine>();
-	}
-
-	public Boolean removeLine(ObstacleLine o) {
-		return _lines.remove(o);
-	}
-
-	public void addLine(ObstacleLine ol) {
-		_lines.add(ol);
-	}
-
 	/** Import data of the circuit in XML format of the f file passed in parameter.
 	 * During the import, we do not verify the validity of our file. An imported file
 	 * must have a .pdp extension. It is assumed that a file with this extension always
@@ -334,6 +304,36 @@ public class Circuit {
 		double ax = 0;
 		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclination));
 		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
+	}
+	
+	public void addBall(Ball b) {
+		_balls.add(b);
+	}
+
+	public Boolean removeBall(Ball b) {
+		return _balls.remove(b);
+	}
+
+	public void clearAll() {
+		clearBalls();
+		clearLines();
+
+	}
+
+	public void clearBalls() {
+		_balls = new ArrayList<Ball>();
+	}
+
+	public void clearLines() {
+		_lines = new ArrayList<ObstacleLine>();
+	}
+
+	public Boolean removeLine(ObstacleLine o) {
+		return _lines.remove(o);
+	}
+
+	public void addLine(ObstacleLine ol) {
+		_lines.add(ol);
 	}
 	
 	/**

@@ -45,15 +45,16 @@ public class PhysicalEngineTest {
 	}
 	
 	
-	/* Ce test permet de verifier que la trajectoire et la vitesse des billes 
-	 * sont correctement modifiees lors d'une collision.
-	 * On cree deux billes de meme masse, leur vitesse est la meme et leur
-	 * trajectoire est opposee au moment de la collision.
+	/**
+	 * This test checks that the trajectory and speed of balls are correctly
+	 * modified during a collision.
+	 * 2 balls of same mass are created, their speed are the same and their trajectory
+	 * are opposed when the collision occurs.
 	 */
 	
 	@Test
 	public void test_resolveCollisionBallBallSameMass() {
-		/* Cas  Collision horizontal*/
+		/* Event: horizontal collision*/
 		try {
 		Method resolveCollBallBall = PhysicalEngine.class.getMethod(
 				"resolveCollisionBallBall", Ball.class, Ball.class);
@@ -68,7 +69,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas  Collision Vertical*/ 
+		/* Event: vertical collision*/ 
 		ball1.setAll(70, 100, 10, 2);
 		ball2.setAll(70, 120, 10, 2);
 		ball1.set_speed(0, 1);
@@ -79,7 +80,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas Collision a 45 degres */ 
+		/* Event: 45 degrees collision*/ 
 		ball1.setAll(50, 100, 10, 2);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(1, 1);
@@ -97,12 +98,12 @@ public class PhysicalEngineTest {
 	}
 	
 	
-	/* Ce test permet de verifier que la vitesse des billes
-	 * est correctement modifiee lors d'une collision entre billes
-	 * de masses differentes.
-	 * On cree deux billes de masse differente et on varie leur vitesse.
-	 * On verifie que notre moteur respecte les lois generales du choc elastique :
-	 * conversation de la quantite de mouvement et conversation de l'energie cinetique. 
+	/**
+	 *  This test checks that the speed of balls is correctly modified during a
+	 *  ball-ball collision of balls with different mass.
+	 *  2 balls of different mass are created, and we make their speed vary.
+	 *  Then, we check that the engine obeys the formulas of elastic impact:
+	 *  preservation of movement quantity and preservation of kinetic energy.
 	 */
 	@Test
 	public void test_resolveCollisionBallBallDifferentMass() {
@@ -110,9 +111,9 @@ public class PhysicalEngineTest {
 		Method resolveCollBallBall = PhysicalEngine.class.getDeclaredMethod(
 						"resolveCollisionBallBall", Ball.class, Ball.class);
 		resolveCollBallBall.setAccessible(true);
-		/* Cas meme vitesse */
+		/* Event: same speed */
 		
-		// Conservation quantite de mouvement 
+		// Preservation of movement quantity 
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(1, 0);
@@ -126,7 +127,7 @@ public class PhysicalEngineTest {
 		boolean b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
 		
-		// Conservation energie cinetique
+		// Preservation of kinetic energy
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(1, 0);
@@ -144,9 +145,9 @@ public class PhysicalEngineTest {
 		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
 		
-		/* Cas une bille immobile */
+		/* Event: one unmoving ball */
 			
-		// Conservation quantite de mouvement 
+		// Preservation of movement quantity 
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(0, 0);
@@ -160,7 +161,7 @@ public class PhysicalEngineTest {
 		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
 		
-		// Conservation energie cinetique
+		// Preservation of kinetic energy
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(0, 0);
@@ -177,9 +178,9 @@ public class PhysicalEngineTest {
 		Diff = Vector.vectorSubtract(eci, ecf);
 		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
-		/* Cas deux vitesses diffirentes non nulles */
+		/* Event : 2 different not null speeds */
 			
-		// Conservation quantite de mouvement 
+		// Preservation of movement quantity
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(10, 0);
@@ -193,7 +194,7 @@ public class PhysicalEngineTest {
 		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
 		assertEquals(true, b);
 		
-		// Conservation energie cinetique
+		// Preservation of kinetic energy
 		ball1.setAll(50, 100, 10, 1);
 		ball2.setAll(70, 100, 10, 2);
 		ball1.set_speed(10, 0);
@@ -216,12 +217,12 @@ public class PhysicalEngineTest {
 	}
 	
 	
-	/* Ce test permet de verifier que la trajectoire et la vitesse d'une bille
-	 * sont correctement modifiees lors d'une collision avec un obstacle.
-	 * Le coefficient de rebond est egal a 1 (la quantite de mouvement et l'energie cinetique est conservee)
-	 * choc elestique
+	/**
+	 * This test checks that the trajectory and speed of a ball are correctly
+	 * modified during a collision with an obstacle.
+	 * The coefficient of restitution is equal to 1 (the movement quantity
+	 * and the kinetic energy are preserved).
 	 */
-	
 	@Test
 	public void test_resolveCollisionBallObstacle() {
 		
@@ -230,7 +231,7 @@ public class PhysicalEngineTest {
 				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
 		resolveCollBallObstacle.setAccessible(true);
 		obstacle.setCOR(1);
-		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
+		// Event: horizontal obstacle collision, ball moving towards bottom
 		obstacle.set_begin(new Point(20,100));
 		obstacle.set_end(new Point(100,100));
 		ball1.setAll(50, 90, 10, 2);
@@ -241,7 +242,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas collision obstacle horizontal, bille direction vers le haut */ 
+		// Event: horizontal obstacle collision, ball moving towards top
 		ball1.set_location(50, 110);
 		ball1.set_speed(0, -5);	
 		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
@@ -250,7 +251,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas collision obstacle vertical, bille direction vers la droite */
+		// Event: vertical obstacle collision, ball moving towards right
 		obstacle.set_begin(new Point(100,100));
 		obstacle.set_end(new Point(100,200));
 		ball1.set_location(90, 150);
@@ -261,7 +262,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas collision obstacle vertical, bille direction vers la gauche */
+		// Event: vertical obstacle collision, ball moving towards left
 		obstacle.set_begin(new Point(100,100));
 		obstacle.set_end(new Point(100,200));
 		ball1.set_location(110, 150);
@@ -272,7 +273,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b1);
 		assertEquals(true, b2);
 		
-		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
+		// Event: 45 degrees obstacle collision, ball moving perpendicularly
 		obstacle.set_begin(new Point(100,300));
 		obstacle.set_end(new Point(200,200));
 		ball1.set_location(145, 245);
@@ -284,6 +285,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle 45+180 degres, bille direction perpendiculaire*/
+		// Event: 45+180 degrees obstacle collision, ball moving perpendicularly
 		obstacle.set_begin(new Point(100,100));
 		obstacle.set_end(new Point(200,200));
 		ball1.set_location(155, 145);
