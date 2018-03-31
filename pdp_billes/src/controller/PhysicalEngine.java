@@ -32,9 +32,8 @@ public class PhysicalEngine {
 
 	/**
 	 * This method moves balls of the circuit. Checks and resolves collisions
-	 * between balls by using a Quadtree for space partitioning.
-	 * Checks and resolves collisions between balls and obstacles.
-	 *  Updates program's wiew.
+	 * between balls by using a Quadtree for space partitioning. Checks and
+	 * resolves collisions between balls and obstacles. Updates program's wiew.
 	 */
 	public void run(DrawingPanel dp) {
 		_timer = new AnimationTimer(new ActionListener() {
@@ -59,11 +58,11 @@ public class PhysicalEngine {
 								resolveCollisionBallObstacle(ball, obstacle);
 							}
 						}
-						dp.repaint();
 						ball.step(_circuit.get_acceleration());
 						dp.drawTraceBuffer(ball.get_track().get(ball.get_track().size() - 1));
 					}
 				}
+				dp.repaint();
 				Toolkit.getDefaultToolkit().sync();
 			}
 		});
@@ -75,9 +74,9 @@ public class PhysicalEngine {
 	}
 
 	/**
-	 * This method determines if a ball is completely out of the circuit,
-	 * by comparing the position of the ball (taking its radius into account)
-	 * with dimensions of the circuit.
+	 * This method determines if a ball is completely out of the circuit, by
+	 * comparing the position of the ball (taking its radius into account) with
+	 * dimensions of the circuit.
 	 */
 	private boolean ballIsOutOfCircuit(Ball b) {
 		double bx = b.get_x();
@@ -92,11 +91,10 @@ public class PhysicalEngine {
 	}
 
 	/**
-	 * This method calculates the speed of both balls after their collision,
-	 * by using formulas of elastic impact. Balls are repositioned by taking
-	 * a minimum distance and their mass into account.
-	 * The new speed vectors are calculated from direction and collision angle
-	 * of both balls.
+	 * This method calculates the speed of both balls after their collision, by
+	 * using formulas of elastic impact. Balls are repositioned by taking a
+	 * minimum distance and their mass into account. The new speed vectors are
+	 * calculated from direction and collision angle of both balls.
 	 */
 
 	private void resolveCollisionBallBall(Ball ball1, Ball ball2) {
@@ -112,8 +110,9 @@ public class PhysicalEngine {
 		double r1 = ball1.get_radius();
 		double r2 = ball2.get_radius();
 
-		/* Speeds are calculated after impact, by using direction and collision angle
-		 * from both balls.
+		/*
+		 * Speeds are calculated after impact, by using direction and collision
+		 * angle from both balls.
 		 */
 		Vector new_v1 = new Vector(v1 * Math.cos(direction_1 - collision_angle),
 				v1 * Math.sin(direction_1 - collision_angle));
@@ -141,9 +140,9 @@ public class PhysicalEngine {
 	}
 
 	/**
-	 * This method resolved the collision between a ball and an obstacle.
-	 * The collision is detected often when ball is overlapping on the obstacle,
-	 * so the ball is correctly repositioned. Based on the incident angle and the
+	 * This method resolved the collision between a ball and an obstacle. The
+	 * collision is detected often when ball is overlapping on the obstacle, so
+	 * the ball is correctly repositioned. Based on the incident angle and the
 	 * perpendicular angle, the bouncing angle is calculated. This angle allows
 	 * to calculate the new speed vector.
 	 */
@@ -190,11 +189,12 @@ public class PhysicalEngine {
 	}
 
 	/**
-	 * The ball is repositioned based on its distance with the obstacle. The events
-	 * of vertical, horizontal or diagonal obstacle are handled. The ball is then
-	 * repositioned based on its center position in relation to its perpendicular
-	 * projection on the obstacle. A contact point is obtained, where the distance
-	 * between the ball and the obstacle is equal to the ball's radius.
+	 * The ball is repositioned based on its distance with the obstacle. The
+	 * events of vertical, horizontal or diagonal obstacle are handled. The ball
+	 * is then repositioned based on its center position in relation to its
+	 * perpendicular projection on the obstacle. A contact point is obtained,
+	 * where the distance between the ball and the obstacle is equal to the
+	 * ball's radius.
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
 		Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);

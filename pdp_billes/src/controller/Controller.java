@@ -251,6 +251,8 @@ public class Controller {
 		return false;
 	}
 
+
+
 	public double distance(Point2D.Double a, Point2D.Double b) {
 		return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
 	}
