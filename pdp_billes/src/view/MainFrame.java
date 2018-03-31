@@ -17,8 +17,7 @@ public class MainFrame extends JFrame {
 
 	public void initialize() {
 		/*
-		 * Recuperation de la taille de l ecran de l utilisateur pour afficher
-		 * une fenetre de la bonne taille
+		 * Getting user's screen dimensions to display a well sized window
 		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();

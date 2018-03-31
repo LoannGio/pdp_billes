@@ -29,21 +29,19 @@ public class DrawingPanel extends JPanel {
 	private Boolean _creatingLine;
 
 	/*
-	 * tmpDraw est un petit rectangle qui sera affiche au point d origine
-	 * potentiel d un obstacle pendant le drag de la souris lors de la creation
-	 * d un obstacle
+	 * tmpDraw is a small rectangle which will be displayed at the potential
+	 * origin point of an obstacle during the obstacle creation's mouse drag
 	 */
 	private Shape _tmpDraw;
-	private double _zoomFactor;
 	private int _panelWidth, _panelHeight;
 	private IRightClickPopUpMenu _rightClickPopUp;
 
 	/*
-	 * Image memoire contenant les obstacle et les traces des billes a tout
-	 * temps de l execution. Cette image permet d eviter d avoir a reparcourir
-	 * 1)la liste des traces de chaque bile et de tous les repeindre a chaque
-	 * fois 2) la liste des obstacles qui, de toute facon, ne changera jamais
-	 * pendant une execution
+	 * Memory images containing obstacles and balls' tracks at every step of the
+	 * simulation. This image avoid having to browse 1) the whole tracks list of
+	 * each ball before repainting them all 2) the obstacle list which will
+	 * never change during a simulation This image is set as a "backgrond image"
+	 * before displaying balls on panel.
 	 */
 	private BufferedImage _buffer;
 
@@ -57,11 +55,7 @@ public class DrawingPanel extends JPanel {
 		_pressedLocation = null;
 		_creatingLine = false;
 		_tmpDraw = null;
-		_zoomFactor = 1;
 
-		/*
-		 * Proportions du panneau de dessin dans la fenetre
-		 */
 		double widthProportion = 0.8;
 		double heightProportion = 0.92;
 
@@ -79,20 +73,19 @@ public class DrawingPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				if (!_controller.isRunningApp()) {
 					/*
-					 * Si on fait un clic gauche, on commence a creer un
-					 * obstacle
+					 * If there's a left click, we start the obstacle creation's
+					 * process
 					 */
 					if (e.getButton() == MouseEvent.BUTTON1) {
-						_pressedLocation = new Point((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor));
+						_pressedLocation = new Point((int) (e.getX()), (int) (e.getY()));
 						_creatingLine = true;
-						_tmpDraw = new Rectangle((int) (e.getX() / _zoomFactor), (int) (e.getY() / _zoomFactor) - 5, 10,
-								10);
+						_tmpDraw = new Rectangle((int) (e.getX()), (int) (e.getY()) - 5, 10, 10);
 						repaint();
 					} else if (e.getButton() == MouseEvent.BUTTON3) {
 						/*
-						 * Clic droit, on verifie si on a clique sur un objet.
-						 * Si oui, on ouvre le popUp correspondant a l objet
-						 * sujet
+						 * Right click : we check if it's within an already
+						 * existing object. If so, we open the corresponding pop
+						 * up menu
 						 */
 						Object o = null;
 						if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
@@ -106,13 +99,13 @@ public class DrawingPanel extends JPanel {
 
 						} else {
 							/*
-							 * On n a pas clique sur un objet existant, on va
-							 * donc creer une bille
+							 * Right click isn't an an existing object : we try
+							 * to create a ball at the given location
 							 */
 							Ball b = new Ball(e.getX(), e.getY(), _controller.get_defaultBallRadius(),
 									_controller.get_defaultBallMass());
 							if (!(_controller.checkIfBallIsOnExistingObject(b))) {
-								b.set_location(b.get_x() / _zoomFactor, b.get_y() / _zoomFactor);
+								b.set_location(b.get_x(), b.get_y());
 								_controller.addBall(b);
 							}
 							repaint();
@@ -128,13 +121,11 @@ public class DrawingPanel extends JPanel {
 				if (!_controller.isRunningApp()) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						/*
-						 * Si on relache le clique gauche (donc il a forcement
-						 * deja ete presse) et on essaie de creer un obstacle
-						 * entre le point ou la souris a ete enfoncee et celui
-						 * ou elle a ete relachee La creation echoue si 1) le
-						 * point d origine est le meme que le point d arrivee 2)
-						 * le point d arrivee est en dehors du panneau de dessin
-						 * 3) l obstacle traverse une bille
+						 * If left click is release, we try to create an
+						 * obstacle with the saved origin point and the released
+						 * point. Creation is aborted if 1)one point is outside
+						 * the circuit 2)the origin and released point are at
+						 * the same location 3) the obstacle crosses a ball
 						 */
 						if (e.getX() <= _panelWidth && e.getX() >= 0 && e.getY() <= _panelHeight && e.getY() >= 0
 								&& (e.getX() != _pressedLocation.getX() || e.getY() != _pressedLocation.getY())) {
@@ -142,7 +133,7 @@ public class DrawingPanel extends JPanel {
 							arrivee.setLocation(e.getX(), e.getY());
 							ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee, _controller.get_defaultCOR());
 							if (!(_controller.checkIfLineIsOnExistingBall(o))) {
-								arrivee.setLocation(arrivee.getX() / _zoomFactor, arrivee.getY() / _zoomFactor);
+								arrivee.setLocation(arrivee.getX(), arrivee.getY());
 								o.set_arrivee(arrivee);
 								_controller.addLine(o);
 								drawLineBuffer(o);
@@ -159,8 +150,8 @@ public class DrawingPanel extends JPanel {
 		});
 	}
 
+	/* Painting an obstacle on the buffered image */
 	public void drawLineBuffer(ObstacleLine o) {
-		/* Peindre un obstacle sur l image bufferisee */
 		Line2D line = new Line2D.Double(o.get_begin(), o.get_end());
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -169,8 +160,8 @@ public class DrawingPanel extends JPanel {
 		gbuff.dispose();
 	}
 
+	/* Painting a point (ball track) on the buffered image */
 	public void drawTraceBuffer(Point p) {
-		/* Peindre un point (une trace de bille) sur l image bufferisee */
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		gbuff.setColor(Color.green);
@@ -179,10 +170,8 @@ public class DrawingPanel extends JPanel {
 	}
 
 	/*
-	 * Efface ce qui est present sur le panneau de dessin et repeint par dessus.
-	 * Dans un premier temps, on affiche l image bufferisse ; puis, on peint les
-	 * billes par dessus
-	 * 
+	 * Clears the drawing panel and paint on it. First we paint the buffered
+	 * image, then we paint balls over it.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
@@ -200,52 +189,13 @@ public class DrawingPanel extends JPanel {
 		}
 
 		/*
-		 * Si on est en train de creer une ligne (clique gauche enfonce), on
-		 * affiche un petit carre a titre indicatif
+		 * If we're creating a line, (left click pressed but not released), we
+		 * draw a square at the mouse pressed point location
 		 */
 		if (_creatingLine) {
 			g2.setColor(Color.BLACK);
 			g2.draw(_tmpDraw);
 		}
-		// g2.dispose();
-	}
-
-	public int getPanelWidth() {
-		return _panelWidth;
-	}
-
-	public int getPanelHeight() {
-		return _panelHeight;
-	}
-
-	public void setPanelWidth(int panelWidth) {
-		_panelWidth = panelWidth;
-		_buffer = resizeBufferedImage(_buffer, panelWidth, getPanelHeight());
-
-	}
-
-	public void setPanelHeight(int panelHeight) {
-		_panelHeight = panelHeight;
-		_buffer = resizeBufferedImage(_buffer, getPanelWidth(), panelHeight);
-
-	}
-
-	public static BufferedImage resizeBufferedImage(BufferedImage img, int newW, int newH) {
-		BufferedImage tmp = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
-
-		Graphics2D g2d = tmp.createGraphics();
-		g2d.drawImage(img, 0, 0, null);
-		g2d.dispose();
-
-		return tmp;
-	}
-
-	public DrawingPanel getMyself() {
-		/*
-		 * On a besoin de cette fonction pour recuperer l'instance du
-		 * DrawingPannel dans les classes internes utilisees par les Listeners
-		 */
-		return this;
 	}
 
 	public void deleteObjectsOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
@@ -257,6 +207,16 @@ public class DrawingPanel extends JPanel {
 		setBounds(x, y, newCreationZoneWidth, newCreationZoneHeight);
 		if (_buffer != null)
 			_buffer = resizeBufferedImage(_buffer, newCreationZoneWidth, newCreationZoneHeight);
+	}
+
+	public static BufferedImage resizeBufferedImage(BufferedImage img, int newW, int newH) {
+		BufferedImage tmp = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g2d = tmp.createGraphics();
+		g2d.drawImage(img, 0, 0, null);
+		g2d.dispose();
+
+		return tmp;
 	}
 
 	public void clearBufferedImage() {
@@ -271,4 +231,34 @@ public class DrawingPanel extends JPanel {
 			for (Point p : b.get_track())
 				drawTraceBuffer(p);
 	}
+
+	public void setPanelWidth(int panelWidth) {
+		_panelWidth = panelWidth;
+		_buffer = resizeBufferedImage(_buffer, panelWidth, getPanelHeight());
+
+	}
+
+	public void setPanelHeight(int panelHeight) {
+		_panelHeight = panelHeight;
+		_buffer = resizeBufferedImage(_buffer, getPanelWidth(), panelHeight);
+
+	}
+
+	public DrawingPanel getMyself() {
+		/*
+		 * We need this method to get the DrawingPanel's instance within
+		 * Listneners internal classes. (In these classes, "this" doesn't
+		 * correspond to the drawing panel anymore)
+		 */
+		return this;
+	}
+
+	public int getPanelWidth() {
+		return _panelWidth;
+	}
+
+	public int getPanelHeight() {
+		return _panelHeight;
+	}
+
 }

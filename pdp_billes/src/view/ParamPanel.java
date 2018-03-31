@@ -26,29 +26,29 @@ public class ParamPanel extends JPanel {
 	private Controller _controller;
 	int _paramZoneWidth, _paramZoneHeight, _maxCreationZoneWidth, _maxCreationZoneHeight;
 
-	private JPanel _conteneur = new JPanel();
-	private JPanel _conteneurLongueur = new JPanel();
-	private JPanel _conteneurLargeur = new JPanel();
-	private JPanel _conteneurRadius = new JPanel();
-	private JPanel _conteneurMass = new JPanel();
-	private JPanel _conteneurInclinaison = new JPanel();
-	private JPanel _conteneurCOR = new JPanel();
-	private JPanel _conteneurScale = new JPanel();
+	private JPanel _container = new JPanel();
+	private JPanel _widthContainer = new JPanel();
+	private JPanel _heightContainer = new JPanel();
+	private JPanel _radiusContainer = new JPanel();
+	private JPanel _massContainer = new JPanel();
+	private JPanel _inclinationContainer = new JPanel();
+	private JPanel _CORContainer = new JPanel();
+	private JPanel _scaleContainer = new JPanel();
 
-	private JLabel _labelLongueur = new JLabel("Longueur   ");
-	private JLabel _labelLargeur = new JLabel("Largeur      ");
-	private JLabel _labelRadius = new JLabel("Rayon des balles ");
-	private JLabel _labelMass = new JLabel("Masse des balles ");
-	private JLabel _labelInclinaison = new JLabel("Inclinaison ");
-	private JLabel _labelCOR = new JLabel("Coef. restitution d'obstacles ");
-	private JLabel _labelScale = new JLabel("Précision   ");
+	private JLabel _widthLabel = new JLabel("Longueur   ");
+	private JLabel _heightLabel = new JLabel("Largeur      ");
+	private JLabel _radiusLabel = new JLabel("Rayon des balles ");
+	private JLabel _massLabel = new JLabel("Masse des balles ");
+	private JLabel _inclinationLabel = new JLabel("Inclinaison ");
+	private JLabel _CORLabel = new JLabel("Coef. restitution d'obstacles ");
+	private JLabel _scaleLabel = new JLabel("Précision   ");
 
-	private JTextField _txtMass;
-	private JTextField _txtLongueur;
-	private JTextField _txtLargeur;
-	private JTextField _txtRadius;
-	private JTextField _txtCOR;
-	private JTextField _txtScale;
+	private JTextField _massTxt;
+	private JTextField _widthTxt;
+	private JTextField _heightTxt;
+	private JTextField _radiusTxt;
+	private JTextField _CORTxt;
+	private JTextField _scaleTxt;
 
 	private JButton _changeButton = new JButton("Changer");
 	private JButton _runButton = new JButton("Lancer");
@@ -59,7 +59,7 @@ public class ParamPanel extends JPanel {
 	private JButton _exportButton = new JButton("Exporter");
 	private JButton _importButton = new JButton("Importer");
 
-	private JSlider _inclinaisonSlider = new JSlider(0, 90, 45);
+	private JSlider _inclinationSlider = new JSlider(0, 90, 45);
 
 	private DrawingPanel _dp;
 
@@ -77,10 +77,9 @@ public class ParamPanel extends JPanel {
 
 		initializeContainers();
 
-		/*
-		 * Les boutons agissent sur la zone de dessin, on a donc besoin de la
-		 * connaitre dans la gestion des listneners, c'est pour ca qu'elle est
-		 * passee en parametre
+		/**
+		 * Buttons have an effect on drawing panel, so we need to know it in the
+		 * listnener's management. That's why it is passed as parameter
 		 */
 		addListneners(creationZone);
 	}
@@ -91,41 +90,40 @@ public class ParamPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
 					/*
-					 * Si les dimension entrees du panneau sont correctes, faire
-					 * les modifications necessaires
+					 * If entered dimensions of panel are correct, proceed to
+					 * needed updates
 					 */
-					if (checkInt(_txtLongueur.getText()) && checkInt(_txtLargeur.getText())) {
-						int newCreationZoneWidth = Integer.parseInt(_txtLongueur.getText());
+					if (checkInt(_widthTxt.getText()) && checkInt(_heightTxt.getText())) {
+						int newCreationZoneWidth = Integer.parseInt(_widthTxt.getText());
 						if (newCreationZoneWidth > _maxCreationZoneWidth) {
 							newCreationZoneWidth = _maxCreationZoneWidth;
-							_txtLongueur.setText(Integer.toString(newCreationZoneWidth));
+							_widthTxt.setText(Integer.toString(newCreationZoneWidth));
 						}
 
-						int newCreationZoneHeight = Integer.parseInt(_txtLargeur.getText());
+						int newCreationZoneHeight = Integer.parseInt(_heightTxt.getText());
 						if (newCreationZoneHeight > _maxCreationZoneHeight) {
 							newCreationZoneHeight = _maxCreationZoneHeight;
-							_txtLargeur.setText(Integer.toString(newCreationZoneHeight));
+							_heightTxt.setText(Integer.toString(newCreationZoneHeight));
 						}
 
 						_controller.setDimensionsPlan(creationZone, newCreationZoneWidth, newCreationZoneHeight);
 					}
 
 					/*
-					 * Pour les tests suivant, on verifie si la valeur
-					 * renseignee est correcte et, le cas echeant, on modifie la
-					 * variable correspondante
+					 * For the following tests, we check if the given value is
+					 * correct and, if so, we update the corresponding variable
 					 */
-					if (checkInt(_txtRadius.getText()))
-						_controller.set_defaultBallRadius(Integer.parseInt(_txtRadius.getText()));
+					if (checkInt(_radiusTxt.getText()))
+						_controller.set_defaultBallRadius(Integer.parseInt(_radiusTxt.getText()));
 
-					if (checkDouble(_txtMass.getText()))
-						_controller.set_defaultBallMass(Double.parseDouble(_txtMass.getText()));
+					if (checkDouble(_massTxt.getText()))
+						_controller.set_defaultBallMass(Double.parseDouble(_massTxt.getText()));
 
-					if (checkDouble(_txtCOR.getText()))
-						_controller.set_defaultCOR(Double.parseDouble(_txtCOR.getText()));
+					if (checkDouble(_CORTxt.getText()))
+						_controller.set_defaultCOR(Double.parseDouble(_CORTxt.getText()));
 
-					if (checkDouble(_txtScale.getText()))
-						_controller.set_defaultScale(Double.parseDouble(_txtScale.getText()));
+					if (checkDouble(_scaleTxt.getText()))
+						_controller.set_defaultScale(Double.parseDouble(_scaleTxt.getText()));
 				}
 			}
 		});
@@ -191,7 +189,7 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
-					/* On ouvre une fenetre de selection de fichier */
+					/* Opening file selection window */
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
@@ -200,10 +198,9 @@ public class ParamPanel extends JPanel {
 					int retValue = chooser.showOpenDialog(null);
 					if (retValue == JFileChooser.APPROVE_OPTION) {
 						/*
-						 * On lance la fonction d import en lui passant en
-						 * parametre le fichier selectionne
+						 * Calling import method with the file as parameter
 						 */
-						_controller.importerCircuit(creationZone, chooser.getSelectedFile());
+						_controller.importCircuit(creationZone, chooser.getSelectedFile());
 					}
 
 					updateLabels();
@@ -215,7 +212,7 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!_controller.isRunningApp()) {
-					/* On ouvre une fenetre de selection de fichier */
+					/* Opening file selection window */
 					JFileChooser chooser = new JFileChooser();
 					FileNameExtensionFilter filter = new FileNameExtensionFilter("PDP files (*.pdp)", "pdp");
 
@@ -223,9 +220,8 @@ public class ParamPanel extends JPanel {
 
 					int retValue = chooser.showSaveDialog(null);
 					/*
-					 * Si on a selectionne un fichier et que celui ci est
-					 * valide, on lance la fonction exporter avec le fichier
-					 * selectionne
+					 * If a valid file is selected, call export method this file
+					 * as parameter
 					 */
 					if (retValue == JFileChooser.APPROVE_OPTION) {
 						File f = null;
@@ -233,34 +229,34 @@ public class ParamPanel extends JPanel {
 							f = new File(chooser.getSelectedFile().getAbsolutePath() + ".pdp");
 						else
 							f = chooser.getSelectedFile();
-						_controller.exporterCircuit(f);
+						_controller.exportCircuit(f);
 
 					}
 				}
 			}
 		});
 
-		_inclinaisonSlider.addChangeListener(new ChangeListener() {
+		_inclinationSlider.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				_controller.set_defaultInclinaison(_inclinaisonSlider.getValue());
+				_controller.set_defaultInclinaison(_inclinationSlider.getValue());
 			}
 
 		});
 	}
 
 	/*
-	 * Prend un string en entree. Par une expression reguliere, retourne si oui
-	 * ou non ce string est un entier positif ou nul
+	 * Takes a string entry. Using a regelur expression, returns either the
+	 * string contains a positive integer or not
 	 */
 	private Boolean checkInt(String s) {
 		return s.matches("[0-9]+");
 	}
 
 	/*
-	 * Prend un string en entree. Par une expression reguliere, retourne si oui
-	 * ou non ce string est un double positif ou nul
+	 * Takes a string entry. Using a regelur expression, returns either the
+	 * string contains a positive double or not
 	 */
 	private Boolean checkDouble(String s) {
 		Boolean isDouble = false;
@@ -275,53 +271,53 @@ public class ParamPanel extends JPanel {
 
 	private void initializeContainers() {
 
-		_conteneur.setLayout(new BoxLayout(_conteneur, BoxLayout.PAGE_AXIS));
-		_conteneurLongueur.setLayout(new BoxLayout(_conteneurLongueur, BoxLayout.LINE_AXIS));
-		_conteneurLargeur.setLayout(new BoxLayout(_conteneurLargeur, BoxLayout.LINE_AXIS));
-		_conteneurRadius.setLayout(new BoxLayout(_conteneurRadius, BoxLayout.LINE_AXIS));
-		_conteneurMass.setLayout(new BoxLayout(_conteneurMass, BoxLayout.LINE_AXIS));
-		_conteneurInclinaison.setLayout(new BoxLayout(_conteneurInclinaison, BoxLayout.LINE_AXIS));
-		_conteneurCOR.setLayout(new BoxLayout(_conteneurCOR, BoxLayout.LINE_AXIS));
-		_conteneurScale.setLayout(new BoxLayout(_conteneurScale, BoxLayout.LINE_AXIS));
+		_container.setLayout(new BoxLayout(_container, BoxLayout.PAGE_AXIS));
+		_widthContainer.setLayout(new BoxLayout(_widthContainer, BoxLayout.LINE_AXIS));
+		_heightContainer.setLayout(new BoxLayout(_heightContainer, BoxLayout.LINE_AXIS));
+		_radiusContainer.setLayout(new BoxLayout(_radiusContainer, BoxLayout.LINE_AXIS));
+		_massContainer.setLayout(new BoxLayout(_massContainer, BoxLayout.LINE_AXIS));
+		_inclinationContainer.setLayout(new BoxLayout(_inclinationContainer, BoxLayout.LINE_AXIS));
+		_CORContainer.setLayout(new BoxLayout(_CORContainer, BoxLayout.LINE_AXIS));
+		_scaleContainer.setLayout(new BoxLayout(_scaleContainer, BoxLayout.LINE_AXIS));
 
-		_conteneurLongueur.add(_labelLongueur);
-		_conteneurLongueur.add(_txtLongueur);
-		_conteneurLargeur.add(_labelLargeur);
-		_conteneurLargeur.add(_txtLargeur);
-		_conteneurRadius.add(_labelRadius);
-		_conteneurRadius.add(_txtRadius);
-		_conteneurMass.add(_labelMass);
-		_conteneurMass.add(_txtMass);
-		_conteneurCOR.add(_labelCOR);
-		_conteneurCOR.add(_txtCOR);
-		_conteneurScale.add(_labelScale);
-		_conteneurScale.add(_txtScale);
+		_widthContainer.add(_widthLabel);
+		_widthContainer.add(_widthTxt);
+		_heightContainer.add(_heightLabel);
+		_heightContainer.add(_heightTxt);
+		_radiusContainer.add(_radiusLabel);
+		_radiusContainer.add(_radiusTxt);
+		_massContainer.add(_massLabel);
+		_massContainer.add(_massTxt);
+		_CORContainer.add(_CORLabel);
+		_CORContainer.add(_CORTxt);
+		_scaleContainer.add(_scaleLabel);
+		_scaleContainer.add(_scaleTxt);
 
-		_conteneur.add(_conteneurLongueur);
-		_conteneur.add(_conteneurLargeur);
-		_conteneur.add(_conteneurCOR);
-		_conteneur.add(_conteneurRadius);
-		_conteneur.add(_conteneurMass);
-		_conteneur.add(_conteneurScale);
+		_container.add(_widthContainer);
+		_container.add(_heightContainer);
+		_container.add(_CORContainer);
+		_container.add(_radiusContainer);
+		_container.add(_massContainer);
+		_container.add(_scaleContainer);
 
-		_conteneurInclinaison.add(_labelInclinaison);
-		_inclinaisonSlider.setMajorTickSpacing(10);
-		_inclinaisonSlider.setMinorTickSpacing(5);
-		_inclinaisonSlider.setPaintLabels(true);
-		_inclinaisonSlider.setPaintTicks(true);
-		_conteneurInclinaison.add(_inclinaisonSlider);
-		_conteneur.add(_conteneurInclinaison);
+		_inclinationContainer.add(_inclinationLabel);
+		_inclinationSlider.setMajorTickSpacing(10);
+		_inclinationSlider.setMinorTickSpacing(5);
+		_inclinationSlider.setPaintLabels(true);
+		_inclinationSlider.setPaintTicks(true);
+		_inclinationContainer.add(_inclinationSlider);
+		_container.add(_inclinationContainer);
 
-		_conteneur.add(_changeButton);
-		_conteneur.add(_runButton);
-		_conteneur.add(_stopButton);
-		_conteneur.add(_resetButton);
-		_conteneur.add(_clearBallsButton);
-		_conteneur.add(_clearLinesButton);
-		_conteneur.add(_importButton);
-		_conteneur.add(_exportButton);
+		_container.add(_changeButton);
+		_container.add(_runButton);
+		_container.add(_stopButton);
+		_container.add(_resetButton);
+		_container.add(_clearBallsButton);
+		_container.add(_clearLinesButton);
+		_container.add(_importButton);
+		_container.add(_exportButton);
 
-		add(_conteneur);
+		add(_container);
 	}
 
 	private int initializeComponents(Dimension frameSize, DrawingPanel creationZone) {
@@ -338,31 +334,31 @@ public class ParamPanel extends JPanel {
 	}
 
 	/*
-	 * Initialise le contenu des zones de texte a la valeur actuelle du champ
-	 * qui leur correspond
+	 * Initialize TextFields content with the corresponding actual value in the
+	 * model
 	 */
 	private void initializeLabels(int panelWidth, int panelHeight) {
-		_txtLongueur = new JTextField(Integer.toString(panelWidth));
-		_txtLargeur = new JTextField(Integer.toString(panelHeight));
-		_txtRadius = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
-		_txtMass = new JTextField(Double.toString(_controller.get_defaultBallMass()));
-		_txtCOR = new JTextField(Double.toString(_controller.get_defaultCOR()));
-		_txtScale = new JTextField(Double.toString(_controller.getdefaultScale()));
+		_widthTxt = new JTextField(Integer.toString(panelWidth));
+		_heightTxt = new JTextField(Integer.toString(panelHeight));
+		_radiusTxt = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
+		_massTxt = new JTextField(Double.toString(_controller.get_defaultBallMass()));
+		_CORTxt = new JTextField(Double.toString(_controller.get_defaultCOR()));
+		_scaleTxt = new JTextField(Double.toString(_controller.getdefaultScale()));
 	}
 
 	/*
-	 * Fonction appelee lors d un import de circuit afin d actualiser les
-	 * valeurs des champs aux nouvelles valeurs presentes en memoire
+	 * This method is called when a circuit is imported. It's purpose is to
+	 * update textfields values to the new corresponding circuit values
 	 */
 	private void updateLabels() {
 		Dimension creationZoneDim = _controller.getDimensionsPlan();
-		_txtLongueur.setText(Integer.toString(creationZoneDim.width));
-		_txtLargeur.setText(Integer.toString(creationZoneDim.height));
-		_txtRadius.setText(Integer.toString(_controller.get_defaultBallRadius()));
-		_txtMass.setText(Double.toString(_controller.get_defaultBallMass()));
-		_inclinaisonSlider.setValue((int) _controller.get_defaultInclinaison());
-		_txtCOR.setText(Double.toString(_controller.get_defaultCOR()));
-		_txtScale.setText(Double.toString(_controller.getdefaultScale()));
+		_widthTxt.setText(Integer.toString(creationZoneDim.width));
+		_heightTxt.setText(Integer.toString(creationZoneDim.height));
+		_radiusTxt.setText(Integer.toString(_controller.get_defaultBallRadius()));
+		_massTxt.setText(Double.toString(_controller.get_defaultBallMass()));
+		_inclinationSlider.setValue((int) _controller.get_defaultInclinaison());
+		_CORTxt.setText(Double.toString(_controller.get_defaultCOR()));
+		_scaleTxt.setText(Double.toString(_controller.getdefaultScale()));
 	}
 
 }

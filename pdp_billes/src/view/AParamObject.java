@@ -15,9 +15,9 @@ import controller.Controller;
 public abstract class AParamObject extends JDialog {
 	protected Controller _controller;
 	protected DrawingPanel _drawingPan;
-	protected JPanel _conteneur = new JPanel();
-	protected JButton _buttonChange = new JButton("Modifier");
-	protected JPanel _buttonConteneur = new JPanel();
+	protected JPanel _container = new JPanel();
+	protected JButton _changeButton = new JButton("Modifier");
+	protected JPanel _buttonContainer = new JPanel();
 
 	public AParamObject(Controller c, DrawingPanel dp) {
 		_controller = c;
@@ -26,8 +26,7 @@ public abstract class AParamObject extends JDialog {
 
 	protected void initialize() {
 		/*
-		 * On recupere l information de la taille de l ecran de l utilisateur
-		 * pour adapter la taille du panel a son ecran.
+		 * Getting user's screen dimensions to display a well sized window
 		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
@@ -40,16 +39,16 @@ public abstract class AParamObject extends JDialog {
 	}
 
 	/*
-	 * Prend un string en entree. Par une expression reguliere, retourne si oui
-	 * ou non ce string est un entier positif ou nul
+	 * Takes a string entry. Using a regelur expression, returns either the
+	 * string contains a positive integer or not
 	 */
 	protected Boolean checkInt(String s) {
 		return s.matches("[0-9]+");
 	}
 
 	/*
-	 * Prend un string en entree. Par une expression reguliere, retourne si oui
-	 * ou non ce string est un double positif ou nul
+	 * Takes a string entry. Using a regelur expression, returns either the
+	 * string contains a positive double or not
 	 */
 	protected Boolean checkDouble(String s) {
 		Boolean isDouble = false;

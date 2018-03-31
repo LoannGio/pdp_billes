@@ -7,9 +7,9 @@ public interface IRightClickPopUpMenu {
 
 	public void initialize();
 
-	public void parametre();
+	public void parameter();
 
-	public void supprimer();
+	public void remove();
 
 	public void show(Component eventOrigin, int mouseX, int mouseY);
 }

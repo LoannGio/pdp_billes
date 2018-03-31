@@ -303,13 +303,13 @@ public class Controller {
 		return new Dimension(_circuit.get_width(), _circuit.get_height());
 	}
 
-	public void importerCircuit(DrawingPanel creationZone, File f) {
+	public void importCircuit(DrawingPanel creationZone, File f) {
 		_circuit.toImport(f);
 		setDimensionsPlan(creationZone, _circuit.get_width(), _circuit.get_height());
 		creationZone.repaint();
 	}
 
-	public void exporterCircuit(File f) {
+	public void exportCircuit(File f) {
 		_circuit.toExport(f);
 	}
 

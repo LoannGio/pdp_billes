@@ -6,8 +6,8 @@ import model.ObstacleLine;
 
 public class RightClickChooser {
 	/*
-	 * Cette classe implémente la classe Visiteure correspondant au Design
-	 * Pattern du meme nom
+	 * This class implements the Visitor class corresponding to the design
+	 * pattern of same name
 	 */
 
 	public static IRightClickPopUpMenu createRightClickPopUp(Ball b, Controller c, DrawingPanel dp) {

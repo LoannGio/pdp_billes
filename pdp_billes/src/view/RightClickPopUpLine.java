@@ -30,26 +30,26 @@ public class RightClickPopUpLine extends ARightClickPopUp {
 		_param.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				parametre();
+				parameter();
 			}
 		});
 
 		_suppr.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				supprimer();
+				remove();
 			}
 		});
 	}
 
 	@Override
-	public void parametre() {
+	public void parameter() {
 		new ParamLine(_line, _controller, _drawingPan);
 
 	}
 
 	@Override
-	public void supprimer() {
+	public void remove() {
 		_controller.removeLine(_line);
 		_drawingPan.repaintBufferedImage(_controller.get_lines(), _controller.get_balls());
 		_drawingPan.repaint();
