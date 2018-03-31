@@ -204,7 +204,7 @@ public class ParamPanel extends JPanel {
 						_controller.importCircuit(creationZone, chooser.getSelectedFile());
 					}
 
-					updateLabels();
+					updateTextFields();
 				}
 			}
 		});
@@ -330,14 +330,14 @@ public class ParamPanel extends JPanel {
 		double heightProportion = 0.92;
 		_paramZoneWidth = (int) Math.round(widthProportion * frameSize.width);
 		_paramZoneHeight = (int) Math.round(heightProportion * frameSize.height);
-		initializeLabels(panelWidth, panelHeight);
+		initializeTextFields(panelWidth, panelHeight);
 	}
 
 	/*
 	 * Initialize TextFields content with the corresponding actual value in the
 	 * model
 	 */
-	private void initializeLabels(int panelWidth, int panelHeight) {
+	private void initializeTextFields(int panelWidth, int panelHeight) {
 		_widthTxt = new JTextField(Integer.toString(panelWidth));
 		_heightTxt = new JTextField(Integer.toString(panelHeight));
 		_radiusTxt = new JTextField(Integer.toString(_controller.get_defaultBallRadius()));
@@ -350,7 +350,7 @@ public class ParamPanel extends JPanel {
 	 * This method is called when a circuit is imported. It's purpose is to
 	 * update textfields values to the new corresponding circuit values
 	 */
-	private void updateLabels() {
+	private void updateTextFields() {
 		Dimension creationZoneDim = _controller.getDimensionsPlan();
 		_widthTxt.setText(Integer.toString(creationZoneDim.width));
 		_heightTxt.setText(Integer.toString(creationZoneDim.height));
