@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import javax.swing.JFrame;
 
@@ -247,15 +248,25 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void test_collisionSegment() {
+	public void test_collisionSegment() {		
 		Controller controller = Controller.getInstance();
 		Ball ball1 = new Ball(120, 189, 10, 1);
 		Ball ball2 = new Ball(300, 400, 10, 1);
 		Point p1 = new Point(80, 200);
 		Point p2 = new Point(200, 200);
 		ObstacleLine obstacle = new ObstacleLine(p1, p2, 0.5);
-		boolean b1 = controller.collisionSegment(ball1, obstacle);
-		boolean b2 = controller.collisionSegment(ball2, obstacle);
+		boolean b1 = false;
+		boolean b2 = true;
+		try {
+			Method collisionSegment = Controller.class.getDeclaredMethod("collisionSegment", Ball.class, ObstacleLine.class);
+			collisionSegment.setAccessible(true);
+			b1 = (Boolean) collisionSegment.invoke(controller, ball1, obstacle);
+			b2 = (Boolean) collisionSegment.invoke(controller, ball2, obstacle);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		// Colliding ball and obstacle
 		assertEquals(true, b1);
 		// Not colliding

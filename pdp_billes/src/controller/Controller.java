@@ -63,15 +63,15 @@ public class Controller {
 	 * redimensionning.
 	 */
 	public void removeLinesOutOfBounds(int xMin, int xMax, int yMin, int yMax) {
-		Point depart, arrivee;
+		Point begin, end;
 		Iterator<ObstacleLine> iterObstacleLine = get_lines().iterator();
 		while (iterObstacleLine.hasNext()) {
 			ObstacleLine o = iterObstacleLine.next();
-			depart = o.get_begin();
-			arrivee = o.get_end();
-			if (depart.getX() > xMax || depart.getX() < xMin || depart.getY() > yMax || depart.getY() < yMin
-					|| arrivee.getX() > xMax || arrivee.getX() < xMin || arrivee.getY() > yMax
-					|| arrivee.getY() < yMin) {
+			begin = o.get_begin();
+			end = o.get_end();
+			if (begin.getX() > xMax || begin.getX() < xMin || begin.getY() > yMax || begin.getY() < yMin
+					|| end.getX() > xMax || end.getX() < xMin || end.getY() > yMax
+					|| end.getY() < yMin) {
 				iterObstacleLine.remove();
 			}
 		}
@@ -159,12 +159,12 @@ public class Controller {
 
 	public Boolean updateLine(ObstacleLine line, int new_beginX, int new_beginY, int new_endX, int new_endY,
 			double newCOR) {
-		Point oldDepart = line.get_begin();
-		Point oldArrivee = line.get_end();
-		Point newDepart = new Point(new_beginX, new_beginY);
-		Point newArrivee = new Point(new_endX, new_endY);
+		Point oldBegin = line.get_begin();
+		Point oldEnd = line.get_end();
+		Point newBegin = new Point(new_beginX, new_beginY);
+		Point newEnd = new Point(new_endX, new_endY);
 
-		line.setPositions(newDepart, newArrivee);
+		line.setPositions(newBegin, newEnd);
 		line.setCOR(newCOR);
 
 		if (!checkIfLineIsOnExistingBall(line) && !(new_beginX > _circuit.get_width())
@@ -173,7 +173,7 @@ public class Controller {
 			return true;
 		}
 
-		line.setPositions(oldDepart, oldArrivee);
+		line.setPositions(oldBegin, oldEnd);
 		return false;
 	}
 
@@ -212,7 +212,7 @@ public class Controller {
 			return false;
 	}
 
-	public boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
+	private boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
 
 		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 		Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
