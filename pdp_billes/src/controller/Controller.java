@@ -202,7 +202,7 @@ public class Controller {
 	 * two endpoints of the obstacle. It is done by checking the distance between
 	 * the center of the ball and the projection point on the line. If this distance is shorter
 	 * than the radius, then we know that the ball collides with the line. After that, we now
-	 * have to check if the ball colides with the obstacle by calling collisionSegment.
+	 * have to check if the ball collides with the obstacle by calling collisionSegment.
 	 * 
 	 * CI = distance between the center of the ball and the projection point on the line.
 	 */
