@@ -162,13 +162,14 @@ public class PhysicalEngine {
 
 	/*
 	 * The orthogonal vector of the tangent of a point to project is calculated.
+	 * Returns the normal vector of segment AB going through point C.
 	 */
 	private Vector GetNormale(Point A, Point B, Point2D.Double C) {
-		Vector u, AC, N;
-		u = new Vector(B.x - A.x, B.y - A.y);
+		Vector AB, AC, N;
+		AB = new Vector(B.x - A.x, B.y - A.y);
 		AC = new Vector(C.x - A.x, C.y - A.y);
-		float parenthesis = (float) (u.getX() * AC.getY() - u.getY() * AC.getX());
-		N = new Vector(-u.getY() * (parenthesis), u.getX() * (parenthesis));
+		float parenthesis = (float) (AB.getX() * AC.getY() - AB.getY() * AC.getX());
+		N = new Vector(-AB.getY() * (parenthesis), AB.getX() * (parenthesis));
 		float norm = (float) Math.sqrt(Math.pow(N.getX(), 2) + Math.pow(N.getY(), 2));
 		N.setCartesian(N.getX() / norm, N.getY() / norm);
 		if (Double.isNaN(N.getX()) || Double.isNaN(N.getY()))
