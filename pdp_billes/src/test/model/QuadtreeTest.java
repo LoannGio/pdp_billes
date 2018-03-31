@@ -14,20 +14,19 @@ public class QuadtreeTest {
 	Quadtree _quad;
 
 	/*
-	 * PART 1 : We create adn add 4 balls to the QuadTree. We consider a circuit
+	 * PART 1 : We create and add 4 balls to the QuadTree. We consider a circuit
 	 * of size 400x400 Every ball is placed on a circuit corner. Calling
 	 * "retrieve" method, we check that every ball is in the same region as the
-	 * 3 others : they are all leaves of the same node.
+	 * 3 others.
 	 *
 	 * PART 2 : We create a 5th ball next to the ball number 4 and we add it to
 	 * the QuadTree. Calling "retrieve" method, we check that the space
-	 * partitioning (split method) is correct. Balls number 1, 2 and 3 remains
-	 * alone in their region (unique leaves of a new node). Balles 4 and 5 are
-	 * both in the same region
+	 * partitioning (split method) is correct. Balls number 1, 2 and 3 remain
+	 * alone in their region. Balls 4 and 5 are both in the same region.
 	 */
 
 	@Test
-	public void testCas1() {
+	public void test_case1() {
 
 		/* PART 1 */
 
@@ -91,17 +90,14 @@ public class QuadtreeTest {
 	/*
 	 * PART 1: Same as case 1
 	 *
-	 * PARTIE 2: On cree une 5eme bille de gros rayon au centre du circuit et on
-	 * l'ajoute au QuadTree. La 5ème bille doit appartenir aux A l'aide de la
-	 * fonction retrieve, on verifie que le partitionnement de l'espace
-	 * (fonction split) est correct. Les balles 1,2 et 3 se retrouve seules dans
-	 * leur region (feuille unique d'un nouveau noeud). Les balles 4 et 5 sont
-	 * toutes les 2 dans la meme region.
-	 * 
-	 * PART 2 : remake in english
+	 * PART 2 : We create a 5th ball with a large radius that we place at the
+	 * center of the circuit. We add it to the Quadtree and the split() method
+	 * is called. Due to her large size, the ball belongs to the four regions.
+	 * We verify with the retrieve() method that the balls 1, 2, 3 and 4 belong
+	 * to the same region that ball 5.
 	 */
 	@Test
-	public void testCas2() {
+	public void test_case2() {
 
 		/* PART 1 */
 
