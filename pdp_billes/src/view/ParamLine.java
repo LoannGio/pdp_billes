@@ -146,10 +146,10 @@ public class ParamLine extends AParamObject {
 		 * Initialise le contenu des zones de texte a la valeur actuelle du
 		 * champ qui leur correspond
 		 */
-		_departXText = new JTextField(Integer.toString((int) _line.get_depart().getX()));
-		_departYText = new JTextField(Integer.toString((int) _line.get_depart().getY()));
-		_arriveeXText = new JTextField(Integer.toString((int) _line.get_arrivee().getX()));
-		_arriveeYText = new JTextField(Integer.toString((int) _line.get_arrivee().getY()));
+		_departXText = new JTextField(Integer.toString((int) _line.get_begin().getX()));
+		_departYText = new JTextField(Integer.toString((int) _line.get_begin().getY()));
+		_arriveeXText = new JTextField(Integer.toString((int) _line.get_end().getX()));
+		_arriveeYText = new JTextField(Integer.toString((int) _line.get_end().getY()));
 		_CORText = new JTextField(Double.toString((double) _line.getCOR()));
 
 	}

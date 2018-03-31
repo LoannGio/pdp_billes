@@ -75,7 +75,7 @@ public class CircuitTest {
 		 * si l export et l import en tiendront bien compte. On les sauvegardes
 		 * dans des variables pour les comparer plus tard
 		 */
-		c.set_inclinaison(90);
+		c.set_inclination(90);
 		c.set_defaultBallMass(12);
 		c.set_defaultBallRadius(20);
 		c.set_defaultCOR(0.8);
@@ -86,13 +86,13 @@ public class CircuitTest {
 		double exporteddefaultCOR = c.get_defaultCOR();
 		int exportedWidth = c.get_width();
 		int exportedHeight = c.get_height();
-		double exportedInclinaison = c.get_inclinaison();
+		double exportedInclinaison = c.get_inclination();
 		ArrayList<Ball> exportedBalls = c.get_balls();
 		ArrayList<ObstacleLine> exportedLines = c.get_lines();
 
 		/* On cree un fichier et on exporte notre circuit dedans */
 		f = new File("TUexport.pdp");
-		c.exporter(f);
+		c.toExport(f);
 
 		/*
 		 * On re initialise le circuit. Toutes ses valeurs sont desormais celles
@@ -102,7 +102,7 @@ public class CircuitTest {
 		 * import
 		 */
 		c = new Circuit(666, 666);
-		c.importer(f);
+		c.toImport(f);
 
 		/* On test les valeurs par defaut */
 		assertEquals(exporteddefaultMass, c.get_defaultBallMass(), 1E-10);
@@ -110,7 +110,7 @@ public class CircuitTest {
 		assertEquals(exporteddefaultCOR, c.get_defaultCOR(), 1E-10);
 		assertEquals(exportedWidth, c.get_width());
 		assertEquals(exportedHeight, c.get_height());
-		assertEquals(exportedInclinaison, c.get_inclinaison(), 1E-10);
+		assertEquals(exportedInclinaison, c.get_inclination(), 1E-10);
 
 		/* On test la presence, la position et les attributs des balles */
 		assertEquals(exportedBalls.size(), c.get_balls().size());
@@ -130,10 +130,10 @@ public class CircuitTest {
 			ObstacleLine o = c.get_lines().get(i);
 			ObstacleLine o2 = exportedLines.get(i);
 			assertEquals(o.getCOR(), o2.getCOR(), 1E-10);
-			assertEquals(o.get_depart().getX(), o2.get_depart().getX(), 1E-10);
-			assertEquals(o.get_depart().getY(), o2.get_depart().getY(), 1E-10);
-			assertEquals(o.get_arrivee().getX(), o2.get_arrivee().getX(), 1E-10);
-			assertEquals(o.get_arrivee().getY(), o2.get_arrivee().getY(), 1E-10);
+			assertEquals(o.get_begin().getX(), o2.get_begin().getX(), 1E-10);
+			assertEquals(o.get_begin().getY(), o2.get_begin().getY(), 1E-10);
+			assertEquals(o.get_end().getX(), o2.get_end().getX(), 1E-10);
+			assertEquals(o.get_end().getY(), o2.get_end().getY(), 1E-10);
 
 		}
 
@@ -186,10 +186,10 @@ public class CircuitTest {
 			}
 		}
 		f = new File("TUimport.pdp");
-		c.exporter(f);
+		c.toExport(f);
 
 		long debutImport = System.currentTimeMillis();
-		c.importer(f);
+		c.toImport(f);
 		long finImport = System.currentTimeMillis();
 
 		long tempsImport = finImport - debutImport;

@@ -56,11 +56,11 @@ public class Controller {
 	}
 
 	public double get_defaultInclinaison() {
-		return _circuit.get_inclinaison();
+		return _circuit.get_inclination();
 	}
 
 	public void set_defaultInclinaison(double incl) {
-		_circuit.set_inclinaison(incl);
+		_circuit.set_inclination(incl);
 	}
 
 	public void clearCircuit() {
@@ -113,8 +113,8 @@ public class Controller {
 		Iterator<ObstacleLine> iterObstacleLine = get_lines().iterator();
 		while (iterObstacleLine.hasNext()) {
 			ObstacleLine o = iterObstacleLine.next();
-			depart = o.get_depart();
-			arrivee = o.get_arrivee();
+			depart = o.get_begin();
+			arrivee = o.get_end();
 			if (depart.getX() > xMax || depart.getX() < xMin || depart.getY() > yMax || depart.getY() < yMin
 					|| arrivee.getX() > xMax || arrivee.getX() < xMin || arrivee.getY() > yMax
 					|| arrivee.getY() < yMin) {
@@ -268,8 +268,8 @@ public class Controller {
 	 */
 	public Boolean updateLine(ObstacleLine line, int new_departX, int new_departY, int new_arriveeX, int new_arriveeY,
 			double newCOR) {
-		Point oldDepart = line.get_depart();
-		Point oldArrivee = line.get_arrivee();
+		Point oldDepart = line.get_begin();
+		Point oldArrivee = line.get_end();
 		Point newDepart = new Point(new_departX, new_departY);
 		Point newArrivee = new Point(new_arriveeX, new_arriveeY);
 
@@ -304,13 +304,13 @@ public class Controller {
 	}
 
 	public void importerCircuit(DrawingPanel creationZone, File f) {
-		_circuit.importer(f);
+		_circuit.toImport(f);
 		setDimensionsPlan(creationZone, _circuit.get_width(), _circuit.get_height());
 		creationZone.repaint();
 	}
 
 	public void exporterCircuit(File f) {
-		_circuit.exporter(f);
+		_circuit.toExport(f);
 	}
 
 	public boolean checkCollisionBallBall(Ball ball1, Ball ball2) {
@@ -324,10 +324,10 @@ public class Controller {
 	}
 
 	public boolean checkCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
-		Vector u = new Vector(obstacle.get_depart().getX() - obstacle.get_arrivee().getX(),
-				obstacle.get_depart().getY() - obstacle.get_arrivee().getY());
-		Vector AC = new Vector(ball.get_x() - obstacle.get_arrivee().getX(),
-				ball.get_y() - obstacle.get_arrivee().getY());
+		Vector u = new Vector(obstacle.get_begin().getX() - obstacle.get_end().getX(),
+				obstacle.get_begin().getY() - obstacle.get_end().getY());
+		Vector AC = new Vector(ball.get_x() - obstacle.get_end().getX(),
+				ball.get_y() - obstacle.get_end().getY());
 
 		/* Norme du vecteur u */
 		double numerateur = Math.abs(u.getX() * AC.getY() - u.getY() * AC.getX());
@@ -341,8 +341,8 @@ public class Controller {
 
 	public boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
 
-		Point2D.Double A = new Point2D.Double(obstacle.get_depart().getX(), obstacle.get_depart().getY());
-		Point2D.Double B = new Point2D.Double(obstacle.get_arrivee().getX(), obstacle.get_arrivee().getY());
+		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
+		Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
 		Point2D.Double C = new Point2D.Double(ball.get_x(), ball.get_y());
 
 		Vector AB = new Vector(B.x - A.x, B.y - A.y);

@@ -112,14 +112,14 @@ public class BallTest {
 		double angle2 = 35;
 		double angle3 = 0;
 		
-		_circuit.set_inclinaison(angle1);
+		_circuit.set_inclination(angle1);
 		Vector acceleration1 = new Vector(_circuit.get_acceleration().getX(),
 										  _circuit.get_acceleration().getY());
-		_circuit.set_inclinaison(angle2);
+		_circuit.set_inclination(angle2);
 		Vector acceleration2 = new Vector(_circuit.get_acceleration().getX(),
 				  _circuit.get_acceleration().getY());
 		
-		_circuit.set_inclinaison(angle3);
+		_circuit.set_inclination(angle3);
 		Vector acceleration3 = new Vector(_circuit.get_acceleration().getX(),
 				  _circuit.get_acceleration().getY());
 		for(int i=0; i<10; i++) {

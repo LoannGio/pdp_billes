@@ -231,7 +231,7 @@ public class PhysicalEngineTest {
 		resolveCollBallObstacle.setAccessible(true);
 		obstacle.setCOR(1);
 		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
-		obstacle.set_depart(new Point(20,100));
+		obstacle.set_begin(new Point(20,100));
 		obstacle.set_arrivee(new Point(100,100));
 		ball1.setAll(50, 90, 10, 2);
 		ball1.set_speed(0, 6);	
@@ -251,7 +251,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle vertical, bille direction vers la droite */
-		obstacle.set_depart(new Point(100,100));
+		obstacle.set_begin(new Point(100,100));
 		obstacle.set_arrivee(new Point(100,200));
 		ball1.set_location(90, 150);
 		ball1.set_speed(3, 0);	
@@ -262,7 +262,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle vertical, bille direction vers la gauche */
-		obstacle.set_depart(new Point(100,100));
+		obstacle.set_begin(new Point(100,100));
 		obstacle.set_arrivee(new Point(100,200));
 		ball1.set_location(110, 150);
 		ball1.set_speed(-4, 0);	
@@ -273,7 +273,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
-		obstacle.set_depart(new Point(100,300));
+		obstacle.set_begin(new Point(100,300));
 		obstacle.set_arrivee(new Point(200,200));
 		ball1.set_location(145, 245);
 		ball1.set_speed(1, 1);	
@@ -284,7 +284,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle 45+180 degres, bille direction perpendiculaire*/
-		obstacle.set_depart(new Point(100,100));
+		obstacle.set_begin(new Point(100,100));
 		obstacle.set_arrivee(new Point(200,200));
 		ball1.set_location(155, 145);
 		ball1.set_speed(-1, 1);	
@@ -314,7 +314,7 @@ public class PhysicalEngineTest {
 		resolveCollBallObstacle.setAccessible(true);	
 		obstacle.setCOR(0.5);
 		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
-		obstacle.set_depart(new Point(20,100));
+		obstacle.set_begin(new Point(20,100));
 		obstacle.set_arrivee(new Point(100,100));
 		ball1.setAll(50, 90, 10, 2);
 		ball1.set_speed(0, 6);	
@@ -325,7 +325,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		
 		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
-		obstacle.set_depart(new Point(100,300));
+		obstacle.set_begin(new Point(100,300));
 		obstacle.set_arrivee(new Point(200,200));
 		ball1.set_location(145, 245);
 		ball1.set_speed(8, 8);	

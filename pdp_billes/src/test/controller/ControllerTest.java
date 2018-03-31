@@ -246,8 +246,8 @@ public class ControllerTest {
 	}
 
 	private void testLinePosition(ObstacleLine o) {
-		assertEquals(new Point(0, 20), o.get_depart());
-		assertEquals(new Point(20, 20), o.get_arrivee());
+		assertEquals(new Point(0, 20), o.get_begin());
+		assertEquals(new Point(20, 20), o.get_end());
 	}
 
 	@Test
