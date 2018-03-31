@@ -431,7 +431,7 @@ public class PhysicalEngineTest {
 			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
 			ballIsOutOfCircuit.setAccessible(true);
 
-			// Balle is inside
+			// Ball is inside
 			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
 			assertEquals(result, false);
 
