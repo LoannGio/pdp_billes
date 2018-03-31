@@ -34,9 +34,9 @@ public class Circuit {
 	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
 	/**
-	 * Velocity's scale of our application. It handles time step of the simulation.
-	 * Increasing this attribute improves the precision of the simulation but it
-	 * also increases its duration.
+	 * Velocity's scale of our application. It handles time step of the
+	 * simulation. Increasing this attribute improves the precision of the
+	 * simulation but it also increases its duration.
 	 */
 	private double _scale;
 	private double _defaultInclination;
@@ -105,9 +105,10 @@ public class Circuit {
 	}
 
 	private void importCircuitXML(Document document) {
-		/** 
-		 * After getting user's screen size, we check if it's large enough to display circuit.
-		 * If it's not, then the circuit is cropped (on right and on bottom).
+		/**
+		 * After getting user's screen size, we check if it's large enough to
+		 * display circuit. If it's not, then the circuit is cropped (on right
+		 * and on bottom).
 		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
@@ -299,7 +300,7 @@ public class Circuit {
 
 		}
 	}
-	
+
 	private void computeGravitation() {
 		double ax = 0;
 		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclination));
@@ -337,14 +338,15 @@ public class Circuit {
 	}
 	
 	/**
-	 * Inclination setter. When inclination is modified, balls' vertical acceleration
-	 * is calculated again, because it depends of gravity and circuit inclination.
+	 * Inclination setter. When inclination is modified, balls' vertical
+	 * acceleration is calculated again, because it depends of gravity and
+	 * circuit inclination.
 	 */
 	public void set_inclination(double inclinaison) {
 		_defaultInclination = inclinaison;
 		computeGravitation();
 	}
-	
+
 	public void set_scale(double scale) {
 		for (Ball b : _balls) {
 			b.set_speed(b.get_velocity().getX() * _scale / scale, b.get_velocity().getY() * _scale / scale);

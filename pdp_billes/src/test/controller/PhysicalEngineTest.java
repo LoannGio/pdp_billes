@@ -1,6 +1,6 @@
 package test.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import controller.PhysicalEngine;
 import model.Ball;
 import model.Circuit;
@@ -20,13 +21,13 @@ public class PhysicalEngineTest {
 	PhysicalEngine physical_engine;
 	Circuit circuit;
 	ObstacleLine obstacle;
-	
+
 	@Before
 	public void setUp() throws Exception {
-		ball1 = new Ball(0,0,10,1);
-		ball2 = new Ball(0,0,10,1);
-		obstacle = new ObstacleLine(new Point(2,2), new Point(5,5), 0.5);
-		circuit = new Circuit(640,200);
+		ball1 = new Ball(0, 0, 10, 1);
+		ball2 = new Ball(0, 0, 10, 1);
+		obstacle = new ObstacleLine(new Point(2, 2), new Point(5, 5), 0.5);
+		circuit = new Circuit(640, 200);
 		physical_engine = new PhysicalEngine(circuit);
 	}
 
@@ -41,7 +42,7 @@ public class PhysicalEngineTest {
 
 	@Test
 	public void testRun() {
-		
+
 	}
 	
 	
@@ -51,7 +52,7 @@ public class PhysicalEngineTest {
 	 * 2 balls of same mass are created, their speed are the same and their trajectory
 	 * are opposed when the collision occurs.
 	 */
-	
+
 	@Test
 	public void test_resolveCollisionBallBallSameMass() {
 		/* Event: horizontal collision*/
@@ -94,6 +95,7 @@ public class PhysicalEngineTest {
 		assertEquals(true, b2);
 		}catch(Exception e) {
 			
+
 		}
 	}
 	
@@ -104,6 +106,7 @@ public class PhysicalEngineTest {
 	 *  2 balls of different mass are created, and we make their speed vary.
 	 *  Then, we check that the engine obeys the formulas of elastic impact:
 	 *  preservation of movement quantity and preservation of kinetic energy.
+=======
 	 */
 	@Test
 	public void test_resolveCollisionBallBallDifferentMass() {
@@ -223,9 +226,10 @@ public class PhysicalEngineTest {
 	 * The coefficient of restitution is equal to 1 (the movement quantity
 	 * and the kinetic energy are preserved).
 	 */
+	
 	@Test
 	public void test_resolveCollisionBallObstacle() {
-		
+
 		try {
 		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
 				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
@@ -299,65 +303,62 @@ public class PhysicalEngineTest {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	/*
-	 * Ce test permet de verifier que la collision fonctionne toujours
-	 * lorsqu'on modifie le coefficient de rebond.
-	 * On verifie que vitesse apres le rebond diminue correctement selon l'axe Y
-	 * ce qui diminue la quantite de mouvement et l'energie cinetique (choc non elastique)
+	 * This test checks that the collisin works when we modify the coefficient
+	 * of restitution modifiesthe size of bounces. We check if the speed after a
+	 * bounce decreases correctly on the Y axis which lower the linear momentum
+	 * and kinetic energy
 	 */
 	@Test
 	public void test_resolveCollisionBallObstacleCOR() {
-		
+
 		try {
-		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
-				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
-		resolveCollBallObstacle.setAccessible(true);	
-		obstacle.setCOR(0.5);
-		/* Cas collision obstacle horizontal, bille direction vers le bas */ 
-		obstacle.set_begin(new Point(20,100));
-		obstacle.set_end(new Point(100,100));
-		ball1.setAll(50, 90, 10, 2);
-		ball1.set_speed(0, 6);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
-		boolean b2 = Math.abs(ball1.get_velocity().getY()+3) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		/* Cas collision obstacle 45 degres, bille direction perpendiculaire */
-		obstacle.set_begin(new Point(100,300));
-		obstacle.set_end(new Point(200,200));
-		ball1.set_location(145, 245);
-		ball1.set_speed(8, 8);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()+8) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()+4) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		}catch(Exception e) {
+			Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod("resolveCollisionBallObstacle",
+					Ball.class, ObstacleLine.class);
+			resolveCollBallObstacle.setAccessible(true);
+			obstacle.setCOR(0.5);
+			/* Horizontal obstacle, ball going down */
+			obstacle.set_begin(new Point(20, 100));
+			obstacle.set_end(new Point(100, 100));
+			ball1.setAll(50, 90, 10, 2);
+			ball1.set_speed(0, 6);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+			boolean b2 = Math.abs(ball1.get_velocity().getY() + 3) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			/*
+			 * Obstacle inclination : 45 degrees. Ball direction : perpendicular
+			 */
+			obstacle.set_begin(new Point(100, 300));
+			obstacle.set_end(new Point(200, 200));
+			ball1.set_location(145, 245);
+			ball1.set_speed(8, 8);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX() + 8) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY() + 4) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-		
-	
-	@Test
-	public void testAngleCollisionBall() {
-		
-	}
-	
-	/* Ce test permet de verifier que le calcul de la 
-	 * normale d'un point par rapport a une droite est correct.
-	 * On verifie si l'angle entre le vecteur normal et la droite
-	 * est egal a 90.
+
+	/*
+	 * Checks if our calculation of the perpendicular angle vector of a point on
+	 * a line is correct. We check if the perpendicular angle between the line
+	 * and the returned vector is 90 degrees.
 	 */
-	@Test 
+	@Test
 	public void test_getNormale() {
 		try {
-			/* normale sur une droite horizontale */	
-			Method normale = PhysicalEngine.class.getDeclaredMethod(
-					"GetNormale", Point.class, Point.class, Point2D.Double.class);	
+			/* Perpendicular angle on a horizontal line */
+			Method normale = PhysicalEngine.class.getDeclaredMethod("GetNormale", Point.class, Point.class,
+					Point2D.Double.class);
 			normale.setAccessible(true);
 			Point2D.Double center = new Point2D.Double(140, 70);
 			Point A = new Point(100, 100);
@@ -366,9 +367,9 @@ public class PhysicalEngineTest {
 			Vector AB = new Vector(B.x - A.x, B.y - A.y);
 			double sizeAB = Math.sqrt(Math.pow(AB.getX(), 2) + Math.pow(AB.getY(), 2));
 			double sizeNorm = Math.sqrt(Math.pow(norm.getX(), 2) + Math.pow(norm.getY(), 2));
-			double cosAngle = Vector.dotProduct(AB, norm)/(sizeAB*sizeNorm);
+			double cosAngle = Vector.dotProduct(AB, norm) / (sizeAB * sizeNorm);
 			assertEquals(true, Math.abs(cosAngle) < 1E-10);
-			/* normale sur une droite diagonale */	
+			/* Perpendicular angle on a diagonal line */
 			center.setLocation(100, 200);
 			A.setLocation(100, 300);
 			B.setLocation(200, 200);
@@ -376,99 +377,83 @@ public class PhysicalEngineTest {
 			AB = new Vector(B.x - A.x, B.y - A.y);
 			sizeAB = Math.sqrt(Math.pow(AB.getX(), 2) + Math.pow(AB.getY(), 2));
 			sizeNorm = Math.sqrt(Math.pow(norm.getX(), 2) + Math.pow(norm.getY(), 2));
-			cosAngle = Vector.dotProduct(AB, norm)/(sizeAB*sizeNorm);
+			cosAngle = Vector.dotProduct(AB, norm) / (sizeAB * sizeNorm);
 			assertEquals(true, Math.abs(cosAngle) < 1E-10);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
-	/*	Ce test permet de verifier que le calcul du point de projection
-	 * d'un point par rapport a une droite est correct.
-	 * On a calcule la position du point de projection pour different cas,
-	 * on verifie que notre fonction renvoie la meme valeur.
+	/*
+	 * Testing if our calculation of the projection of the point on a line is
+	 * corret. We compute projection point's position in different cases and we
+	 * test that our method returns the same value.
 	 */
 	@Test
 	public void test_projectionI() {
 		try {
-		/* projection sur une droite horizontale */	
-		Method projection = PhysicalEngine.class.getDeclaredMethod(
-				"ProjectionI", Point.class, Point.class, Point2D.Double.class);
-		projection.setAccessible(true);
-		Point2D.Double center = new Point2D.Double(140, 70);
-		Point A = new Point(100, 100);
-		Point B = new Point(200, 100);
-		Point2D.Double proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
-		boolean b1 = Math.abs(proj.getX() - center.getX()) < 1E-10;
-		boolean b2 = Math.abs(proj.getY() - 100) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		/* projection sur une droite verticale */
-		center.setLocation(60, 150);
-		A.setLocation(100, 100);
-		B.setLocation(100, 200);
-		proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
-		b1 = Math.abs(proj.getX() - 100) < 1E-10;
-		b2 = Math.abs(proj.getY() - center.getY() ) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		/* projection sur une droite diagonale */
-		center.setLocation(100, 200);
-		A.setLocation(100, 300);
-		B.setLocation(200, 200);
-		proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
-		b1 = Math.abs(proj.getX() - 150) < 1E-10;
-		b2 = Math.abs(proj.getY() - 250 ) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		}catch(Exception e) {
+			Method projection = PhysicalEngine.class.getDeclaredMethod("ProjectionI", Point.class, Point.class,
+					Point2D.Double.class);
+			projection.setAccessible(true);
+			/* Projection on a horizontal line */
+			Point2D.Double center = new Point2D.Double(140, 70);
+			Point A = new Point(100, 100);
+			Point B = new Point(200, 100);
+			Point2D.Double proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+			boolean b1 = Math.abs(proj.getX() - center.getX()) < 1E-10;
+			boolean b2 = Math.abs(proj.getY() - 100) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+			/* Projection on a vertical line */
+			center.setLocation(60, 150);
+			A.setLocation(100, 100);
+			B.setLocation(100, 200);
+			proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+			b1 = Math.abs(proj.getX() - 100) < 1E-10;
+			b2 = Math.abs(proj.getY() - center.getY()) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+			/* Projection on a diagonal line */
+			center.setLocation(100, 200);
+			A.setLocation(100, 300);
+			B.setLocation(200, 200);
+			proj = (Point2D.Double) projection.invoke(physical_engine, A, B, center);
+			b1 = Math.abs(proj.getX() - 150) < 1E-10;
+			b2 = Math.abs(proj.getY() - 250) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 
-	
 	@Test
 	public void test_ballIsOutOfCircuit() {
-		Ball ball = new Ball(635,200,10,1);
-		
-		//Balle dedans
+		Ball ball = new Ball(635, 200, 10, 1);
+
 		Boolean result = null;
 		try {
 			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
 			ballIsOutOfCircuit.setAccessible(true);
+
+			// Balle is inside
 			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
-		}
-		catch (Exception e) {
+			assertEquals(result, false);
+
+			// Ball is out on X axis
+			ball.set_location(651, 200);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+			assertEquals(result, true);
+
+			// Ball is out on Y axis
+			ball.set_location(640, 211);
+			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
+			assertEquals(result, true);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		assertEquals(result, false);
-		
-		//Balle sortie en X
-		ball.set_location(651, 200);
-		try {
-			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
-			ballIsOutOfCircuit.setAccessible(true);
-			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		assertEquals(result, true);
-		
-		//Balle sortie en Y
-		ball.set_location(640, 211);
-		try {
-			Method ballIsOutOfCircuit = PhysicalEngine.class.getDeclaredMethod("ballIsOutOfCircuit", Ball.class);
-			ballIsOutOfCircuit.setAccessible(true);
-			result = (Boolean) ballIsOutOfCircuit.invoke(physical_engine, ball);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		assertEquals(result, true);
+
 	}
 
 }
