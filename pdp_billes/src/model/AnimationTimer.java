@@ -4,6 +4,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+
+// CLASSE A COMMENTER
+
 @SuppressWarnings("serial")
 public class AnimationTimer extends Timer {
 
