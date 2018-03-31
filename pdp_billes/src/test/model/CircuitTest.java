@@ -43,14 +43,14 @@ public class CircuitTest {
 				f.delete();
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 	}
 
 	@Test
 	public void test_importExport() {
-		/* On cree une balle avec une trace */
+		/* Creting a ball with track */
 		Ball ball = new Ball(10, 10, 7, 4);
 		ArrayList<Point> exportedTrace = new ArrayList<Point>();
 		exportedTrace.add(new Point(2, 2));
@@ -63,17 +63,16 @@ public class CircuitTest {
 		}
 
 		/*
-		 * On ajoute une balle et un obstacle au circuit afin qu'il y ait
-		 * quelque chose a exporter
+		 * Adding a ball and two obstacles to the circuit to export something
 		 */
 		c.addBall(ball);
 		c.addLine(new ObstacleLine(new Point(10, 10), new Point(20, 10), 0.8));
 		c.addLine(new ObstacleLine(new Point(20, 10), new Point(20, 10), 0.8));
 
 		/*
-		 * On modifie toutes les valeurs modifiables par defaut afin de tester
-		 * si l export et l import en tiendront bien compte. On les sauvegardes
-		 * dans des variables pour les comparer plus tard
+		 * Updating all updatable default values in order to test if the export
+		 * and the import will save and load these values. We save these new
+		 * values in variables in rder to test the imported circuit later
 		 */
 		c.set_inclinaison(90);
 		c.set_defaultBallMass(12);
@@ -90,21 +89,18 @@ public class CircuitTest {
 		ArrayList<Ball> exportedBalls = c.get_balls();
 		ArrayList<ObstacleLine> exportedLines = c.get_lines();
 
-		/* On cree un fichier et on exporte notre circuit dedans */
 		f = new File("TUexport.pdp");
 		c.exporter(f);
 
 		/*
-		 * On re initialise le circuit. Toutes ses valeurs sont desormais celles
-		 * par defaut. Ensuite, on importe un circuit a partir du fichier que l
-		 * on vient d exporter. Si l import et l export ont correctement
-		 * fonctionnes, on devrait avoir les memes valeurs avant et apres l
-		 * import
+		 * Reseting circuit and importing the file. If export and import both
+		 * succeeded, the imported circuit attributes shall be the same as the
+		 * one we created before export
 		 */
 		c = new Circuit(666, 666);
 		c.importer(f);
 
-		/* On test les valeurs par defaut */
+		/* Testing default attributes */
 		assertEquals(exporteddefaultMass, c.get_defaultBallMass(), 1E-10);
 		assertEquals(exporteddefaultRadius, c.get_defaultBallRadius());
 		assertEquals(exporteddefaultCOR, c.get_defaultCOR(), 1E-10);
@@ -112,7 +108,7 @@ public class CircuitTest {
 		assertEquals(exportedHeight, c.get_height());
 		assertEquals(exportedInclinaison, c.get_inclinaison(), 1E-10);
 
-		/* On test la presence, la position et les attributs des balles */
+		/* Testing ball presence and attributes */
 		assertEquals(exportedBalls.size(), c.get_balls().size());
 		for (int i = 0; i < c.get_balls().size(); i++) {
 			Ball b = c.get_balls().get(i);
@@ -124,7 +120,7 @@ public class CircuitTest {
 			assertEquals(b.get_radius(), b2.get_radius());
 		}
 
-		/* On test la presence, la position et les attributs des obstacles */
+		/* Testing line presence and attributes */
 		assertEquals(exportedLines.size(), c.get_lines().size());
 		for (int i = 0; i < c.get_lines().size(); i++) {
 			ObstacleLine o = c.get_lines().get(i);
@@ -138,9 +134,9 @@ public class CircuitTest {
 		}
 
 		/*
-		 * On n importe jamais les traces. Cette donnee est juste vouee a etre
-		 * exportee. Ici, on teste que les traces presentes dans le fichiers
-		 * sont bien celles qu on avait dans le circuit exporte
+		 * We never import tracks. This data is only meant to be exported. Here
+		 * we test their presence in the exported file to control if they have
+		 * been successfully exported
 		 */
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder;
@@ -176,8 +172,8 @@ public class CircuitTest {
 		c.set_height(1000);
 		Ball b;
 		/*
-		 * On ajoute environ 500*100 billes au circuit pour faire un gros
-		 * fichier a importer
+		 * Adding around 500*100 balls to the circuit to create a "heavy" file
+		 * to import
 		 */
 		for (int i = 10; i < 5000; i = i + 10) {
 			for (int j = 10; j < 1000; j = j + 10) {

@@ -30,18 +30,17 @@ public class ParamLineTest {
 		try {
 			Method checkInt = AParamObject.class.getDeclaredMethod("checkInt", String.class);
 			checkInt.setAccessible(true);
-			/* Tests de valeurs rejetees par la fonction checkInt */
+			/* Testing checkInt rejected values */
 			result = (Boolean) checkInt.invoke(pl, "a");
 			assertEquals(false, result);
 			result = (Boolean) checkInt.invoke(pl, "10.0");
 			assertEquals(false, result);
-			// Notre fonction checkInt n'accepte pas les nombres négatifs
 			result = (Boolean) checkInt.invoke(pl, "-1");
 			assertEquals(false, result);
 			result = (Boolean) checkInt.invoke(pl, "");
 			assertEquals(false, result);
 
-			/* Test de valeur acceptee par la fonction checkInt */
+			/* Testing checkInt accepted value */
 			result = (Boolean) checkInt.invoke(pl, "1");
 			assertEquals(true, result);
 		} catch (Exception e) {
@@ -56,7 +55,7 @@ public class ParamLineTest {
 		try {
 			Method checkDouble = AParamObject.class.getDeclaredMethod("checkDouble", String.class);
 			checkDouble.setAccessible(true);
-			/* Tests de valeurs rejetees par la fonction checkDouble */
+			/* Testing checkDouble rejected values */
 			result = (Boolean) checkDouble.invoke(pl, "a");
 			assertEquals(false, result);
 			result = (Boolean) checkDouble.invoke(pl, "1.");
@@ -65,13 +64,12 @@ public class ParamLineTest {
 			assertEquals(false, result);
 			result = (Boolean) checkDouble.invoke(pl, ".1");
 			assertEquals(false, result);
-			// Notre fonction checkDouble n'accepte pas les nombres négatifs
 			result = (Boolean) checkDouble.invoke(pl, "-1");
 			assertEquals(false, result);
 			result = (Boolean) checkDouble.invoke(pl, "");
 			assertEquals(false, result);
 
-			/* Tests de valeurs acceptees par la fonction checkDouble */
+			/* Testing checkDouble accepted value */
 			result = (Boolean) checkDouble.invoke(pl, "10.0");
 			assertEquals(true, result);
 			result = (Boolean) checkDouble.invoke(pl, "1");
