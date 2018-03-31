@@ -1,14 +1,13 @@
 package model;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-/** A ball is characterized by :
- * - the location of its center : vector _location
- * - a velocity : vector _velocity
- * - a mass : _mass
- * - a radius : _radius
- * - a track : a history of its positions
+/**
+ * A ball is characterized by : - the location of its center : vector _location
+ * - a velocity : vector _velocity - a mass : _mass - a radius : _radius - a
+ * track : a history of its positions
  */
 
 public class Ball {
@@ -30,8 +29,14 @@ public class Ball {
 	}
 
 	public Boolean contains(Point p) {
-		double x = p.getX();
-		double y = p.getY();
+		return refactContains(p.getX(), p.getY());
+	}
+
+	public Boolean contains(Point2D.Double p) {
+		return refactContains(p.getX(), p.getY());
+	}
+
+	private Boolean refactContains(double x, double y) {
 		double calc = Math.pow(x - _location.getX(), 2) + Math.pow(y - _location.getY(), 2);
 		double radius_squared = Math.pow(_radius, 2);
 		if (calc <= radius_squared)
@@ -39,8 +44,9 @@ public class Ball {
 		return false;
 	}
 
-	/** We calculate the new velocity : old velocity + acceleration.
-	 * Then we calculate the new position : old position + new velocity
+	/**
+	 * We calculate the new velocity : old velocity + acceleration. Then we
+	 * calculate the new position : old position + new velocity
 	 */
 	public void step(Vector acceleration) {
 		double x0 = _location.getX();
@@ -55,17 +61,17 @@ public class Ball {
 		if ((int) _location.getX() != (int) x0 || (int) _location.getY() != (int) y0)
 			_track.add(new Point((int) _location.getX(), (int) _location.getY()));
 	}
-	
+
 	public void setAll(double x, double y, int radius, double mass) {
 		_location.setCartesian(x, y);
 		set_radius(radius);
 		set_mass(mass);
 	}
-	
+
 	public double get_speed() {
 		return Math.sqrt(Math.pow(_velocity.getX(), 2) + Math.pow(_velocity.getY(), 2));
 	}
-	
+
 	public void set_location(double x, double y) {
 		_location.setCartesian(x, y);
 	}
@@ -73,13 +79,13 @@ public class Ball {
 	public void set_speed(double x, double y) {
 		_velocity.setCartesian(x, y);
 	}
-	
+
 	public void set_radius(int radius) {
 		_radius = radius;
 		if (_radius <= 0)
 			_radius = 1;
 	}
-	
+
 	public double get_x() {
 		return _location.getX();
 	}
