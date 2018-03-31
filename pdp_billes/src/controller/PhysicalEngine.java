@@ -148,7 +148,7 @@ public class PhysicalEngine {
 	 */
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-		ReplaceBall(obstacle, ball, c);
+		ReplaceBall(obstacle, ball);
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
 		Vector N = new Vector();
 		N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
@@ -197,7 +197,9 @@ public class PhysicalEngine {
 	 * where the distance between the ball and the obstacle is equal to the
 	 * ball's radius.
 	 */
-	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
+	private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
+		
+		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
 		double dist = _controller.distance(c, p);
 		if (dist < ball.get_radius()) {
