@@ -55,7 +55,7 @@ public class CircuitTest {
 		ArrayList<Point> exportedTrace = new ArrayList<Point>();
 		exportedTrace.add(new Point(2, 2));
 		try {
-			Field f = ball.getClass().getDeclaredField("_trace");
+			Field f = ball.getClass().getDeclaredField("_track");
 			f.setAccessible(true);
 			f.set(ball, exportedTrace);
 		} catch (Exception e) {
