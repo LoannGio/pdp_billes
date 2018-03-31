@@ -34,9 +34,9 @@ public class Circuit {
 	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
 	/*
-	 * Echelle de vitesse de notre application. De gere le pas de temps de la
-	 * simulation. Augmenter cet attribut améliore la précision de la simulation
-	 * mais diminue sa vitesse d'exécution
+	 * Velocity's scale of our application. It handles time step of the simulation.
+	 * Increasing this attribute improves the precision of the simulation but it
+	 * also increases its duration.
 	 */
 	private double _scale;
 	private double _defaultInclinaison;
@@ -85,7 +85,11 @@ public class Circuit {
 		_lines.add(ol);
 	}
 
-	/*
+	/*Import data of the circuit in XML format of the f file passed in parameter.
+	 * During the import, we do not verify the validity of our file. An imported file
+	 * must have a .pdp extension. It is assumed that a file with this extension always
+	 * have a validate structure. 
+	 * 
 	 * Importe les donnees du circuit au format XML du fichier f passe en
 	 * parametre. Lors de l import, on ne verifie pas la validite de notre
 	 * fichier pour l application. Un fichier importe a forcement une extension

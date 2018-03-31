@@ -3,12 +3,12 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 
-/* Une bille est caracterisee par :
- * - la position de son centre : vecteur _location
- * - une vitesse : vecteur _velocity
- * - une masse : _mass
- * - un rayon : _radius
- * - une trace : un historique de positions
+/* A ball is characterized by :
+ * - the location of her center : vector _location
+ * - a velocity : vector _velocity
+ * - a mass : _mass
+ * - a radius : _radius
+ * - a track : a historic of the positions
  */
 public class Ball {
 	private Vector _location;
@@ -94,8 +94,8 @@ public class Ball {
 		return _trace;
 	}
 
-	/* On calcule la nouvelle vitesse : ancienne vitesse + acceleration
-	 * Puis on calcule la nouvelle position : ancienne position + nouvelle vitesse
+	/* We calculate the new position : old velocity + acceleration.
+	 * Then we calculate the new position : old position + new velocity
 	 */
 	public void step(Vector acceleration) {
 		double x0 = _location.getX();
