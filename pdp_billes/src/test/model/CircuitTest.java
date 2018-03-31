@@ -98,7 +98,7 @@ public class CircuitTest {
 		 * one we created before export
 		 */
 		c = new Circuit(666, 666);
-		c.toExport(f);
+		c.toImport(f);
 
 		/* Testing default attributes */
 		assertEquals(exporteddefaultMass, c.get_defaultBallMass(), 1E-10);
