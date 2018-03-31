@@ -197,6 +197,15 @@ public class Controller {
 			return true;
 	}
 
+	/*
+	 * We check if the ball collides with the line that goes through the
+	 * two endpoints of the obstacle. It is done by checking the distance between
+	 * the center of the ball and the projection point on the line. If this distance is shorter
+	 * than the radius, then we know that the ball collides with the line. After that, we now
+	 * have to check if the ball colides with the obstacle by calling collisionSegment.
+	 * 
+	 * CI = distance between the center of the ball and the projection point on the line.
+	 */
 	public boolean checkCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Vector u = new Vector(obstacle.get_begin().getX() - obstacle.get_end().getX(),
 				obstacle.get_begin().getY() - obstacle.get_end().getY());
@@ -212,6 +221,11 @@ public class Controller {
 			return false;
 	}
 
+	/*
+	 * Check if the projection point is on the obstacle. If so, the ball collides with the obstacle.
+	 * Otherwise, we have to check if the endpoints A and B of the obstacle are located inside the ball.
+	 * If so, the ball collides with the obstacle. Otherwise, there is no collision.
+	 */
 	public boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
 
 		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
