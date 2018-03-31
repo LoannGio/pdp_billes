@@ -16,20 +16,20 @@ import model.Ball;
 public class ParamBall extends AParamObject {
 	private Ball _ball;
 
-	private JPanel _radiusConteneur = new JPanel();
+	private JPanel _radiusContainer = new JPanel();
 	private JLabel _radiusLabel = new JLabel("Rayon  ");
 	private JTextField _radiusText;
 
-	private JPanel _massConteneur = new JPanel();
+	private JPanel _massContainer = new JPanel();
 	private JLabel _massLabel = new JLabel("Masse  ");
 	private JTextField _massText;
 
-	private JPanel _centreConteneur = new JPanel();
-	private JLabel _centreLabel = new JLabel("Centre  ");
-	private JLabel _centreXLabel = new JLabel("X ");
-	private JLabel _centreYLabel = new JLabel("Y ");
-	private JTextField _centreXText;
-	private JTextField _centreYText;
+	private JPanel _centerContainer = new JPanel();
+	private JLabel _centerLabel = new JLabel("Centre  ");
+	private JLabel _centerXLabel = new JLabel("X ");
+	private JLabel _centerYLabel = new JLabel("Y ");
+	private JTextField _centerXText;
+	private JTextField _centerYText;
 
 	public ParamBall(Ball b, Controller c, DrawingPanel dp) {
 		super(c, dp);
@@ -56,43 +56,41 @@ public class ParamBall extends AParamObject {
 		this.setVisible(true);
 	}
 
+	/*
+	 * Initialize TextFields content with the corresponding actual value in the
+	 * model
+	 */
 	private void initializeComponents() {
-		/*
-		 * Initialise le contenu des zones de texte a la valeur actuelle du
-		 * champ qui leur correspond
-		 */
 		_radiusText = new JTextField(Integer.toString(_ball.get_radius()));
 		_massText = new JTextField(Double.toString(_ball.get_mass()));
-		_centreXText = new JTextField(Integer.toString((int) _ball.get_x()));
-		_centreYText = new JTextField(Integer.toString((int) _ball.get_y()));
+		_centerXText = new JTextField(Integer.toString((int) _ball.get_x()));
+		_centerYText = new JTextField(Integer.toString((int) _ball.get_y()));
 	}
 
 	private void addListneners() {
-		_buttonChange.addActionListener(new ActionListener() {
+		_changeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String radius = _radiusText.getText();
 				String mass = _massText.getText();
-				String centreX = _centreXText.getText();
-				String centreY = _centreYText.getText();
-				int iradius, icentreX, icentreY;
+				String centerX = _centerXText.getText();
+				String centerY = _centerYText.getText();
+				int iradius, icenterX, icenterY;
 				double imass;
 
 				/*
-				 * Si au moins un champ n est pas valide, on annule la
-				 * modification
+				 * If at least a field isn't valid, we cancel the whole update
 				 */
-				if (checkInt(radius) && checkDouble(mass) && checkInt(centreX) && checkInt(centreY)) {
+				if (checkInt(radius) && checkDouble(mass) && checkInt(centerX) && checkInt(centerY)) {
 					iradius = Integer.parseInt(radius);
 					imass = Double.parseDouble(mass);
-					icentreX = Integer.parseInt(centreX);
-					icentreY = Integer.parseInt(centreY);
+					icenterX = Integer.parseInt(centerX);
+					icenterY = Integer.parseInt(centerY);
 
 					/*
-					 * Si la modification reussit, on actualise le panneau de
-					 * dessin
+					 * If updates succeeds, refresh the drawing panel
 					 */
-					if (_controller.updateBall(_ball, iradius, imass, icentreX, icentreY)) {
+					if (_controller.updateBall(_ball, iradius, imass, icenterX, icenterY)) {
 						_drawingPan.repaint();
 					}
 				}
@@ -102,33 +100,33 @@ public class ParamBall extends AParamObject {
 	}
 
 	private void initializeContainers() {
-		_conteneur.setLayout(new BoxLayout(_conteneur, BoxLayout.PAGE_AXIS));
-		_radiusConteneur.setLayout(new BoxLayout(_radiusConteneur, BoxLayout.LINE_AXIS));
-		_massConteneur.setLayout(new BoxLayout(_massConteneur, BoxLayout.LINE_AXIS));
-		_buttonConteneur.setLayout(new BoxLayout(_buttonConteneur, BoxLayout.LINE_AXIS));
-		_centreConteneur.setLayout(new BoxLayout(_centreConteneur, BoxLayout.LINE_AXIS));
+		_container.setLayout(new BoxLayout(_container, BoxLayout.PAGE_AXIS));
+		_radiusContainer.setLayout(new BoxLayout(_radiusContainer, BoxLayout.LINE_AXIS));
+		_massContainer.setLayout(new BoxLayout(_massContainer, BoxLayout.LINE_AXIS));
+		_buttonContainer.setLayout(new BoxLayout(_buttonContainer, BoxLayout.LINE_AXIS));
+		_centerContainer.setLayout(new BoxLayout(_centerContainer, BoxLayout.LINE_AXIS));
 
-		_radiusConteneur.add(_radiusLabel);
-		_radiusConteneur.add(_radiusText);
-		_massConteneur.add(_massLabel);
-		_massConteneur.add(_massText);
-		_buttonConteneur.add(_buttonChange);
+		_radiusContainer.add(_radiusLabel);
+		_radiusContainer.add(_radiusText);
+		_massContainer.add(_massLabel);
+		_massContainer.add(_massText);
+		_buttonContainer.add(_changeButton);
 
-		_centreConteneur.add(_centreLabel);
-		_centreConteneur.add(_centreXLabel);
-		_centreConteneur.add(_centreXText);
-		_centreConteneur.add(_centreYLabel);
-		_centreConteneur.add(_centreYText);
+		_centerContainer.add(_centerLabel);
+		_centerContainer.add(_centerXLabel);
+		_centerContainer.add(_centerXText);
+		_centerContainer.add(_centerYLabel);
+		_centerContainer.add(_centerYText);
 
-		_conteneur.add(_centreConteneur);
-		_conteneur.add(_radiusConteneur);
-		_conteneur.add(_massConteneur);
-		_conteneur.add(_buttonConteneur);
+		_container.add(_centerContainer);
+		_container.add(_radiusContainer);
+		_container.add(_massContainer);
+		_container.add(_buttonContainer);
 
-		_buttonConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-		_radiusConteneur.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-		_conteneur.setBorder(BorderFactory.createEmptyBorder(50, 30, 50, 30));
+		_buttonContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		_radiusContainer.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		_container.setBorder(BorderFactory.createEmptyBorder(50, 30, 50, 30));
 
-		this.add(_conteneur);
+		this.add(_container);
 	}
 }
