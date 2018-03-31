@@ -2,10 +2,8 @@ package view;
 
 import java.awt.Component;
 
+/* Minimal services proposed by a right click pop-up on an object*/
 public interface IRightClickPopUpMenu {
-	/* Services minimums rendus par un popUp de clic droit sur objet */
-
-	public void initialize();
 
 	public void parameter();
 
