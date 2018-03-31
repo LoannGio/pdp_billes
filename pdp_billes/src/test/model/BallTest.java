@@ -103,12 +103,12 @@ public class BallTest {
 		double angle2 = 35;
 		double angle3 = 0;
 
-		circuit.set_inclinaison(angle1);
+		circuit.set_inclination(angle1);
 		Vector acceleration1 = new Vector(circuit.get_acceleration().getX(), circuit.get_acceleration().getY());
-		circuit.set_inclinaison(angle2);
+		circuit.set_inclination(angle2);
 		Vector acceleration2 = new Vector(circuit.get_acceleration().getX(), circuit.get_acceleration().getY());
 
-		circuit.set_inclinaison(angle3);
+		circuit.set_inclination(angle3);
 		Vector acceleration3 = new Vector(circuit.get_acceleration().getX(), circuit.get_acceleration().getY());
 		for (int i = 0; i < 10; i++) {
 			ball1.step(acceleration1);

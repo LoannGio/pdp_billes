@@ -143,10 +143,10 @@ public class ParamLine extends AParamObject {
 		 * Initialize TextFields content with the corresponding actual value in
 		 * the model
 		 */
-		_beginXText = new JTextField(Integer.toString((int) _line.get_depart().getX()));
-		_beginYText = new JTextField(Integer.toString((int) _line.get_depart().getY()));
-		_endXText = new JTextField(Integer.toString((int) _line.get_arrivee().getX()));
-		_endYText = new JTextField(Integer.toString((int) _line.get_arrivee().getY()));
+		_beginXText = new JTextField(Integer.toString((int) _line.get_begin().getX()));
+		_beginYText = new JTextField(Integer.toString((int) _line.get_begin().getY()));
+		_endXText = new JTextField(Integer.toString((int) _line.get_end().getX()));
+		_endYText = new JTextField(Integer.toString((int) _line.get_end().getY()));
 		_CORText = new JTextField(Double.toString((double) _line.getCOR()));
 
 	}

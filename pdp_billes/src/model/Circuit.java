@@ -33,13 +33,13 @@ public class Circuit {
 	private double _defaultBallMass;
 	private double _defaultCOR;
 	private static double _gravitation = 9.80665;
-	/*
+	/**
 	 * Velocity's scale of our application. It handles time step of the simulation.
 	 * Increasing this attribute improves the precision of the simulation but it
 	 * also increases its duration.
 	 */
 	private double _scale;
-	private double _defaultInclinaison;
+	private double _defaultInclination;
 	private Vector _gravityAcceleration;
 
 	public Circuit(int width, int height) {
@@ -47,11 +47,11 @@ public class Circuit {
 		_height = height;
 		_defaultBallMass = 1;
 		_defaultBallRadius = 10;
-		_defaultInclinaison = 45;
+		_defaultInclination = 45;
 		_defaultCOR = 0.5;
 		_scale = 800;
 		double ax = 0;
-		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
+		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclination));
 		_gravityAcceleration = new Vector(ax / _scale, ay / _scale);
 	}
 
@@ -85,18 +85,12 @@ public class Circuit {
 		_lines.add(ol);
 	}
 
-	/*Import data of the circuit in XML format of the f file passed in parameter.
+	/** Import data of the circuit in XML format of the f file passed in parameter.
 	 * During the import, we do not verify the validity of our file. An imported file
 	 * must have a .pdp extension. It is assumed that a file with this extension always
 	 * have a validate structure. 
-	 * 
-	 * Importe les donnees du circuit au format XML du fichier f passe en
-	 * parametre. Lors de l import, on ne verifie pas la validite de notre
-	 * fichier pour l application. Un fichier importe a forcement une extension
-	 * .pdp. On part du principe qu un fichier ayant cette extension a forcement
-	 * la structure adequate pour l import.
 	 */
-	public void importer(File f) {
+	public void toImport(File f) {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder;
 		try {
@@ -122,29 +116,28 @@ public class Circuit {
 
 	private void importObstaclesXML(Document document) {
 		_lines.clear();
-		NodeList listeObstacles = document.getElementsByTagName("OBSTACLE");
+		NodeList obstaclesList = document.getElementsByTagName("OBSTACLE");
 		NodeList COR = document.getElementsByTagName("COR");
-		NodeList xDepart = document.getElementsByTagName("XOBSDEPART");
-		NodeList yDepart = document.getElementsByTagName("YOBSDEPART");
-		NodeList xArrivee = document.getElementsByTagName("XOBSARRIVEE");
-		NodeList yArrivee = document.getElementsByTagName("YOBSARRIVEE");
-		for (int i = 0; i < listeObstacles.getLength(); i++) {
-			double xdep, ydep, xarr, yarr, cor;
+		NodeList xBegin = document.getElementsByTagName("XOBSDEPART");
+		NodeList yBegin = document.getElementsByTagName("YOBSDEPART");
+		NodeList xEnd = document.getElementsByTagName("XOBSARRIVEE");
+		NodeList yEnd = document.getElementsByTagName("YOBSARRIVEE");
+		for (int i = 0; i < obstaclesList.getLength(); i++) {
+			double xbeg, ybeg, xe, ye, cor;
 			cor = Double.parseDouble(COR.item(i).getTextContent());
-			xdep = Double.parseDouble(xDepart.item(i).getTextContent());
-			ydep = Double.parseDouble(yDepart.item(i).getTextContent());
-			xarr = Double.parseDouble(xArrivee.item(i).getTextContent());
-			yarr = Double.parseDouble(yArrivee.item(i).getTextContent());
+			xbeg = Double.parseDouble(xBegin.item(i).getTextContent());
+			ybeg = Double.parseDouble(yBegin.item(i).getTextContent());
+			xe = Double.parseDouble(xEnd.item(i).getTextContent());
+			ye = Double.parseDouble(yEnd.item(i).getTextContent());
 
-			_lines.add(new ObstacleLine(new Point((int) xdep, (int) ydep), new Point((int) xarr, (int) yarr), cor));
+			_lines.add(new ObstacleLine(new Point((int) xbeg, (int) ybeg), new Point((int) xe, (int) ye), cor));
 		}
 	}
 
 	private void importCircuitXML(Document document) {
-		/*
-		 * On recupere la taille de l ecran de l utilisateur. Si la taille de
-		 * celui ci ne permet pas d afficher le circuit qu on esaye d importer,
-		 * on rogne le dit circuit (a droite et en bas)
+		/** 
+		 * After getting user's screen size, we check if it's large enough to display circuit.
+		 * If it's not, then the circuit is cropped (on right and on bottom).
 		 */
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
@@ -161,7 +154,7 @@ public class Circuit {
 		if (_height > panelMaxHeight)
 			_height = (int) panelMaxHeight;
 
-		_defaultInclinaison = Double.parseDouble(document.getElementsByTagName("INCLINAISON").item(0).getTextContent());
+		_defaultInclination = Double.parseDouble(document.getElementsByTagName("INCLINAISON").item(0).getTextContent());
 		_defaultBallRadius = Integer
 				.parseInt(document.getElementsByTagName("DEFAULTBALLRADIUS").item(0).getTextContent());
 		_defaultBallMass = Double
@@ -172,27 +165,26 @@ public class Circuit {
 
 	private void importBallsXML(Document document) {
 		_balls.clear();
-		NodeList listeBilles = document.getElementsByTagName("BILLE");
-		NodeList xBilles = document.getElementsByTagName("BX");
-		NodeList yBilles = document.getElementsByTagName("BY");
-		NodeList radiusBilles = document.getElementsByTagName("RADIUS");
-		NodeList massBilles = document.getElementsByTagName("MASS");
-		for (int i = 0; i < listeBilles.getLength(); i++) {
+		NodeList ballsList = document.getElementsByTagName("BILLE");
+		NodeList xBalls = document.getElementsByTagName("BX");
+		NodeList yBalls = document.getElementsByTagName("BY");
+		NodeList radiusBalls = document.getElementsByTagName("RADIUS");
+		NodeList massBalls = document.getElementsByTagName("MASS");
+		for (int i = 0; i < ballsList.getLength(); i++) {
 			double x, y, mass;
 			int radius;
-			x = Double.parseDouble(xBilles.item(i).getTextContent());
-			y = Double.parseDouble(yBilles.item(i).getTextContent());
-			mass = Double.parseDouble(massBilles.item(i).getTextContent());
-			radius = Integer.parseInt(radiusBilles.item(i).getTextContent());
+			x = Double.parseDouble(xBalls.item(i).getTextContent());
+			y = Double.parseDouble(yBalls.item(i).getTextContent());
+			mass = Double.parseDouble(massBalls.item(i).getTextContent());
+			radius = Integer.parseInt(radiusBalls.item(i).getTextContent());
 			_balls.add(new Ball(x, y, radius, mass));
 		}
 	}
 
-	/*
-	 * Exporte les donnees de notre circuit au format XML dans un fichier f
-	 * passe en parametre
+	/**
+	 * Exports circuit data in XML format in a file F passed as parameter.
 	 */
-	public void exporter(File f) {
+	public void toExport(File f) {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -208,7 +200,7 @@ public class Circuit {
 
 			saveBallsXML(doc, rootElement);
 
-			/* Mise en page du fichier */
+			/* File layout */
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			try {
 				Transformer transformer = transformerFactory.newTransformer();
@@ -247,21 +239,21 @@ public class Circuit {
 			COR.setTextContent(String.valueOf(o.getCOR()));
 			obstacle.appendChild(COR);
 
-			Element xObsDepart = doc.createElement("XOBSDEPART");
-			xObsDepart.setTextContent(String.valueOf(o.get_depart().getX()));
-			obstacle.appendChild(xObsDepart);
+			Element xObsBegin = doc.createElement("XOBSDEPART");
+			xObsBegin.setTextContent(String.valueOf(o.get_begin().getX()));
+			obstacle.appendChild(xObsBegin);
 
-			Element yObsDepart = doc.createElement("YOBSDEPART");
-			yObsDepart.setTextContent(String.valueOf(o.get_depart().getY()));
-			obstacle.appendChild(yObsDepart);
+			Element yObsBegin = doc.createElement("YOBSDEPART");
+			yObsBegin.setTextContent(String.valueOf(o.get_begin().getY()));
+			obstacle.appendChild(yObsBegin);
 
-			Element xObsArrivee = doc.createElement("XOBSARRIVEE");
-			xObsArrivee.setTextContent(String.valueOf(o.get_arrivee().getX()));
-			obstacle.appendChild(xObsArrivee);
+			Element xObsEnd = doc.createElement("XOBSARRIVEE");
+			xObsEnd.setTextContent(String.valueOf(o.get_end().getX()));
+			obstacle.appendChild(xObsEnd);
 
-			Element yObsArrivee = doc.createElement("YOBSARRIVEE");
-			yObsArrivee.setTextContent(String.valueOf(o.get_arrivee().getY()));
-			obstacle.appendChild(yObsArrivee);
+			Element yObsEnd = doc.createElement("YOBSARRIVEE");
+			yObsEnd.setTextContent(String.valueOf(o.get_end().getY()));
+			obstacle.appendChild(yObsEnd);
 		}
 	}
 
@@ -279,7 +271,7 @@ public class Circuit {
 		rootElement.appendChild(defCOR);
 
 		Element incl = doc.createElement("INCLINAISON");
-		incl.setTextContent(String.valueOf(_defaultInclinaison));
+		incl.setTextContent(String.valueOf(_defaultInclination));
 		rootElement.appendChild(incl);
 
 		Element defBallRadius = doc.createElement("DEFAULTBALLRADIUS");
@@ -296,35 +288,35 @@ public class Circuit {
 	}
 
 	private void saveBallsXML(Document doc, Element rootElement) {
-		Element billes = doc.createElement("BILLES");
-		rootElement.appendChild(billes);
+		Element balls = doc.createElement("BILLES");
+		rootElement.appendChild(balls);
 
 		for (Ball b : _balls) {
-			Element bille = doc.createElement("BILLE");
-			billes.appendChild(bille);
+			Element ball = doc.createElement("BILLE");
+			balls.appendChild(ball);
 
-			Element xBille = doc.createElement("BX");
-			xBille.setTextContent(String.valueOf(b.get_x()));
-			bille.appendChild(xBille);
+			Element xBall = doc.createElement("BX");
+			xBall.setTextContent(String.valueOf(b.get_x()));
+			ball.appendChild(xBall);
 
-			Element yBille = doc.createElement("BY");
-			yBille.setTextContent(String.valueOf(b.get_y()));
-			bille.appendChild(yBille);
+			Element yBall = doc.createElement("BY");
+			yBall.setTextContent(String.valueOf(b.get_y()));
+			ball.appendChild(yBall);
 
 			Element radius = doc.createElement("RADIUS");
 			radius.setTextContent(String.valueOf(b.get_radius()));
-			bille.appendChild(radius);
+			ball.appendChild(radius);
 
 			Element mass = doc.createElement("MASS");
 			mass.setTextContent(String.valueOf(b.get_mass()));
-			bille.appendChild(mass);
+			ball.appendChild(mass);
 
-			Element trace = doc.createElement("TRACE");
-			bille.appendChild(trace);
+			Element track = doc.createElement("TRACE");
+			ball.appendChild(track);
 
-			for (Point p : b.get_trace()) {
+			for (Point p : b.get_track()) {
 				Element pointTrace = doc.createElement("P");
-				trace.appendChild(pointTrace);
+				track.appendChild(pointTrace);
 
 				Element xTrace = doc.createElement("X");
 				xTrace.setTextContent(String.valueOf(p.getX()));
@@ -337,6 +329,29 @@ public class Circuit {
 
 		}
 	}
+	
+	private void computeGravitation() {
+		double ax = 0;
+		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclination));
+		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
+	}
+	
+	/**
+	 * Inclination setter. When inclination is modified, balls' vertical acceleration
+	 * is calculated again, because it depends of gravity and circuit inclination.
+	 */
+	public void set_inclination(double inclinaison) {
+		_defaultInclination = inclinaison;
+		computeGravitation();
+	}
+	
+	public void set_scale(double scale) {
+		for (Ball b : _balls) {
+			b.set_speed(b.get_velocity().getX() * _scale / scale, b.get_velocity().getY() * _scale / scale);
+		}
+		_scale = scale;
+		computeGravitation();
+	}
 
 	public static double get_gravitation() {
 		return _gravitation;
@@ -346,18 +361,8 @@ public class Circuit {
 		_gravitation = gravitation;
 	}
 
-	public double get_inclinaison() {
-		return _defaultInclinaison;
-	}
-
-	/*
-	 * Mutateur de l inclinaison. Lorsqu on modifie l inclinaison, on doit
-	 * recalculer la valeur de l acceleration verticale de la bille qui depend
-	 * de la gravite et de l inclinaison du plan
-	 */
-	public void set_inclinaison(double inclinaison) {
-		_defaultInclinaison = inclinaison;
-		computeGravitation();
+	public double get_inclination() {
+		return _defaultInclination;
 	}
 
 	public Vector get_acceleration() {
@@ -408,14 +413,6 @@ public class Circuit {
 		return _scale;
 	}
 
-	public void set_scale(double scale) {
-		for (Ball b : _balls) {
-			b.set_speed(b.get_velocity().getX() * _scale / scale, b.get_velocity().getY() * _scale / scale);
-		}
-		_scale = scale;
-		computeGravitation();
-	}
-
 	public Vector get_gravityAcceleration() {
 		return _gravityAcceleration;
 	}
@@ -430,12 +427,6 @@ public class Circuit {
 
 	public void set_defaultCOR(double defaultCOR) {
 		this._defaultCOR = defaultCOR;
-	}
-
-	private void computeGravitation() {
-		double ax = 0;
-		double ay = _gravitation * Math.sin(Math.toRadians(_defaultInclinaison));
-		_gravityAcceleration.setCartesian(ax / _scale, ay / _scale);
 	}
 
 }

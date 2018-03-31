@@ -62,7 +62,7 @@ public class PhysicalEngine {
 						}
 						dp.repaint();
 						ball.step(_circuit.get_acceleration());
-						dp.drawTraceBuffer(ball.get_trace().get(ball.get_trace().size() - 1));
+						dp.drawTraceBuffer(ball.get_track().get(ball.get_track().size() - 1));
 					}
 				}
 				Toolkit.getDefaultToolkit().sync();
@@ -155,7 +155,7 @@ public class PhysicalEngine {
 		ReplaceBall(obstacle, ball, c);
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
 		Vector N = new Vector();
-		N = GetNormale(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
 		double normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX()));
 		angle = 2 * normalAngle - 180 - angle;
 		double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
@@ -200,7 +200,7 @@ public class PhysicalEngine {
 	 * la bille et l'obstacle est egale rayon
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball, Point2D.Double c) {
-		Point2D.Double p = ProjectionI(obstacle.get_depart(), obstacle.get_arrivee(), c);
+		Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
 		double dist = _controller.distance(c, p);
 		if (dist < ball.get_radius()) {
 			if (p.getX() == c.getX() && p.getY() == c.getY()) {

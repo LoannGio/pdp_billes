@@ -134,7 +134,7 @@ public class DrawingPanel extends JPanel {
 							ObstacleLine o = new ObstacleLine(_pressedLocation, arrivee, _controller.get_defaultCOR());
 							if (!(_controller.checkIfLineIsOnExistingBall(o))) {
 								arrivee.setLocation(arrivee.getX(), arrivee.getY());
-								o.set_arrivee(arrivee);
+								o.set_end(arrivee);
 								_controller.addLine(o);
 								drawLineBuffer(o);
 							}
@@ -152,7 +152,7 @@ public class DrawingPanel extends JPanel {
 
 	/* Painting an obstacle on the buffered image */
 	public void drawLineBuffer(ObstacleLine o) {
-		Line2D line = new Line2D.Double(o.get_depart(), o.get_arrivee());
+		Line2D line = new Line2D.Double(o.get_begin(), o.get_end());
 		Graphics2D gbuff = _buffer.createGraphics();
 		gbuff.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		gbuff.setColor(Color.blue);
@@ -228,7 +228,7 @@ public class DrawingPanel extends JPanel {
 		for (ObstacleLine o : lines)
 			drawLineBuffer(o);
 		for (Ball b : balls)
-			for (Point p : b.get_trace())
+			for (Point p : b.get_track())
 				drawTraceBuffer(p);
 	}
 
