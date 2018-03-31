@@ -44,263 +44,258 @@ public class PhysicalEngineTest {
 	public void testRun() {
 
 	}
-	
-	
+
 	/**
 	 * This test checks that the trajectory and speed of balls are correctly
-	 * modified during a collision.
-	 * 2 balls of same mass are created, their speed are the same and their trajectory
-	 * are opposed when the collision occurs.
+	 * modified during a collision. 2 balls of same mass are created, their
+	 * speed are the same and their trajectory are opposed when the collision
+	 * occurs.
 	 */
 
 	@Test
 	public void test_resolveCollisionBallBallSameMass() {
-		/* Event: horizontal collision*/
+		/* Event: horizontal collision */
 		try {
-		Method resolveCollBallBall = PhysicalEngine.class.getMethod(
-				"resolveCollisionBallBall", Ball.class, Ball.class);
-		resolveCollBallBall.setAccessible(true);
-		ball1.setAll(50, 100, 10, 2);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(1, 0);
-		ball2.set_speed(-1, 0);
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		boolean b1 = Math.abs(ball1.get_velocity().getX()+1) < 1E-10;
-		boolean b2 = Math.abs(ball2.get_velocity().getX()-1) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		/* Event: vertical collision*/ 
-		ball1.setAll(70, 100, 10, 2);
-		ball2.setAll(70, 120, 10, 2);
-		ball1.set_speed(0, 1);
-		ball2.set_speed(0, -1);
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		b1 = Math.abs(ball1.get_velocity().getY()+1) < 1E-10;
-		b2 = Math.abs(ball2.get_velocity().getY()-1) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		/* Event: 45 degrees collision*/ 
-		ball1.setAll(50, 100, 10, 2);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(1, 1);
-		ball2.set_speed(-1, -1);
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		b1 = ( Math.abs(ball1.get_velocity().getX()+1) < 1E-10 ) && 
-			 ( Math.abs(ball1.get_velocity().getY()-1) < 1E-10);
-		b2 = ( Math.abs(ball2.get_velocity().getX()-1) < 1E-10 ) && 
-			 ( Math.abs(ball2.get_velocity().getY()+1) < 1E-10);
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		}catch(Exception e) {
-			
+			Method resolveCollBallBall = PhysicalEngine.class.getMethod("resolveCollisionBallBall", Ball.class,
+					Ball.class);
+			resolveCollBallBall.setAccessible(true);
+			ball1.setAll(50, 100, 10, 2);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(1, 0);
+			ball2.set_speed(-1, 0);
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			boolean b1 = Math.abs(ball1.get_velocity().getX() + 1) < 1E-10;
+			boolean b2 = Math.abs(ball2.get_velocity().getX() - 1) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			/* Event: vertical collision */
+			ball1.setAll(70, 100, 10, 2);
+			ball2.setAll(70, 120, 10, 2);
+			ball1.set_speed(0, 1);
+			ball2.set_speed(0, -1);
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			b1 = Math.abs(ball1.get_velocity().getY() + 1) < 1E-10;
+			b2 = Math.abs(ball2.get_velocity().getY() - 1) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			/* Event: 45 degrees collision */
+			ball1.setAll(50, 100, 10, 2);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(1, 1);
+			ball2.set_speed(-1, -1);
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			b1 = (Math.abs(ball1.get_velocity().getX() + 1) < 1E-10)
+					&& (Math.abs(ball1.get_velocity().getY() - 1) < 1E-10);
+			b2 = (Math.abs(ball2.get_velocity().getX() - 1) < 1E-10)
+					&& (Math.abs(ball2.get_velocity().getY() + 1) < 1E-10);
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+		} catch (Exception e) {
 
 		}
 	}
-	
-	
+
 	/**
-	 *  This test checks that the speed of balls is correctly modified during a
-	 *  ball-ball collision of balls with different mass.
-	 *  2 balls of different mass are created, and we make their speed vary.
-	 *  Then, we check that the engine obeys the formulas of elastic impact:
-	 *  preservation of movement quantity and preservation of kinetic energy.
-=======
+	 * This test checks that the speed of balls is correctly modified during a
+	 * ball-ball collision of balls with different mass. 2 balls of different
+	 * mass are created, and we make their speed vary. Then, we check that the
+	 * engine obeys the formulas of elastic impact: preservation of movement
+	 * quantity and preservation of kinetic energy. =======
 	 */
 	@Test
 	public void test_resolveCollisionBallBallDifferentMass() {
 		try {
-		Method resolveCollBallBall = PhysicalEngine.class.getDeclaredMethod(
-						"resolveCollisionBallBall", Ball.class, Ball.class);
-		resolveCollBallBall.setAccessible(true);
-		/* Event: same speed */
-		
-		// Preservation of movement quantity 
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(1, 0);
-		ball2.set_speed(-1, 0);
-		Vector qmi  = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-					                   Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		Vector qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-                                      Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));	
-		Vector Diff = Vector.vectorSubtract(qmi, qmf);
-		boolean b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		
-		// Preservation of kinetic energy
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(1, 0);
-		ball2.set_speed(-1, 0);
-		Vector v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		Vector v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		Vector eci  = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-					                   Vector.vectorProductConstant(v2square, ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		Vector ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-                                      Vector.vectorProductConstant(v2square, ball2.get_mass()));	
-		Diff = Vector.vectorSubtract(eci, ecf);
-		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		
-		/* Event: one unmoving ball */
-			
-		// Preservation of movement quantity 
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(0, 0);
-		ball2.set_speed(-5, 0);
-		qmi  = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-					                   Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-                                      Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));	
-		Diff = Vector.vectorSubtract(qmi, qmf);
-		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		
-		// Preservation of kinetic energy
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(0, 0);
-		ball2.set_speed(-5, 0);
-		v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		eci  = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-					                   Vector.vectorProductConstant(v2square, ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-                                      Vector.vectorProductConstant(v2square, ball2.get_mass()));	
-		Diff = Vector.vectorSubtract(eci, ecf);
-		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		/* Event : 2 different not null speeds */
-			
-		// Preservation of movement quantity
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(10, 0);
-		ball2.set_speed(-5, 0);
-		qmi  = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-					                   Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
-                                      Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));	
-		Diff = Vector.vectorSubtract(qmi, qmf);
-		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		
-		// Preservation of kinetic energy
-		ball1.setAll(50, 100, 10, 1);
-		ball2.setAll(70, 100, 10, 2);
-		ball1.set_speed(10, 0);
-		ball2.set_speed(-5, 0);
-		v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		eci  = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-					                   Vector.vectorProductConstant(v2square, ball2.get_mass()));
-		resolveCollBallBall.invoke(physical_engine, ball1, ball2);
-		v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
-		v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
-		ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
-                                      Vector.vectorProductConstant(v2square, ball2.get_mass()));	
-		Diff = Vector.vectorSubtract(eci, ecf);
-		b = (Math.abs(Diff.getX()) < 1E-10)  && (Math.abs(Diff.getY()) < 1E-10);
-		assertEquals(true, b);
-		}catch(Exception e) {
+			Method resolveCollBallBall = PhysicalEngine.class.getDeclaredMethod("resolveCollisionBallBall", Ball.class,
+					Ball.class);
+			resolveCollBallBall.setAccessible(true);
+			/* Event: same speed */
+
+			// Preservation of movement quantity
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(1, 0);
+			ball2.set_speed(-1, 0);
+			Vector qmi = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			Vector qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			Vector Diff = Vector.vectorSubtract(qmi, qmf);
+			boolean b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+
+			// Preservation of kinetic energy
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(1, 0);
+			ball2.set_speed(-1, 0);
+			Vector v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			Vector v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			Vector eci = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			Vector ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			Diff = Vector.vectorSubtract(eci, ecf);
+			b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+
+			/* Event: one unmoving ball */
+
+			// Preservation of movement quantity
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(0, 0);
+			ball2.set_speed(-5, 0);
+			qmi = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			Diff = Vector.vectorSubtract(qmi, qmf);
+			b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+
+			// Preservation of kinetic energy
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(0, 0);
+			ball2.set_speed(-5, 0);
+			v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			eci = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			Diff = Vector.vectorSubtract(eci, ecf);
+			b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+			/* Event : 2 different not null speeds */
+
+			// Preservation of movement quantity
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(10, 0);
+			ball2.set_speed(-5, 0);
+			qmi = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			qmf = Vector.vectorSum(Vector.vectorProductConstant(ball1.get_velocity(), ball1.get_mass()),
+					Vector.vectorProductConstant(ball2.get_velocity(), ball2.get_mass()));
+			Diff = Vector.vectorSubtract(qmi, qmf);
+			b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+
+			// Preservation of kinetic energy
+			ball1.setAll(50, 100, 10, 1);
+			ball2.setAll(70, 100, 10, 2);
+			ball1.set_speed(10, 0);
+			ball2.set_speed(-5, 0);
+			v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			eci = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			resolveCollBallBall.invoke(physical_engine, ball1, ball2);
+			v1square = Vector.Product(ball1.get_velocity(), ball1.get_velocity());
+			v2square = Vector.Product(ball2.get_velocity(), ball2.get_velocity());
+			ecf = Vector.vectorSum(Vector.vectorProductConstant(v1square, ball1.get_mass()),
+					Vector.vectorProductConstant(v2square, ball2.get_mass()));
+			Diff = Vector.vectorSubtract(eci, ecf);
+			b = (Math.abs(Diff.getX()) < 1E-10) && (Math.abs(Diff.getY()) < 1E-10);
+			assertEquals(true, b);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * This test checks that the trajectory and speed of a ball are correctly
-	 * modified during a collision with an obstacle.
-	 * The coefficient of restitution is equal to 1 (the movement quantity
-	 * and the kinetic energy are preserved).
+	 * modified during a collision with an obstacle. The coefficient of
+	 * restitution is equal to 1 (the movement quantity and the kinetic energy
+	 * are preserved).
 	 */
-	
+
 	@Test
 	public void test_resolveCollisionBallObstacle() {
 
 		try {
-		Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod(
-				"resolveCollisionBallObstacle", Ball.class, ObstacleLine.class);
-		resolveCollBallObstacle.setAccessible(true);
-		obstacle.setCOR(1);
-		// Event: horizontal obstacle collision, ball moving towards bottom
-		obstacle.set_begin(new Point(20,100));
-		obstacle.set_end(new Point(100,100));
-		ball1.setAll(50, 90, 10, 2);
-		ball1.set_speed(0, 6);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
-		boolean b2 = Math.abs(ball1.get_velocity().getY()+6) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		// Event: horizontal obstacle collision, ball moving towards top
-		ball1.set_location(50, 110);
-		ball1.set_speed(0, -5);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()-5) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		// Event: vertical obstacle collision, ball moving towards right
-		obstacle.set_begin(new Point(100,100));
-		obstacle.set_end(new Point(100,200));
-		ball1.set_location(90, 150);
-		ball1.set_speed(3, 0);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()+3) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		// Event: vertical obstacle collision, ball moving towards left
-		obstacle.set_begin(new Point(100,100));
-		obstacle.set_end(new Point(100,200));
-		ball1.set_location(110, 150);
-		ball1.set_speed(-4, 0);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()-4) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		// Event: 45 degrees obstacle collision, ball moving perpendicularly
-		obstacle.set_begin(new Point(100,300));
-		obstacle.set_end(new Point(200,200));
-		ball1.set_location(145, 245);
-		ball1.set_speed(1, 1);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()+1) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()+1) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		/* Cas collision obstacle 45+180 degres, bille direction perpendiculaire*/
-		// Event: 45+180 degrees obstacle collision, ball moving perpendicularly
-		obstacle.set_begin(new Point(100,100));
-		obstacle.set_end(new Point(200,200));
-		ball1.set_location(155, 145);
-		ball1.set_speed(-1, 1);	
-		resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
-		b1 = Math.abs(ball1.get_velocity().getX()-1) < 1E-10;
-		b2 = Math.abs(ball1.get_velocity().getY()+1) < 1E-10;
-		assertEquals(true, b1);
-		assertEquals(true, b2);
-		
-		}catch(Exception e) {
+			Method resolveCollBallObstacle = PhysicalEngine.class.getDeclaredMethod("resolveCollisionBallObstacle",
+					Ball.class, ObstacleLine.class);
+			resolveCollBallObstacle.setAccessible(true);
+			obstacle.setCOR(1);
+			// Event: horizontal obstacle collision, ball moving towards bottom
+			obstacle.set_begin(new Point(20, 100));
+			obstacle.set_end(new Point(100, 100));
+			ball1.setAll(50, 90, 10, 2);
+			ball1.set_speed(0, 6);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			boolean b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+			boolean b2 = Math.abs(ball1.get_velocity().getY() + 6) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			// Event: horizontal obstacle collision, ball moving towards top
+			ball1.set_location(50, 110);
+			ball1.set_speed(0, -5);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX()) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY() - 5) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			// Event: vertical obstacle collision, ball moving towards right
+			obstacle.set_begin(new Point(100, 100));
+			obstacle.set_end(new Point(100, 200));
+			ball1.set_location(90, 150);
+			ball1.set_speed(3, 0);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX() + 3) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			// Event: vertical obstacle collision, ball moving towards left
+			obstacle.set_begin(new Point(100, 100));
+			obstacle.set_end(new Point(100, 200));
+			ball1.set_location(110, 150);
+			ball1.set_speed(-4, 0);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX() - 4) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY()) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			// Event: 45 degrees obstacle collision, ball moving perpendicularly
+			obstacle.set_begin(new Point(100, 300));
+			obstacle.set_end(new Point(200, 200));
+			ball1.set_location(145, 245);
+			ball1.set_speed(1, 1);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX() + 1) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY() + 1) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+			// Event: 45+180 degrees obstacle collision, ball moving
+			// perpendicularly
+			obstacle.set_begin(new Point(100, 100));
+			obstacle.set_end(new Point(200, 200));
+			ball1.set_location(155, 145);
+			ball1.set_speed(-1, 1);
+			resolveCollBallObstacle.invoke(physical_engine, ball1, obstacle);
+			b1 = Math.abs(ball1.get_velocity().getX() - 1) < 1E-10;
+			b2 = Math.abs(ball1.get_velocity().getY() + 1) < 1E-10;
+			assertEquals(true, b1);
+			assertEquals(true, b2);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
