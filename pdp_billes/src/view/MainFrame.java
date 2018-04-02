@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		DisplayMode dm = ge.getScreenDevices()[ge.getScreenDevices().length - 1].getDisplayMode();
 		Dimension screenSize = new Dimension(dm.getWidth(), dm.getHeight());
-		this.setTitle("pdp billes");
+		this.setTitle("Simulateur d'ecoulement de billes");
 		this.setBounds(50, 50, screenSize.width, screenSize.height);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
