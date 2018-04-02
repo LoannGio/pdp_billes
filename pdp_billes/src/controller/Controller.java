@@ -13,11 +13,11 @@ import model.ObstacleLine;
 import model.Vector;
 import view.DrawingPanel;
 
-/*Pattern singleton : il n y a qu une seule instance de cette classe et fournit un point d acces de type global a cette classe */
+/*Singleton pattern : there is only one instance of the class and provides a global type access to this class. */
 public class Controller {
 	private Circuit _circuit;
 	private static Controller instance = new Controller();
-	/* isRunning est un boolean indiquant si une execution est en cours */
+	/* isRunning is a boolean that indicates whether or not an execution is currently running */
 	private boolean _isRunning;
 	private PhysicalEngine _pe;
 
