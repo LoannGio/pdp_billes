@@ -37,8 +37,8 @@ public class ParamPanel extends JPanel {
 
 	private JLabel _widthLabel = new JLabel("Longueur   ");
 	private JLabel _heightLabel = new JLabel("Largeur      ");
-	private JLabel _radiusLabel = new JLabel("Rayon des balles ");
-	private JLabel _massLabel = new JLabel("Masse des balles ");
+	private JLabel _radiusLabel = new JLabel("Rayon des billes ");
+	private JLabel _massLabel = new JLabel("Masse des billes ");
 	private JLabel _inclinationLabel = new JLabel("Inclinaison ");
 	private JLabel _CORLabel = new JLabel("Coef. restitution d'obstacles ");
 	private JLabel _scaleLabel = new JLabel("Precision   ");
