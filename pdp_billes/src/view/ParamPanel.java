@@ -41,7 +41,7 @@ public class ParamPanel extends JPanel {
 	private JLabel _massLabel = new JLabel("Masse des balles ");
 	private JLabel _inclinationLabel = new JLabel("Inclinaison ");
 	private JLabel _CORLabel = new JLabel("Coef. restitution d'obstacles ");
-	private JLabel _scaleLabel = new JLabel("Précision   ");
+	private JLabel _scaleLabel = new JLabel("Precision   ");
 
 	private JTextField _massTxt;
 	private JTextField _widthTxt;
