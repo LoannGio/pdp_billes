@@ -1,20 +1,35 @@
 # ball-flow simulator
 
-Following lines have been tested and work on Windows 10, Linux Debian with JDK 8.
+## About the project
 
-## Notable external libraries
+Authors : GIOVANNANGELI Loann, MAYOLINI Maxime, MOUHOUB Noureddine, RIOU Maxence
+
+This project has been realised as part of our course in first year of Master in computer science, at the University of Bordeaux.
+
+Our project goal is to achieve a 2D ball flow simulator. It must be able to simulate a reclining plate, on which it is possible to add lines obstacles and balls. Its graphic interface must allow the user to create, configure, export, import and start the simulation of a circuit (ensemble plateau-billes-obstacles). The program must be fitted with its own physics engine, handling the whole collisions in the circuit.
+
+## Run the project
+
+### Notable external libraries
 
 - SWING
 - JUnit 4
 
-## Compile the project
+Following lines have been tested and work on Windows 10, Linux Debian with JDK 8.
 
-From a terminal in `pdp_billes/ball-flow_simulator/src` directory, type : `javac _defaut/Main.java`
+### Run the project with a terminal
 
-## Execute the project
+#### Compile the project
 
-From a terminal in `pdp_billes/ball-flow_simulator/src` directory, type : `java _defaut.Main`
+In `pdp_billes/ball-flow_simulator/src` directory, type : `javac _defaut/Main.java`
 
-## Clean the project
+#### Execute the project
 
-From a terminal in `pdp_billesball-flow_simulator/src` directory, type : `rm */*.class`
+In `pdp_billes/ball-flow_simulator/src` directory, type : `java _defaut.Main`
+
+#### Clean the project
+
+In `pdp_billesball-flow_simulator/src` directory, type : `rm */*.class`
+
+### Run the project with an executable
+
