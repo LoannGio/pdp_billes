@@ -17,19 +17,20 @@ Our project goal is to achieve a 2D ball flow simulator. It must be able to simu
 
 Following lines have been tested and work on Windows 10, Linux Debian with JDK 8.
 
-### Run the project with a terminal
+### Run the project
 
 #### Compile the project
 
-In `pdp_billes/ball-flow_simulator/src` directory, type : `javac _defaut/Main.java`
+In `pdp_billes/ball_flow_simulator/src` directory, type : `javac _defaut/Main.java`
 
 #### Execute the project
 
-In `pdp_billes/ball-flow_simulator/src` directory, type : `java _defaut.Main`
+In `pdp_billes/ball_flow_simulator/src` directory, type : `java _defaut.Main`
 
 #### Clean the project
 
-In `pdp_billesball-flow_simulator/src` directory, type : `rm */*.class`
+In `pdp_billes/ball_flow_simulator/src` directory, type : `rm */*.class`
 
-### Run the project with an executable
+#### Run the project with the executable
 
+In `pdp_billes/ball_flow_simulator` directory, type : `java -jar ball_flow.jar`
