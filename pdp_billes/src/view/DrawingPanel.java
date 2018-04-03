@@ -87,14 +87,8 @@ public class DrawingPanel extends JPanel {
 						 * existing object. If so, we open the corresponding pop
 						 * up menu
 						 */
-						Object o = null;
-						if ((o = _controller.checkIfPointIsInBall(e.getPoint())) != null) {
-							_rightClickPopUp = RightClickChooser.createRightClickPopUp((Ball) o, _controller,
-									getMyself());
-							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
-						} else if ((o = _controller.checkIfPointIsNearLine(e.getPoint())) != null) {
-							_rightClickPopUp = RightClickChooser.createRightClickPopUp((ObstacleLine) o, _controller,
-									getMyself());
+						if ((_rightClickPopUp = RightClickChooser.createRightCLickPopUp(e.getPoint(),
+								getMyself())) != null) {
 							_rightClickPopUp.show(e.getComponent(), e.getX(), e.getY());
 
 						} else {
