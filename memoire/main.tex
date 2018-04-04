@@ -19,6 +19,11 @@
 \usepackage{graphicx}
 \usepackage{pgf, tikz}
 \usepackage{lscape}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usepackage{amssymb}
+\usepackage{amsmath}
 %\usepackage{slashbox}
 \usepackage{fullpage}
 \usepackage[hidelinks]{hyperref}
@@ -45,7 +50,7 @@
 		\includegraphics[scale=0.30]{universite-Bordeaux.jpg}~\\[1.5cm]
 		\textsc{\LARGE Master 1 Informatique}\\[2cm]
 		
-		\textsc{\Large Projet de Programmation - Cahier des besoins}\\[1.5cm]
+		\textsc{\Large Projet de Programmation - Mémoire}\\[1.5cm]
 		
 		% Titre
 		\HRule \\[0.4cm]
@@ -92,15 +97,19 @@ Un moteur physique est une bibliothèque qui offre un ensemble de fonctionnalit�
 
 \section{Mécanique newtonienne}
 
-L’attraction gravitationnelle de la Terre qui attire les objets vers son centre peut être considérée comme une constante dans un moteur physique qui simule la chute libre de corps sur Terre. On parle alors de pesanteur et son accélération a pour valeur g = 9,81m/$s^2$. //
 
-On parle de chute libre lorsque les forces autres que celle de la pesanteur sont négligeables. Une chute libre dépend donc uniquement du poids de l’objet et non de sa masse. //
+La mécanique est la science qui décrit les mouvements des corps. La mécanique newtonienne (aussi appelée mécanique classique) est la branche qu'on utilise la plupart du temps pour décrire les mouvements des corps sur terre. Elle possède cependant des limites : elle n'est plus juste lorsque les vitesses sont proches de celle de la lumière ou que objets sont trop massifs. De même au niveau atomique pour lequel on se redirige vers la mécanique quantique. Les lois de la mécanique newtonienne répondent tout de même à la majorité des cas qu'on rencontre au quotidien et sont donc implémentées dans la plupart des moteurs physiques.
 
-L’accélération de la pesanteur étant constante, nous pouvons utiliser les équations de la cinématique du mouvement rectiligne uniformément accéléré pour calculer le déplacement des objets attirés vers la Terre. //
+L’attraction gravitationnelle de la Terre qui attire les objets vers son centre peut être considérée comme une constante dans un moteur physique dont les objets sont proches de la Terre. En effet, la variation de distance entre les objets et la Terre est négligeable. On parle alors de pesanteur et son accélération a pour valeur g = 9,81m/$s^2$. \\
 
-Les équations principales d’un mouvement rectiligne uniformément accéléré sont données par :
+On parle de chute libre lorsque les forces autres que celle de la pesanteur sont négligeables. Il faut comprendre que l'accélération de la pesanteur ne dépend pas de la masse de l'objet. Par conséquent, deux objets en chute libre de même poids mais de masses différentes ont la même accélération. \\
 
-\(a = Ft / m\)
+L’accélération de la pesanteur étant constante, nous pouvons utiliser les équations de la cinématique du mouvement rectiligne uniformément accéléré  pour calculer le déplacement des objets attirés vers la Terre. \\
+
+\newpage
+Les équations principales d’un mouvement rectiligne uniformément accéléré \cite{02} sont données par :
+
+\(a = F_t / m\)
 
 \(v’ = v + a\)
 
@@ -108,54 +117,58 @@ Les équations principales d’un mouvement rectiligne uniformément accéléré
 
 avec :
 \begin{itemize}
+\item a : l'accélération de l'objet
 \item m : la masse de l’objet
-\item Ft : la force totale (la somme des forces)
+\item \(F_t\) : la force totale (la somme des forces)
 \item v : la vitesse à l’instant actuel
 \item v’ : la vitesse à l’instant prochain
 \item x : la position courante
-\item y : la prochaine position
+\item x' : la prochaine position
 \end{itemize}
 
-\newpage
 \section{Collisions}
 
-La force d’un moteur physique est sa capacité à réagir aux événements successifs qui se produisent dans une simulation, en particulier les collisions entre les différents corps.
-Pour cela il a besoin de prendre en compte les concepts généraux de la mécanique des collisions. Notamment les deux principaux chocs : élastique et inélastique.
+La force d’un moteur physique est sa capacité à réagir aux événements successifs qui se produisent dans une simulation, en particulier les collisions entre les différents corps. Pour cela, il a besoin de prendre en compte les concepts généraux de la mécanique des collisions, notamment les deux principaux chocs : élastique et inélastique. \\
 
-Lorsque deux billes entrent en collision il s’agit d’un choc élastique entre deux corps rigides. Pour que le moteur physique réponde bien lorsque deux billes entrent en collision il doit prendre en compte leur masse et leur vitesse.
+Lorsque deux billes entrent en collision, il s’agit d’un choc élastique entre deux corps rigides. Pour que le moteur physique réponde bien lorsque deux billes entrent en collision, il doit prendre en compte leur masse et leur vitesse. \\
 
-Il existe des principes généraux qui interviennent lors d’un choc élastique.
+Il existe des principes généraux \cite{02} qui interviennent lors d’un choc élastique.
 
 \paragraph*{Conservation de la quantité de mouvement}
 
 La somme des quantités de mouvement de chaque corps est conservée avant et après la collision. Dans le cas où le système impose des forces extérieures, cette loi ne sera pas respectée.
 La loi de conservation de quantité de mouvement est donnée par :
 
-\(M1Vf1 = M1Vi1 + P\)
+\(M_1V_{f_1} = M_1V_{i_1} + P\)
 
-\(M2Vf2 = M2Vi2 - P\)
+\(M_2V_{f_2} = M_2V_{i_2} - P\)
 
 Ce qui donne :
 
-\(M1Vf1 + M2Vf2 = M1Vi1+M2Vi2\)
+\(M_1V_{f_1} + M_2V_{f_2} = M_1V_{i_1}+M_2V_{i_2}\)
 
-Mx est la masse de l’objet x.
-Vix est la vitesse initiale de l’objet x.
-Vfx est la vitesse finale de l’objet x.
-P est le vecteur de percussion du choc (est la variation de la quantité de mouvement en négligeant les autres forces).
+\(M_x\) est la masse de l’objet \(x\).
+\(V_{i_x}\) est la vitesse initiale de l’objet \(x\).
+\(V_{f_x}\) est la vitesse finale de l’objet \(x\).
+\(P\) est le vecteur de percussion du choc (variation de la quantité de mouvement en négligeant les autres forces).
 
 \paragraph*{Conservation de l'énergie cinétique}
 
-Cette situation caractérise un choc dit “parfaitement élastique” dans lequel la somme de l’énergie cinétique des deux objets avant la collision est la même après le contact. Dans le cas ou il s’agit d’un choc inélastique cette lois ne sera pas respectée. 
-La loi de conservation de quantité de mouvement est donnée par :
+La somme de l’énergie cinétique des deux objets est la même avant et après la collision. Cette loi n'est pas respectée lors d'un choc inélastique.
+La loi de conservation de l'énergie cinétique est donnée par :
 
-\(M1Vi2 + M2Vi2 = M1Vf2 + M2Vf2\)
+\(M_1V_{i_2} + M_2V_{i_2} = M_1V_{f_2} + M_2V_{f_2}\)
 
-où Mi est la masse de l’objet i, et Vi (resp. Vf) est la vitesse initiale (resp. finale).
+où \(M_x\) est la masse de l’objet \(x\), et \(V_i\) (resp. \(V_f\)) est la vitesse initiale (resp. finale).
 
+\newpage
 \section{Limites des moteurs physiques}
 
-Avoir un comportement le plus réaliste possible est bien évidemment l’objectif majeur d’un moteur physique. Cependant, à ce jour, il n’en existe aucun qui puisse reproduire la physique sur Terre avec exactitude. Une des premières limites à laquelle on peut penser est la précision des nombres représentant les forces ou la position des objets. Si cette précision est trop basse, le comportement des objets ne sera pas satisfaisant et les données de la simulation ne seront pas exploitables. Plus la précision est importante, plus la simulation sera réaliste. Cependant, cette précision est coûteuse en puissance de calcul, en temps et en mémoire. On peut également penser aux phénomènes dits aléatoires ou imprédictibles (théorie du chaos) qui interviennent et qui font que la simulation d’une expérience est différente du déroulement de cette expérience dans la réalité.
+Avoir un comportement le plus réaliste possible est bien évidemment l’objectif majeur d’un moteur physique. Cependant, il est impossible d'en concevoir un qui puisse reproduire la physique sur terre avec exactitude. \\
+
+Une des premières limites à laquelle on peut penser est la précision des nombres représentant les forces ou la position des objets. Si cette précision est trop basse, le comportement des objets ne sera pas satisfaisant et les données de la simulation ne seront pas exploitables. Plus la précision est importante, plus la simulation sera réaliste. Cependant, cette précision est coûteuse en puissance de calcul, en temps et en mémoire. \\
+
+On peut également penser aux phénomènes dits aléatoires ou imprédictibles (théorie du chaos) qui interviennent et qui font que la simulation d’une expérience est différente du déroulement de cette expérience dans la réalité.
 
 %%% PARTIE 2 : ANALYSE DE L'EXISTANT %%%
 \chapter{Analyse de l'existant}
@@ -168,9 +181,9 @@ Avoir un comportement le plus réaliste possible est bien évidemment l’object
 
 Unity est un moteur de jeu multi-plateformes très répandu pour la conception d’applications graphiques 3D. Il intègre le moteur physique PhysX qui permet une simulation en temps réel très réaliste. \\
 
-PhysX est à l’origine conçu par la société AGEIA en 2005. Au même moment, AGEIA développe également le premier processeur physique (Physics Processing Unit) dédié pour jeux vidéos PC. Ce processeur porte également le nom PhysX et a pour but de gérer les calculs de simulation de la physique des jeux vidéo utilisant le moteur physique PhysX (on parle d’accélération matérielle). En 2008, NVIDIA rachète AGEIA et la production des processeurs PhysX est stoppée. Cependant, le moteur physique est récupéré et l’accélération matérielle est désormais réalisée par les GPU (cartes graphiques) NVIDIA. Le SDK (kit de développement logiciel) de PhysX est rendu public et gratuit et est rapidement supporté par la plupart des marques de GPU. Aujourd’hui, l’accélération matérielle NVIDIA PhysX est supportée par de nombreux jeux, mais elle est également utilisée dans la recherche et l’éducation. \\
+PhysX est à l’origine conçu par la société AGEIA en 2005. Au même moment, AGEIA développe également le premier processeur physique (Physics Processing Unit) dédié pour jeux vidéos PC. Ce processeur porte également le nom PhysX et a pour but de gérer les calculs de simulation de la physique des jeux vidéo utilisant le moteur physique PhysX (on parle d’accélération matérielle). En 2008, NVIDIA rachète AGEIA et la production des processeurs PhysX est stoppée. Cependant, le moteur physique est récupéré et l’accélération matérielle est désormais réalisée par les GPU (cartes graphiques) NVIDIA. Le SDK (kit de développement logiciel) de PhysX est rendu public et gratuit et est rapidement supporté par la plupart des marques de GPU. Aujourd’hui, l’accélération matérielle NVIDIA PhysX est supportée par de nombreux jeux, mais elle est également utilisée dans la recherche et l’enseignement. \\
 
-	Unity quand à lui est très facile d’utilisation : grâce à une interface simple, on peut créer un plan de taille modulable, l’incliner, poser des billes et des obstacles sur ce plan et lancer une simulation.
+	Unity, quant à lui, est très facile d’utilisation : grâce à une interface simple, on peut créer un plan de taille modulable, l’incliner, poser des billes et des obstacles sur ce plan et lancer une simulation.
 
     
 \subsubsection{Havok}
@@ -179,7 +192,7 @@ Le concurrent de PhysX est le moteur physique Havok, qui est également utilisé
 
 \subsubsection{Bullet}
 
-Bullet est une bibliothèque qui regroupe un ensemble de fonctionnalités qui permettent de simuler l'interaction entre des objets de différents types (sphère, cylindre,  rectangle, etc). ll offre un modèle des corps absolument rigide négligeant toute déformation. Bullet a été retranscrit dans plusieurs langages de programmation, et notamment en Java sous le nom JBullet. Il est utilisé par exemple dans les jeux vidéo “Asphalt” et “Fast and Furious”.
+Bullet est une bibliothèque qui regroupe un ensemble de fonctionnalités qui permet de simuler l'interaction entre des objets de différents types (sphère, cylindre,  rectangle, etc). Il offre un modèle des corps absolument rigide négligeant toute déformation. Bullet a été retranscrit dans plusieurs langages de programmation, et notamment en Java sous le nom JBullet. Il est utilisé, par exemple, dans les jeux vidéo “Asphalt” et “Fast and Furious”.
 
 \subsection{Quelques moteurs 2D}
 
@@ -187,18 +200,13 @@ Box2D est un moteur physique 2D open-source développé en C++. Il est égalemen
 
 Chipmunk est un moteur physique 2D en temps réel disponible en deux versions : une gratuite et l’autre professionnelle. Il dispose d’un système de détection de collisions flexible, de telle sorte qu’il permet à l'utilisateur de paramétrer les forces et coefficients en jeu selon le type de collision. Il est également disponible sur toutes les plateformes. \\
 
-Le problème principal que nous posent ces moteurs physiques est qu’ils sont trop complets par rapport à nos besoins. Par conséquent, les utiliser rendrait notre programme trop lourd.
-
-
-\subsection{Limites}
-
-Avoir un comportement le plus réaliste possible est bien évidemment l’objectif majeur d’un moteur physique. Cependant, à ce jour, il n’en existe aucun qui puisse reproduire la physique sur Terre avec exactitude. Une des premières limites à laquelle on peut penser est la précision des nombres représentant les forces ou la position des objets. Si cette précision est trop basse, le comportement des objets ne sera pas satisfaisant et les données de la simulation ne seront pas exploitables. Plus la précision est importante, plus la simulation sera réaliste. Cependant, cette précision est coûteuse en puissance de calcul et en temps. On peut également penser aux phénomènes dits aléatoires ou imprédictibles (théorie du chaos) qui interviennent et qui font que la simulation d’une expérience est différente du déroulement de cette expérience dans la réalité.
+Le problème principal est que ces moteurs physiques sont trop complets par rapport à nos besoins. Par conséquent, les utiliser rendrait notre programme trop lourd.
 
 \section{Algorithmes}
 
 \subsection{Algorithme général}
 
-L'algorithme général d’un simulateur physique discrète synchrone relié à un pas de temps est basé sur les étapes suivantes :
+L'algorithme général d’un simulateur de physique discrète synchrone, relié à un pas de temps, est basé sur les étapes suivantes :
 \begin{itemize}
 \item Calculer les nouvelles positions de chaque objet sans prendre en considération les collisions.
 \item Détecter les collisions selon le type des corps concernés.
@@ -210,7 +218,7 @@ L'algorithme général d’un simulateur physique discrète synchrone relié à 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1.0]{algo_general.PNG}
-\caption{Schéma de l'algorithme général}
+\caption{Schéma de l'algorithme général \cite{03}}
 \end{figure}
 
 \subsection{Détection de collisions}
@@ -221,7 +229,8 @@ Une collision est un choc entre deux objets. La détection des collisions néces
 
 La détection d’une collision entre deux cercles est très simple. On récupère les coordonnées des deux centres et on calcule la distance qui les sépare. Si cette distance est inférieure à la somme des rayons, alors il y a collision. \\
 
-L’algorithme de détection d’une collision entre un cercle et une droite est un peu plus complexe. Cela se fait par étapes. Il faut d’abord vérifier si le cercle est en collision avec la droite passant par ce segment. Si ce n’est pas le cas, il n’y a pas collision. Si c’est le cas, on calcule le point de projection perpendiculaire au centre de la bille sur la droite. Si ce point est sur le segment, alors il y a collision. Si ce n’est pas le cas, on vérifie si les points d’extrémité du segment sont à l’intérieur du cercle pour savoir s’il y a collision ou non. Ci-dessous se trouve un schéma explicatif.
+\newpage
+L’algorithme de détection d’une collision entre un cercle et un segment est un peu plus complexe. Cela se fait par étapes. Il faut d’abord vérifier si le cercle est en collision avec la droite passant par ce segment. Si ce n’est pas le cas, il n’y a pas collision. Si c’est le cas, on calcule le point de projection perpendiculaire au centre de la bille sur la droite. Si ce point est sur le segment, alors il y a collision. Si ce n’est pas le cas, on vérifie si les points d’extrémité du segment sont à l’intérieur du cercle pour savoir s’il y a collision ou non. Ci-dessous se trouve un schéma explicatif.
 
 \begin{figure}[H]
 \centering
@@ -239,12 +248,13 @@ Cas 3 : le cercle est en collision avec la droite, alors on calcule P. Ce point 
 
 L’algorithme trivial de détection des collisions consiste à prendre chaque objet un à un et vérifier s’il est en collision avec chaque objet. La complexité en temps de cet algorithme est quadratique (O($n^2$), n étant le nombre d’objets). Il est donc coûteux en terme de calculs. Heureusement, il existe une technique simple pour diminuer drastiquement cette complexité : il suffit de partitionner l’espace. De cette manière, un objet appartient à une portion de l’espace et vérifie uniquement la collision avec ses voisins, c’est-à-dire les objets qui se situent dans la même portion d’espace. En effet, il est inutile de vérifier la collision d’un objet avec un autre objet se situant à une très grande distance, puisqu’on est certain qu’il n’y a pas collision.
 
-Il existe plusieurs méthodes de partitionnement de l’espace qui diffèrent selon leur complexité de mise en oeuvre et leurs performances (diminution du nombre de calculs). Il est difficile d’en déclarer une meilleure que les autres, elles ont chacune des avantages et inconvénients selon les cas d’utilisation.
+Il existe plusieurs méthodes de partitionnement de l’espace \cite{06} qui diffèrent selon leur complexité de mise en œuvre et leurs performances (diminution du nombre de calculs). Il est difficile d’en déclarer une meilleure que les autres, elles ont chacune des avantages et inconvénients selon les cas d’utilisation.
 
+\newpage
 \paragraph{Grille}
 
-D’un point de vue algorithmique, c’est la méthode la plus simple à mettre en oeuvre.
-Le principe est de diviser l’espace en une grille de cellules de taille identique. Cependant, la taille des cellules pose problème et doit être réfléchie. Trop grandes, et il se peut qu’il y ait beaucoup d’objets dans une même cellule, et donc le nombre de calculs reste important. Trop petites, et on se retrouve avec un nombre très élevé de cellules à stocker ce qui est coûteux en mémoire. De plus, si les objets sont surtout localisés dans une partie de l’espace, on stocke un grand nombre de cases vides inutilement. Cette méthode présente donc des limites et n’est pas la meilleure en terme de gain de performances. \\
+D’un point de vue algorithmique, c’est la méthode la plus simple à mettre en œuvre.
+Le principe est de diviser l’espace en une grille de cellules de taille identique. Cependant, la taille des cellules pose problème et doit être réfléchie. Si elles sont trop grandes, il se peut qu’il y ait beaucoup d’objets dans une même cellule, et donc le nombre de calculs reste important. Si elles sont trop petites, on se retrouve avec un nombre très élevé de cellules à stocker, ce qui est coûteux en mémoire. De plus, si les objets sont surtout localisés dans une partie de l’espace, on stocke un grand nombre de cases vides inutilement. Cette méthode présente donc des limites et n’est pas la meilleure en terme de gain de performances. \\
 
 Ci-dessous se trouve un exemple de grille.
 
@@ -258,7 +268,7 @@ L’objet A se situe dans la même cellule que l’objet B : il va donc devoir v
 
 \paragraph{QuadTree}
 
-Le quadtree (arbre quaternaire) est la méthode la plus utilisée pour partitionner un espace 2D. On part d’un noeud racine qui représente l’ensemble de l’espace. Ce noeud possède 4 noeuds fils représentant chacun une partie de l’espace (4 quadrants de taille égale). Le principe est simple : lorsqu’un noeud contient un certain nombre d’objets, il se divise à nouveau en 4 sous-quadrants. Cet algorithme est récursif. On peut donc penser à une sorte de grille dynamique, mais il a un gros avantage : on subdivise uniquement les cellules contenant beaucoup d’objets, par conséquent on ne stocke pas un grand nombre de cellules vides comme c’est le cas pour la grille. L’inconvénient de cette méthode est qu’elle peut entraîner un arbre déséquilibré selon la répartition des objets. \\
+Le quadtree (arbre quaternaire) est la méthode la plus utilisée pour partitionner un espace 2D. On part d’un nœud racine qui représente l’ensemble de l’espace. Ce nœud possède 4 nœuds fils représentant chacun une partie de l’espace (4 quadrants de taille égale). Le principe est simple : lorsqu’un nœud contient un certain nombre d’objets, il se divise à nouveau en 4 sous-quadrants. Cet algorithme est récursif. On peut donc penser à une sorte de grille dynamique, mais il a un gros avantage : on subdivise uniquement les cellules contenant beaucoup d’objets, par conséquent on ne stocke pas un grand nombre de cellules vides comme c’est le cas pour la grille. L’inconvénient de cette méthode est qu’elle peut entraîner un arbre déséquilibré selon la répartition des objets. \\
 
 Ci-dessous se trouve un exemple de Quadtree.
 
@@ -276,9 +286,9 @@ L’objet A est seul dans sa région : il n’a donc pas besoin de vérifier de 
 \caption{Arbre d'un Quadtree}
 \end{figure}
 
-Ce quadtree représente le découpage des régions du cas ci-dessus. Le noeud racine représente l’ensemble de l’espace. On peut voir que le quadrant supérieur gauche est divisé en 4 sous-régions car il contenait trop d’objets. \\
+Ce quadtree représente le découpage des régions du cas ci-dessus. Le nœud racine représente l’ensemble de l’espace. On peut voir que le quadrant supérieur gauche est divisé en 4 sous-régions car il contenait trop d’objets. \\
 
-La même méthode récursive de partitionnement est utilisée pour les espaces 3D avec des octrees (un noeud possède 8 fils).
+La même méthode récursive de partitionnement est utilisée pour les espaces 3D avec des octrees (un nœud possède 8 fils).
 
 \paragraph{K-d tree}
 
@@ -310,55 +320,55 @@ Il existe de nombreux algorithmes pour gérer les collisions entre les différen
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.9]{collision_bille_bille.png}
-\caption{Schéma d'une collision entre deux billes}
+\caption{Schéma d'une collision entre deux billes \cite{04}}
 \end{figure}
 
 La gestion de ce type de collision dépend de la vitesse, de l’angle d’arrivée de chaque bille et de l’angle de collision qui est le segment reliant les deux centres. \\
 
-L’algorithme s'appuie sur les équations des vitesses obtenues par les deux lois de conservation de quantité de mouvement et de l’énergie cinétique d’un choc élastique, de telle sorte que les nouvelles vitesses X dans notre nouveau système de coordonnées suivent le même résultat que la collision 1D, et les composantes Y ne changent pas. \\
+L’algorithme s'appuie sur les équations des vitesses obtenues par les deux lois de conservation de quantité de mouvement et de l’énergie cinétique d’un choc élastique, de telle sorte que les nouvelles vitesses X dans notre nouveau système de coordonnées suivent le même résultat que la collision 1D \cite{02}, et les composantes Y ne changent pas. \\
 
 \newpage
+
 Cela implique que :
 
-\[u’1x = ((m1-m2)*v’1x+(m2+m2)*v’2x)/(m1+m2)\]
-\[u’1y = v’1y\] \\
+\[u’_1x = ((m_1-m_2)*v’_1x+(m_2+m_2)*v’_2x)/(m_1+m_2)\]
+\[u’_1y = v’_1y\] \\
 
 Or, d'après le schéma, on a :
 
-\[v’1x = v1*cos(direction1-phi)\]
-\[v’1y = v1*sin(direction1-phi)\] \\
+\[v’_1x = v_1*cos(direction1-\phi)\]
+\[v’_1y = v_1*sin(direction1-\phi)\] \\
 
 Donc l'équation de la nouvelle vitesse sera de la forme :
 
-\[Vx = ux’ cos(phi) - uy’ sin(phi)\]
-\[Vy = ux’ sin(phi) + uy’ cos(phi)\]
+\[V_x = u_x’ cos(\phi) - u_y’ sin(\phi)\]
+\[V_y = u_x’ sin(\phi) + u_y’ cos(\phi)\]
 
 Où :
 
 \begin{itemize}
-\item "phi" est l'angle de collision
-\item "direction" est la direction da la bille 1
-\item "vi" est la vitesse de la bille i
+\item \(\phi\) est l'angle de collision.
+\item "direction" est la direction de la bille 1.
+\item \(v_i\) est la vitesse de la bille i.
 \end{itemize}
 
 
 \begin{algorithm}[h]
 \KwIn{Ball1, Ball2}
-\KwOut{}
     \caption{{\bf CollisionBallBall} \label{CollisionBallBall}}
-   \nl {\bf direction1} = Ball1.getAngle();\\
-   \nl {\bf direction2} = Ball2.getAngle();\\
-   \nl {\bf collisionAngle} = getCollisionAngle();\\
-   \nl {\bf newV1x} = V1 * Cos(direction1-collisionAngle);\\ 
-   \nl {\bf newV1y} = V1 * Sin(direction1-collisionAngle);\\
-   \nl {\bf newV2x} = V2 * Cos(direction2-collisionAngle);\\ 
-   \nl {\bf newV2y} = V2 * Sin(direction2-collisionAngle);\\
-   \nl {\bf finalV1x} = ((mass1-mass2) * newV1x + (2*mass2) * newV2x)/(mass1+mass2);\\ 
-   \nl {\bf finalV2x} = ((2*mass1) * newV1x + (mass2 - mass1) * newV2x)/(mass1+mass2);\\
-   \nl {\bf Ball1.Vx} = Cos(collisionAngle) * finalV1x - Sin(collisionAngle) * newV1y;\\
-   \nl {\bf Ball1.Vy} = Sin(collisionAngle) * finalV1x + Cos(collisionAngle) * newV1y;\\
-   \nl {\bf Ball2.Vx} = Cos(collisionAngle) * finalV2x - Sin(collisionAngle) * newV2y;\\
-   \nl {\bf Ball2.Vy} = Sin(collisionAngle) * finalV2x + Cos(collisionAngle) * newV2y;
+   \nl {\bf direction1} \(\leftarrow\) Ball1.getAngle();\\
+   \nl {\bf direction2} \(\leftarrow\) Ball2.getAngle();\\
+   \nl {\bf collisionAngle} \(\leftarrow\) getCollisionAngle();\\
+   \nl {\bf newV1x} \(\leftarrow\) V1 * Cos(direction1-collisionAngle);\\ 
+   \nl {\bf newV1y} \(\leftarrow\) V1 * Sin(direction1-collisionAngle);\\
+   \nl {\bf newV2x} \(\leftarrow\) V2 * Cos(direction2-collisionAngle);\\ 
+   \nl {\bf newV2y} \(\leftarrow\) V2 * Sin(direction2-collisionAngle);\\
+   \nl {\bf finalV1x} \(\leftarrow\) ((mass1-mass2) * newV1x + (2*mass2) * newV2x)/(mass1+mass2);\\ 
+   \nl {\bf finalV2x} \(\leftarrow\) ((2*mass1) * newV1x + (mass2 - mass1) * newV2x)/(mass1+mass2);\\
+   \nl {\bf Ball1.Vx} \(\leftarrow\) Cos(collisionAngle) * finalV1x - Sin(collisionAngle) * newV1y;\\
+   \nl {\bf Ball1.Vy} \(\leftarrow\) Sin(collisionAngle) * finalV1x + Cos(collisionAngle) * newV1y;\\
+   \nl {\bf Ball2.Vx} \(\leftarrow\) Cos(collisionAngle) * finalV2x - Sin(collisionAngle) * newV2y;\\
+   \nl {\bf Ball2.Vy} \(\leftarrow\) Sin(collisionAngle) * finalV2x + Cos(collisionAngle) * newV2y;
 \end{algorithm}
 
 \clearpage
@@ -368,11 +378,10 @@ Où :
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{collision_bille_obstacle.png}
-\caption{Schéma d'une collision entre une bille et un obstacle}
+\caption{Schéma d'une collision entre une bille et un obstacle. \cite{05}}
 \end{figure}
 
-Ce type de collision est très répandu dans les jeux de billard et de flipper, dans lesquels une bille entre en collision avec un mur horizontal ou vertical. Ces derniers sont les
-cas basiques du problème général de rebondissement contre un obstacle : il s’agit d’inverser la composante vitesse sur l’axe correspondant. \\
+Ce type de collision est très répandu dans les jeux de billard et de flipper, dans lesquels une bille entre en collision avec un mur horizontal ou vertical. Ces derniers sont les cas basiques du problème général de rebondissement contre un obstacle : il s’agit d’inverser la composante vitesse sur la normale à la surface percutée. \\
 
 Le principe de base de cette collision est la réflexion de l’angle d’arrivée de la bille, c’est-à-dire que l’angle d’arrivée est le même pour la sortie. \\
 
@@ -380,13 +389,12 @@ D’après la figure, l’angle de rebond est la soustraction entre l’angle de
 
 \begin{algorithm}[h]
 \KwIn{Ball, Obstacle}
-\KwOut{}
     \caption{{\bf CollisionBallObstacle} \label{CollisionBallObstacle}}
-   \nl {\bf incoming} = Ball.getAngle();\\
-   \nl {\bf normal} = getNormaleAngle();\\
-   \nl {\bf outgoing} = 2 * normal -180 - incoming;\\
-   \nl {\bf Ball.Vx} = Cos(outgoing) * Ball.getSpeed();\\
-   \nl {\bf Ball.Vy} = Sin(outgoing) * Ball.getSpeed();\\
+   \nl {\bf incoming} \(\leftarrow\) Ball.getAngle();\\
+   \nl {\bf normal} \(\leftarrow\) getNormaleAngle();\\
+   \nl {\bf outgoing} \(\leftarrow\) 2 * normal -180 - incoming;\\
+   \nl {\bf Ball.Vx} \(\leftarrow\) Cos(outgoing) * Ball.getSpeed();\\
+   \nl {\bf Ball.Vy} \(\leftarrow\) Sin(outgoing) * Ball.getSpeed();\\
 \end{algorithm}
 
 
@@ -415,7 +423,7 @@ Le déplacement d’une bille nécessite de connaître sa position ainsi que sa 
 
 \paragraph{Obstacles - Priorité : 4}
 
-Les obstacles sont des segments et sont infranchissables, les billes doivent s'y heurter. Pour détecter les collisions entre billes et obstacles on doit connaître la position des extrémités du segment. Ces collision sont des chocs inélastiques, l’énergie cinétique de la bille doit diminuer et ainsi que sa vitesse. Il faut donc utiliser un coefficient de restitution inférieur à 1.
+Les obstacles sont des segments et sont infranchissables, les billes doivent s'y heurter. Pour détecter les collisions entre billes et obstacles on doit connaître la position des extrémités du segment. Ces collisions sont des chocs inélastiques, l’énergie cinétique de la bille doit diminuer, ainsi que sa vitesse. Il faut donc utiliser un coefficient de restitution inférieur à 1.
 
 \newpage
 \subsubsection{Forces en jeu}
@@ -428,9 +436,9 @@ La gravité a un impact sur le déplacement des billes, elle les attire vers le 
 
 \paragraph{Force de réaction - Priorité : 4}
 
-La force de réaction du plan (circuit) influence sur l’accélération des billes. Plus le plan est vertical (inclinaison proche de 90 degrés), plus la force réaction du plan est faible et donc l’accélération est élevée. Lorsque l’inclinaison est égale à 90 degrés, la force de réaction du plan est nulle et l’accélération est égale à force de la gravité. A l’inverse, si l’inclinaison est de 0 degré, le plan est horizontal et la force de réaction du plan s’oppose parfaitement à la gravité, donc aucune bille ne doit bouger. \\
+La force de réaction du plan (circuit) influence l’accélération des billes. Plus le plan est vertical (inclinaison proche de 90 degrés), plus la force réaction du plan est faible et donc l’accélération est élevée. Lorsque l’inclinaison est égale à 90 degrés, la force de réaction du plan est nulle et l’accélération est égale à la force de la gravité. A l’inverse, si l’inclinaison est de 0 degré, le plan est horizontal et la force de réaction du plan s’oppose parfaitement à la gravité, donc aucune bille ne doit bouger. \\
 
-La force de réaction d’un obstacle est sa normale qui doit être utilisée pour calculer l’angle de rebond lors d’une collision bille-obstacle. 
+La force de réaction d’un obstacle est de même direction que sa normale, et cette dernière doit être utilisée pour calculer l’angle de rebond lors d’une collision bille-obstacle. 
 
 
 \paragraph{Force de frottements - Priorité : 2}
@@ -443,7 +451,7 @@ Une physique réaliste sur terre comporte des frottements, ce qui a pour effet d
 
 Un circuit doit contenir une liste de billes et permettre l’ajout ou la suppression d’une bille. L’ajout d’une bille ne peut pas se faire si elle va être ajoutée par-dessus un objet déjà existant.
 
-Pour vérifier qu’une bille a bien été ajoutée au circuit, on vérifie qu’elle est bien présente dans la liste de billes du circuits. Il faudra aussi vérifier que l’ajout d’une bille est bien refusé si celle-ci est censée être ajoutée par dessus un objet déjà existant. Pour cela, on ajoutera un objet dans le circuit puis on essaiera d’ajouter une bille aux mêmes coordonnées que l’objet précédent. La liste de billes du circuit ne devra alors pas contenir la bille en question.
+Pour vérifier qu’une bille a bien été ajoutée au circuit, on vérifie qu’elle est bien présente dans la liste de billes du circuit. Il faut aussi vérifier que l’ajout d’une bille est bien refusé si celle-ci est censée être ajoutée par-dessus un objet déjà existant. Pour cela, on ajoute un objet dans le circuit puis on essaie d’ajouter une bille aux mêmes coordonnées que l’objet précédent. La liste de billes du circuit ne doit alors pas contenir la bille en question.
 
 \subsubsection{Traces des billes - Priorité : 4}
 
@@ -454,14 +462,14 @@ Chaque bille du circuit doit contenir une liste de points correspondant à sa tr
 
 Un circuit doit contenir une liste d’obstacles et permettre l’ajout ou la suppression d’un obstacle. Un obstacle ne doit pas pouvoir être placé par-dessus une bille déjà existante dans le circuit. Par contre, il doit être possible de pouvoir le placer en croisant un autre obstacle.
 
-Pour vérifier qu’un obstacle a bien été ajouté au circuit, on vérifie qu’il est bien présent dans la liste d’obstacles du circuit. Il faudra aussi vérifier que l’ajout d’un obstacle est bien refusé si celui-ci est censé être ajouté par-dessus une bille déjà existante. Pour cela, on ajoutera une bille dans le circuit puis on essaiera d’ajouter un obstacle dont la droite passe par les coordonnées de la bille. La liste d’obstacles du circuit ne devra alors pas contenir l’obstacle en question.
+Pour vérifier qu’un obstacle a bien été ajouté au circuit, on vérifie qu’il est bien présent dans la liste d’obstacles du circuit. Il faut aussi vérifier que l’ajout d’un obstacle est bien refusé si celui-ci est censé être ajouté par-dessus une bille déjà existante. Pour cela, on ajoute une bille dans le circuit puis on essaie d’ajouter un obstacle dont la droite passe par les coordonnées de la bille. La liste d’obstacles du circuit ne doit alors pas contenir l’obstacle en question.
 
 
 \subsubsection{Réinitialisation - Priorité : 3}
 
 L’application doit proposer un moyen de suppression de toutes les billes, tous les obstacles ou tous les objets (billes et obstacles).
 
-Pour vérifier que la réinitialisation a fonctionné, on vérifie le contenue des listes d’objets (bille, obstacle ou les deux) qui ont été supprimés.
+Pour vérifier que la réinitialisation a fonctionné, on vérifie le contenu des listes d’objets (bille, obstacle ou les deux) qui ont été supprimés.
 
 
 \subsubsection{Redimensionnement - Priorité : 3}
@@ -489,7 +497,7 @@ L’interface graphique doit permettre de visualiser l’état du circuit durant
 
 \subsubsection{Paramétrage du circuit - Priorité : 3}
 
-L’interface doit permettre de paramétrer le circuit, c’est-à-dire de pouvoir demander à le modifier selon les exigences demandées dans la gestion du circuit, le tout via la souris ou différents boutons.
+L’interface doit permettre de paramétrer le circuit, c’est-à-dire de pouvoir le modifier selon les exigences demandées dans la gestion du circuit, le tout via la souris ou différents boutons.
 
 \subsubsection{Optionnel - Zoom}
 
@@ -573,7 +581,7 @@ L’utilisateur doit pouvoir interagir facilement et rapidement avec les fonctio
 
 \subsection{Installation}
 
-L'application a été développée en Java 8. Comme bibliothèque importante, on notera l'utilisation de la dernière version de Java SWING. Nous sommes conscient que SWING a été délaissé il y a maintenant plusieurs années au profit de JavaFX, cependant nous avions déjà les connaissances nécessaires pour réaliser notre interface sous SWING (mais pas sous JavaFX). Nous avons donc préférés utiliser la bibliothèque SWING, bien que moins récente et sans doute moins adaptée afin d'accélérer la partie développement de l'interface et privilégier ainsi le développement du moteur physique.
+L'application a été développée en Java 8. Comme bibliothèque importante, on notera l'utilisation de la dernière version de Java SWING. Nous sommes conscients que SWING a été délaissé il y a maintenant plusieurs années au profit de JavaFX, cependant nous avions déjà les connaissances nécessaires pour réaliser notre interface sous SWING (mais pas sous JavaFX). Nous avons donc préféré utiliser la bibliothèque SWING, bien que moins récente et sans doute moins adaptée, afin d'accélérer la partie développement de l'interface et privilégier ainsi le développement du moteur physique.
 
 Les tests ont été réalisés avec la bibliothèque JUnit 4.
 
@@ -582,7 +590,8 @@ Les tests ont été réalisés avec la bibliothèque JUnit 4.
 \paragraph*{Compilation} Pour exécuter l'application en recompilant les fichiers, il faut au minimum un JDK 8. Ensuite, il y a deux solutions :
 \begin{itemize}
 \item via un IDE : le projet a été réalisé sous Eclipse (Neon ou plus). Il doit aussi être possible d'importer le projet sous IntelliJ 11.
-\item via le makefile : les informations sur l'utilisation du makefile sont présentes dans le fichier README.md fournit avec les fichiers du code.
+\item via un terminal : se placer dans le dossier src. Pour compiler, faire la commande \texttt{javac \_default/Main.java} ; puis, pour exécuter, effectuer \texttt{java \_default.Main} . La compilation va créer des fichiers ".class" à coté de chaque fichier ".java" du code source. Cette méthode marche sous Windows (testé sous Windows 10) et sous Linux. Vous pouvez retrouver les informations de la compilation par terminal dans le fichier \texttt{README.md}.
+
 \end{itemize}
 
 \newpage
@@ -632,10 +641,10 @@ Sur le panneau de paramétrage, l’utilisateur peut interagir plus globalement 
 
 Voici les actions possibles :
 \begin{itemize}
-\item Champs de texte et bouton “Changer” : l’utilisateur peut modifier, à l’aide de champs de texte, les caractéristiques affichées à l’écran (longueur et largeur du circuit, coefficient de restitution des obstacles, rayon et masse des billes, précision du moteur physique). Une fois que l’utilisateur a rempli les champs comme il le souhaite, il clique sur le bouton “Changer” afin d’appliquer ces changements. Tous les changements s’appliquent pour les prochains objets créés, donc les objets actuellement sur le circuit au moment du changement ne sont pas affectés par ces changements. En ce qui concerne le champ “Précision”, ce nombre représente l’échelle du pas de temps utilisé pour le moteur physique : plus la précision est grande, plus la simulation sera fine mais lente ; à l’inverse, plus la précision est petite, plus la simulation sera rapide mais grossière.
-\item Slider ‘Inclinaison” : l’utilisateur peut changer en temps réel l’inclinaison du circuit. 90 correspond à un circuit vertical (les billes tombent en chute libre) et 0 à un circuit plat. L’inclinaison est modifiable au cours d’une simulation.
+\item Champs de texte et bouton “Changer” : l’utilisateur peut modifier, à l’aide de champs de texte, les caractéristiques affichées à l’écran (longueur et largeur du circuit, coefficient de restitution des obstacles, rayon et masse des billes, précision du moteur physique). Une fois que l’utilisateur a rempli les champs comme il le souhaite, il clique sur le bouton “Changer” afin d’appliquer ces changements. Tous les changements s’appliquent pour les prochains objets créés, donc les objets actuellement sur le circuit au moment du changement ne sont pas affectés par ces modifications. En ce qui concerne le champ “Precision”, ce nombre représente l’échelle du pas de temps utilisé pour le moteur physique : plus la précision est grande, plus la simulation sera fine mais lente ; à l’inverse, plus la précision est petite, plus la simulation sera rapide mais grossière.
+\item Slider "Inclinaison” : l’utilisateur peut changer en temps réel l’inclinaison du circuit. 90 correspond à un circuit vertical (les billes tombent en chute libre) et 0 à un circuit plat. L’inclinaison est modifiable au cours d’une simulation.
 \item Boutons “Lancer” et “Arreter” : ces deux boutons permettent respectivement à l’utilisateur de lancer et arrêter la simulation. Lorsque la simulation est en cours d’exécution, le bouton “Lancer” est de couleur verte, et il est impossible de cliquer sur d’autres boutons du panneau de paramétrage (sauf “Arreter” et le slider “Inclinaison”) ou de cliquer sur le panneau de dessin. Lorsque la simulation n’est pas en cours d’exécution, le bouton “Arreter” est de couleur rouge (ou sans couleur si aucune simulation n’a été lancée depuis le lancement de l’application) et il est à nouveau possible de cliquer sur les boutons du panneau de paramétrage ou sur le panneau de dessin.
-\item Boutons “Reinitialiser”, “Supp. billes” et “Supp. obstacles” : l’utilisateur peut supprimer un ensemble d’objets du circuit en utilisant ces boutons. Le bouton “Reinitialiser” supprimer tous les objets (billes et obstacles), alors que les deux autres ne suppriment que leur propre catégorie d’objets. Le bouton “Reinitialiser” ne fait rien de plus que de supprimer les objets, il ne va par exemple pas remettre les dimensions du circuit ou l’inclinaison par défaut.
+\item Boutons “Reinitialiser”, “Supp. billes” et “Supp. obstacles” : l’utilisateur peut supprimer un ensemble d’objets du circuit en utilisant ces boutons. Le bouton “Reinitialiser” supprime tous les objets (billes et obstacles), alors que les deux autres ne suppriment que leur propre catégorie d’objets. Le bouton “Reinitialiser” ne fait rien de plus que de supprimer les objets, il ne va, par exemple, pas remettre les dimensions du circuit ou l’inclinaison par défaut.
 \item Boutons “Importer” et “Exporter” : l’utilisateur peut exporter et importer des circuits. Les détails de l’import et de l’export sont expliqués dans la sous-partie “Gestion de fichiers”.
 \end{itemize}
 
@@ -676,7 +685,7 @@ Lors de l’import, l’application lit le fichier d’export, ce qui lui permet
 
 \paragraph{Gravité}
 
-Au lancement de l’exécution, les billes sont déplacées vers le bas du circuit à cause de la l’accélération de la gravité. Cette accélération dépend de l’inclinaison du circuit qui varie entre 0 et 90 degrés. Lorsque l’inclinaison vaut 0 degrés, l’accélération est nulle et les billes ne bougent pas. A l’inverse, lorsque l’inclinaison vaut 90 degrés, la bille est en chute libre et son accélération est égale à la gravité.
+Au lancement de l’exécution, les billes sont déplacées vers le bas du circuit à cause de l’accélération de la gravité. Cette accélération dépend de l’inclinaison du circuit qui varie entre 0 et 90 degrés. Lorsque l’inclinaison vaut 0 degré, l’accélération est nulle et les billes ne bougent pas. A l’inverse, lorsque l’inclinaison vaut 90 degrés, la bille est en chute libre et son accélération est égale à la gravité.
 
 \paragraph{Événements externes}
 
@@ -704,14 +713,14 @@ Dans le cas d’une collision bille-bille. On récupère la direction des deux b
 
 \paragraph{Optimisation}
 
-Nous avons décidé d’implémenter un Quadtree pour partitionner l’espace 2D de notre circuit car cette solution répond parfaitement à nos besoins. A chaque appelle de la fonction \texttt{run()} qui va déplacer toutes les billes d’un pas de temps, on vide le Quadtree puis on rajoute toutes les billes dedans. Ensuite, plutôt que de tester la collision de chaque bille avec toutes les autres, on teste la collision uniquement avec celles voisines (situées dans la même région), renvoyées par le Quadtree.
+Nous avons décidé d’utiliser un Quadtree pour partitionner l’espace 2D de notre circuit car cette solution répond parfaitement à nos besoins. Son implémentation a été réalisée en suivant le tutoriel présent à la référence \cite{07}. A chaque appel de la fonction \texttt{run()} qui va déplacer toutes les billes d’un pas de temps, on vide le Quadtree puis on rajoute toutes les billes dedans. Ensuite, plutôt que de tester la collision de chaque bille avec toutes les autres, on teste la collision uniquement avec celles voisines (situées dans la même région), renvoyées par le Quadtree.
 
 \newpage
 \subsubsection{Traces}
 
 \paragraph{Implémentation}
 
-Lorsqu’une bille se déplace lors d’une simulation, elle laisse derrière elle sa trace afin de savoir quel est le parcours qu’elle a effectué au cours de cette simulation.
+Lorsqu’une bille se déplace lors d’une simulation, elle laisse derrière elle sa trace, ce qui permet de connaître le parcours qu’elle a effectué au cours de cette simulation.
 La trace d’une bille est implémentée par une liste de points, chacune correspondant à la position du centre de la bille à un instant de la simulation. Un point est ajouté à la liste à chaque fois que la bille se déplace lors d’un pas de temps. Cela signifie que lorsqu’une bille n’a pas bougé (ou quasiment pas bougé) lors d’un pas de temps, le point représentant son centre à cet instant-là n’est pas ajouté à la liste, puisqu’un point de mêmes coordonnées est déjà censé y être.
 
 \paragraph{Affichage}
@@ -720,18 +729,16 @@ Lors de la mise à jour de l’affichage, la méthode par défaut est de tout ef
 
 Nous avons donc opté pour une autre méthode : le passage par une image bufferisée. Dans cette image sont stockés les objets n’étant pas amenés à être changés de place : les obstacles et les traces (chaque fois qu’une bille se déplace, on ajoute sa nouvelle trace à l’image bufferisée, on n’efface rien de cette dernière). \\
 
-Le but de cette méthode est que lorsque la mise à jour de l’affichage est effectuée, on efface tout, on affiche l’image bufferisée puis on affiche les billes par-dessus. La différence avec la première méthode est que, là où on devait réafficher toutes les traces à chaque pas de temps avant, on ajoute désormais uniquement le dernier point de chaque trace par pas de temps à l’image bufferisée. \\
+Le but de cette méthode est que lorsque la mise à jour de l’affichage est effectuée, on efface tout, on affiche l’image bufferisée, puis on affiche les billes par-dessus. La différence avec la première méthode est que, là où on devait réafficher toutes les traces à chaque pas de temps avant, on ajoute désormais uniquement le dernier point de chaque trace à chaque pas de temps à l’image bufferisée. \\
 
 Cependant, bien que cette méthode améliore nettement les performances de l’application, elle reste toutefois coûteuse par rapport au reste des opérations d’une simulation.
 
 \newpage
 \subsection{Limites}
 
-\subsubsection{Moteur physique}
+\subsubsection{Collisions du moteur physique}
 
-\paragraph{Collisions}
-
-\subparagraph{Bugs}
+\paragraph{Bugs}
 
 Deux bugs connus peuvent survenir lors d’une exécution. \\
 
@@ -743,6 +750,44 @@ Premier bug : une bille traverse un obstacle. Cela arrive lorsqu’une bille pos
 \caption{Schémas du bug d'une bille passant à travers un obstacle}
 \end{figure}
 
+%===========================
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[
+        xlabel=$temps\ .ms$,
+        ylabel=$vitesse\ .pixel$]
+    \addplot[smooth,mark=*,blue] 
+    	plot coordinates {      
+        	(0,0)
+        	(15,0.008)
+        	(1500,0.866)
+            (3000,1.734)
+    };
+    \addlegendentry{800}
+    \addplot[smooth,color=red,mark=x]
+        plot coordinates {
+        	(0,0)
+        	(15,0.017)
+        	(1500,1.734)
+            (3000,3.467)
+        };
+    \addlegendentry{400}
+    \addplot[smooth,color=green,mark=+]
+        plot coordinates {
+        	(0,0)
+        	(15,0.035)
+        	(1500,3.467)
+            (3000,6.934)
+        };
+    \addlegendentry{200}
+    \end{axis}
+\end{tikzpicture}
+\caption{Evolution de la vitesse des billes en fonction de l'échelle et du temps}
+\end{figure}
+%===========================
+
+\newpage
 Deuxième bug : lorsque la bille entre en collision avec une extrémité d’un obstacle vertical ou horizontal. Dans la gestion de la collision, on calcule la projection d’un point sur un point au lieu de calculer la projection d’un point sur une droite. On ne replace donc pas la bille au bon endroit.
 
 \begin{figure}[H]
@@ -751,27 +796,29 @@ Deuxième bug : lorsque la bille entre en collision avec une extrémité d’un 
 \caption{Schémas du bug d'une bille entrant en collision avec l'extrémité d'un obstacle}
 \end{figure}
 
+\paragraph{Mécanique du moteur}
+
+Notre moteur physique est basé sur la simulation discrète synchrone qui est reliée à un pas de temps. C’est-à-dire qu’à chaque pas de temps, on déplace les billes puis on exécute les vérifications de collisions après. Comme il est expliqué dans \cite{01}, ce type de moteur physique est répandu car il est “simple” à programmer et donne des résultats suffisants dans la plupart des utilisations. Cependant, il possède des limites en terme de précision car on accumule des approximations. Il faut souvent replacer les objets ou revenir en arrière et réduire le pas de temps. \\
+
+Un autre point qui n’est pas pris en compte est la gestion des événements dans le temps. Par exemple, si deux billes sont au repos et en contact, et qu’une bille vient entrer en collision dans les deux en même temps, laquelle doit-on déplacer en premier ? Dans notre cas, on ne gère la collision qu’avec une seule bille. Pour gérer une collision entre plusieurs billes, il aurait fallu implémenter un moteur physique basé sur la simulation discrète asynchrone dans laquelle les événements (ici collisions) sont déterminés avant le déplacement.
+
 \newpage
-\subparagraph{Mécanique du moteur}
-
-Notre moteur physique est basé sur la simulation discrète synchrone qui est relié à un pas de temps. C’est-à-dire qu’à chaque pas de temps on déplace les billes puis on exécute les vérifications de collisions après. Ce type de moteur physique est répandu car il est “simple” à programmer et donne des résultats suffisant dans la plupart des utilisations. Cependant il possède des limites en termes de précisions car on accumule des approximations. Il faut souvent replacer les objets ou revenir en arrière et réduire le pas de temps. Un autre point qui n’est pas pris en compte est la gestion des évènements dans le temps. Par exemple si deux billes sont au repos et en contact et qu’une bille vient entrer en collision dans les deux en même temps, laquelle doit on déplacer en premier ? Dans notre cas on ne gère la collision qu’avec une seule bille. Pour gérer une collision entre plusieurs billes il aurait fallu implémenter un moteur physique basé sur la simulation discrète asynchrone dans laquelle les évènements (ici collisions) sont déterminés avant le déplacement.
-
 \subsubsection{Interface graphique}
 
 \paragraph{Ergonomie}
 
 \subparagraph{Responsivity}
 
-La “responsivity” correspond à l’adaptation de l’affichage de l’application, en fonction de la taille de la fenêtre d’affichage. Par exemple, diminuer la taille de la fenêtre pourrait redimensionner les panneaux de dessin et de paramétrage afin que tout reste visible à l’écran.
-Une limite de notre application est qu’elle n’est donc pas responsive : l’application est adaptée pour être affichée à la taille de l’écran de l’utilisateur, donc en plein écran. Il est déconseillé de diminuer la taille de fenêtre, sous risque de ne plus voir une partie de l’application.
+“Responsivity” correspond à l’adaptation de l’affichage de l’application, en fonction de la taille de la fenêtre d’affichage. Par exemple, diminuer la taille de la fenêtre pourrait redimensionner les panneaux de dessin et de paramétrage afin que tout reste visible à l’écran.
+En l'occurrence, notre application n’est pas responsive : l’application est adaptée pour être affichée à la taille de l’écran de l’utilisateur, uniquement en plein écran. Il est déconseillé de diminuer la taille de la fenêtre, sous risque de ne plus voir une partie de l’application.
 
 \subparagraph{Lisibilité}
 
-Dès que le nombre de billes dans notre simulation devient important, il devient difficile de distinguer à quelle bille correspond quelle trace. En effet, actuellement, toutes les billes de l’application sont rouges et toutes les traces de billes sont vertes.
+Dès que le nombre de billes dans notre simulation est important, il devient difficile de distinguer à quelle bille correspond quelle trace. En effet, actuellement, toutes les billes de l’application sont rouges et toutes les traces de billes sont vertes.
 
 \paragraph{Taille du circuit}
 
-Dans l’application, la taille du panneau de dessin correspond exactement à la taille du circuit. Cela signifie qu’il est impossible de créer un circuit plus grand qu’une certain pourcentage de la taille de l’écran de l’utilisateur.
+Dans l’application, la taille du panneau de dessin correspond exactement à la taille du circuit. Cela signifie qu’il est impossible de créer un circuit plus grand qu’un certain pourcentage de la taille de l’écran de l’utilisateur.
 De plus, si un circuit trop grand par rapport à l’écran de l’utilisateur est importé, la partie qui dépasse sera rognée sur la droite et sur le bas du circuit.
 
 \paragraph{Bibliothèque d'affichage}
@@ -783,18 +830,18 @@ Notre application utilise la bibliothèque d’affichage SWING. Cette bibliothè
 
 \section{Description}
 
-Dans cette partie, nous présentons les choix d'architectures réalisés pour le développement de l'application.
+Dans cette partie, nous présentons les choix d'architecture réalisés pour le développement de l'application.
 
 \subsection{Structure Modèle-Vue-Contrôleur (MVC)}
 
-Notre application utilisant une interface graphique, il nous a paru naturel d'utiliser une structure applicative Modèle-Vue-Contrôleur (MVC). Cette structure permet de séparer les fonctionnalités de notre applications dans des classes en fonctions de l'intention de ces fonctionnalités. 
+Notre application utilisant une interface graphique, il nous est paru naturel d'utiliser une structure applicative Modèle-Vue-Contrôleur (MVC). Cette structure permet de séparer les fonctionnalités de notre application dans des classes en fonction de l'intention de ces fonctionnalités. 
 \begin{itemize}
 \item Modèle : contient les données à afficher
 \item Vue : implémente l'interface permettant d'afficher les données
 \item Contrôleur : définit les opérations effectuées par l'utilisateur et les traitements à effectuer sur les données
 \end{itemize}
 
-Ainsi, dans notre application, notre circuit et les objets qui le composent forment notre modèle ; les actions que peut effectuer l'utilisateur, les traitements qui y sont liés, et la gestion de la simulation forment notre contrôleur ; et enfin, tous les objets liés à l'affichage et à la paramétrabilité de l'application forment notre vue.
+Ainsi, dans notre application, notre circuit et les objets qui le composent forment notre modèle. Les actions que peut effectuer l'utilisateur, les traitements qui y sont liés et la gestion de la simulation forment notre contrôleur. Enfin, tous les objets liés à l'affichage et à la paramétrabilité de l'application forment notre vue.
 
 \subsection{Organisation des classes}
 
@@ -818,29 +865,29 @@ La classe principale de l'application est la classe MainFrame. C'est lorsqu'on c
 
 Une MainFrame est composée d'un DrawingPanel (panneau de dessin qui va afficher le circuit) et d'un ParamPanel (panneau permettant de paramétrer le circuit et d'effectuer certaines actions comme lancer l'exécution ou importer un circuit). \\
 
-DrawingPanel et ParamPanel étant des objets permettant d'afficher ou de paramétrer un circuit, ils ont besoin d'avoir accès à certaines informations du modèle. Pour cela, elles récupèrent une référence sur l'instance du Controller à travers lequel elle pourront obtenir les informations ou effectuer les actions dont elles ont besoin. \\
+DrawingPanel et ParamPanel étant des objets permettant d'afficher ou de paramétrer un circuit, ils ont besoin d'avoir accès à certaines informations du modèle. Pour cela, ils récupèrent une référence sur l'instance du Controller à travers lequel ils pourront obtenir les informations ou effectuer les actions dont ils ont besoin. \\
 
-La classe RightClickPopUpChooser est un pseudo-Visitor. Dans le DrawingPanel, on veut que lorsqu'on clic droit sur un objet du circuit, on ouvre un pop up correspondant au type d'objet sur lequel on a cliqué. Le rôle de la classe RightClickPopUpChooser est de recevoir un objet et, en fonction de son type, créer et renvoyer une instance de  IRightClickPopUpMenu correspondant au type d'objet reçu. Le DrawingPanel récupère ensuite cette instance dans son attribut correspondant et affichera le pop up. \\
+La classe RightClickPopUpChooser est un pseudo-Visitor. Dans le DrawingPanel, on veut que lorsqu'on clique droit sur un objet du circuit, on ouvre un pop up correspondant au type d'objet sur lequel on a cliqué. Le rôle de la classe RightClickPopUpChooser est de recevoir un point du circuit et, selon le type de l'objet sur lequel il est (s'il est sur un objet), créer et renvoyer une instance de  IRightClickPopUpMenu correspondant au type d'objet reçu. Le DrawingPanel récupère ensuite cette instance dans son attribut correspondant et affiche le pop up. \\
 
 Enfin, étant donné que chaque IRightClickPopUpMenu de notre application doit être capable de demander la suppression de l'objet sur lequel il est invoqué ou d'ouvrir une fenêtre de paramétrage de cet objet, il y a une association entre les RightClickPopUpX et les ParamX (X étant "Ball" ou "Line").
 
 \subsubsection{Contrôleur}
 
-La classe "Controller" est un Singleton. Ce design pattern garantit que cette classe n'a qu'une seule instance et fournit un point d'accès global à celle-ci. C'est l'instance de notre Controller qui crée et possède le Circuit du modèle. C'est aussi elle qui va définir les services que l'on propose à l'utilisateur (la vue) pour interagir avec ce circuit. Enfin, si l'utilisateur le demande, c'est lui qui va lancer l'exécuton de la simulation d'écoulement de billes à travers le "PhysicalEngine".
+La classe "Controller" est un Singleton. Ce design pattern garantit que cette classe n'a qu'une seule instance et fournit un point d'accès global à celle-ci. C'est l'instance de notre Controller qui crée et possède le Circuit du modèle. C'est aussi elle qui va définir les services que l'on propose à l'utilisateur (la vue) pour interagir avec ce circuit. Enfin, si l'utilisateur le demande, c'est lui qui va lancer l'exécution de la simulation d'écoulement de billes à travers le "PhysicalEngine".
 
 Le PhysicalEngine permet d'exécuter la simulation d'écoulement des billes.
 
 \subsection{Améliorations}
 
-Ici, nous présentons les améliorations d'architectures majeures auxquelles nous avons pensées.
+Ici, nous présentons les améliorations d'architecture majeures auxquelles nous avons pensé.
 
 \subsubsection{Interface Movable}
 
 Notre application ne possède qu'un seul type d'objet capable de se déplacer : Ball. Pour cette raison, nous n'avons pas créé d'interface "Movable" permettant de définir un comportement qui serait commun à tous les objets capables de se déplacer dans notre application. 
 
-Dans un soucis d'extensibilité, il faudrait donc rajouter une interface IMovable, contenant au minimum les méthodes \texttt{step(Vector):void} permettant à un objet de se déplacer et \texttt{contains(Point):bool} permettant de savoir si un Point est dans l'objet en question.
+Dans un souci d'extensibilité, il faudrait donc rajouter une interface IMovable, contenant au minimum les méthodes \texttt{step(Vector):void} permettant à un objet de se déplacer et \texttt{contains(Point):bool} permettant de savoir si un Point est dans l'objet en question.
 
-On pourra alors définir une liste d'objets "IMovable" plutôt que "Ball" dans le Circuit.
+On pourrait alors définir une liste d'objets "IMovable" plutôt que "Ball" dans le Circuit.
 
 \subsubsection{Interface Obstacle}
 
@@ -848,15 +895,15 @@ Notre application ne possédant qu'un seul type d'obstacle (ObstacleLine), nous 
 
 Là aussi, dans un soucis d'extensibilité, nous pourrions rajouter cette interface et ainsi définir les services que doit rendre chaque nouvelle forme d'obstacle dans notre application. Cette interface devrait au minimum contenir la méthode \texttt{contains(Point):bool} qui sera utilisée pour détecter les collisions.
 
-On pourra alors définir une liste d'objets "IObstacles" plutôt que "ObstacleLine" dans le Circuit.
+On pourrait alors définir une liste d'objets "IObstacles" plutôt que "ObstacleLine" dans le Circuit.
 
 \subsubsection{Implémentation d'Observer-Observable}
 
-Observer est un design pattern dont le but est de définir une intedépendance (de type un à plusieurs) de façon telle que, quand un objet change d'état, tous ceux qui en dépendent soient notifiés et automatiquement mis à jour.
+Observer est un design pattern dont le but est de définir une interdépendance (de type un à plusieurs) de telle sorte que, lorsqu'un objet change d'état, tous ceux qui en dépendent sont notifiés et automatiquement mis à jour.
 
-Nous nous sommes rendus compte que parfois, la communication entre notre modèle, notre vue et notre contrôleur n'était pas très optimale. Par exemple, certaines classes devaient parfois posséder une référence sur un objet alors qu'elle ne l'utilisait jamais. Elle conservait cette référence afin de la passer à un autre objet qu'elle aurait créé et qui, lui, en aurait besoin.
+Nous nous sommes rendus compte que parfois, la communication entre notre modèle, notre vue et notre contrôleur n'était pas toujours optimale. Par exemple, certaines classes devaient parfois posséder une référence sur un objet alors qu'elles ne l'utilisaient jamais. Elles conservaient cette référence afin de la passer à un autre objet qu'elles auraient créé et qui, lui, en aurait besoin.
 
-En implémentant le design pattern Observer, nous pourrions améliorer la communication entre nos objets. Notre modèle serait à ce moment là observé par notre vue. Ainsi, chaque fois que le modèle serait modifié et en fonction de ce qui a été modifié dans celui-ci, chaque objet de notre vue qui l'observait pourrait effectuer le traitement correspondant afin d'actualiser l'affichage pour l'utilisateur. Chaque objet de la vue observerait donc ce dont il a besoin dans le modèle et les communications seraient simplifiées.
+En implémentant le design pattern Observer, nous pourrions améliorer la communication entre nos objets. Notre modèle serait, à ce moment-là, observé par notre vue. Ainsi, chaque fois que le modèle serait modifié et, en fonction de la modification apportée, chaque objet de notre vue qui l'observait pourrait effectuer le traitement correspondant afin d'actualiser l'affichage pour l'utilisateur. Ainsi, chaque objet de la vue observerait ce dont il a besoin dans le modèle et les communications seraient simplifiées.
 
 \subsubsection{Opérations Vue-Contrôleur}
 
@@ -872,7 +919,7 @@ Dans cette partie, nous présentons chaque classe (objectifs, attributs et méth
 
 \subsubsection{Classe Vector}
 
-Notre moteur physique met en oeuvre des forces et en physique, une force est représentée par un vectteur. Pour cette raison, nous avons besoins d'implémenter une classe permettant de représenter un vecteur et capable de réaliser certaines opérations sur ceux-ci.
+Notre moteur physique met en œuvre des forces. En physique, une force est représentée par un vecteur. Pour cette raison, nous avons besoin d'implémenter une classe permettant de représenter un vecteur et capable de réaliser certaines opérations sur celui-ci.
 
 \paragraph*{Attributs}
 \begin{itemize}
@@ -882,8 +929,8 @@ Notre moteur physique met en oeuvre des forces et en physique, une force est rep
 
 \paragraph*{Méthodes}
 \begin{itemize}
-\item \texttt{Vector vectorSum(Vector A, Vector B)} : retourne un vecteur dont les valeur est la somme des vecteurs A et B.
-\item \texttt{Vector vectorSubstract(Vector A, Vector B)} : retourne un vecteur dont les valeur est la différence entre les vecteurs A et B.
+\item \texttt{Vector vectorSum(Vector A, Vector B)} : retourne un vecteur dont les valeurs est la somme des vecteurs A et B.
+\item \texttt{Vector vectorSubstract(Vector A, Vector B)} : retourne un vecteur dont les valeurs est la différence des vecteurs A et B.
 \item \texttt{double dotProduct(Vector A, Vector B)} : retourne le produit scalaire des vecteurs A et B.
 \item \texttt{Vector vectorProductConstant(Vector A, double val)} : retourne un vecteur dont les valeurs  \_x et \_y ont été multipliées par "val".
 \item \texttt{Vector Product(Vector A, Vector B)} : retourne le produit des vecteurs A et B.
@@ -903,7 +950,7 @@ Cette classe implémente les obstacles dont la forme est un segment.
 \paragraph*{Méthodes}
 \begin{itemize}
 \item \texttt{Boolean contains(Point p)} : cette méthode permet de déterminer si le point "p" passé en paramètre est sur l'ObstacleLine. Pour savoir cela, on utilise l'inégalité triangulaire : si la distance(\_begin, p)  + distance(p, \_end) = distance(\_begin, \_end), alors p est entre \_begin et \_end et p appartient à l'obstacle.
-\item \texttt{Boolean isNearPoint(Point p)} : cette méthode permet de déterminer si le point "p" est proche de l'obstacle. Cette méthode est utilisée plutôt que contains lorsque l'on veut savoir si un clic droit à été effectué sur un ObstacleLine. Ceux-ci étant fins de 1 pixel, 
+\item \texttt{Boolean isNearPoint(Point p)} : cette méthode permet de déterminer si le point "p" est proche de l'obstacle. Cette méthode est préférée à \texttt{contains} lorsque l'on veut savoir si un clic droit a été effectué sur un ObstacleLine. Ce dernier étant fin de 1 pixel, il est difficile de cliquer exactement dessus.
 \end{itemize}
 
 \subsubsection{Classe Ball}
@@ -922,13 +969,13 @@ Objet principal de notre application, la classe Ball implémente la numérisatio
 \paragraph*{Méthodes}
 \begin{itemize}
 \item \texttt{Boolean contains(Point p)} : détermine si le point "p" passé en paramètre est dans la bille. Pour cela, on regarde simplement si la distance entre le centre de la bille et "p" est supérieure ou inférieure au rayon de la bille.
-\item \texttt{void step()} : calcule la nouvelle position et la nouvelle vitesse de la bille en fonction de l'accélération de la gravité, de ses coordonnées et de sa vitesse au pas de temps précédent. Si l'ancienne et la nouvelle position transtypées en entier sont différentes, on sauvegarde la nouvelle position dans "\_track". On transtype en entier les coordonnées avant de les tester afin d'arrondir leur valeur et ainsi diminuer le nombre de points à insérer dans la liste. Évidemment, nous diminuons la précision de nos traces en effectuant cette opération mais c'est un mal nécessaire afin de permettre un export de cette données. Lors d'un export, chaque point de la trace de chaque bille est inscrit dans le fichier et, en gardant la précision des doubles, les fichiers devenaient trop vite démesurément lourds.
+\item \texttt{void step()} : calcule la nouvelle position et la nouvelle vitesse de la bille en fonction de l'accélération de la gravité, de ses coordonnées et de sa vitesse au pas de temps précédent. Si l'ancienne et la nouvelle position transtypées en entier sont différentes, on sauvegarde la nouvelle position dans "\_track". On transtype en entier les coordonnées avant de les tester afin d'arrondir leur valeur et ainsi diminuer le nombre de points à insérer dans la liste. Évidemment, nous diminuons la précision de nos traces en effectuant cette opération mais c'est un mal nécessaire afin de permettre un export de ces données. Lors d'un export, chaque point de la trace de chaque bille est inscrit dans le fichier et, en gardant la précision des doubles, les fichiers devenaient trop vite démesurément lourds.
 \end{itemize}
 
 \newpage
 \subsubsection{Classe Circuit}
 
-Cette classe représente le terrain sur lesquels vont être posés et évoluer nos objets et l'objet que nous allons vouloir exporter ou importer.
+Cette classe représente le terrain sur lequel vont être posés et vont évoluer nos objets. C'est aussi la classe que nous allons vouloir exporter ou importer.
 
 \paragraph*{Attributs}
 \begin{itemize}
@@ -948,7 +995,7 @@ Cette classe représente le terrain sur lesquels vont être posés et évoluer n
 \paragraph*{Méthodes}
 \begin{itemize}
 \item \texttt{void toExport(File f)} : sauvegarde les données du circuit et de chaque bille et obstacle qui le compose dans le fichier passé en paramètre. Les données sont sauvegardées au format XML. Les fonctions \texttt{void saveCircuitXML}, \texttt{void saveBallsXML} et \texttt{void saveObstaclesXML} font parties de la fonction \texttt{toExport}. Leur séparation est uniquement due à un soucis de lisibilité.
-\item \texttt{void toImport(File f)} : charge les données d'un circuit à partir du fichier passé en paramètre. On lit le fichier au format XML sans vérifier la validité de l'arborescence du fichier car on par du principe que si le fichier est  importé c'est qu'il a l'extension ".pdp" donc il a été généré par notre application et possède déjà la bonne arborescence. Les fonctions \texttt{void importCircuitXML}, \texttt{void importBallsXML} et \texttt{void importObstaclesXML} font parties de la fonction \texttt{toImport}. Leur séparation est uniquement due à un soucis de lisibilité.
+\item \texttt{void toImport(File f)} : charge les données d'un circuit à partir du fichier passé en paramètre. On lit le fichier au format XML sans vérifier la validité de l'arborescence du fichier car on part du principe que si le fichier est importé, c'est qu'il a l'extension ".pdp" donc il a été généré par notre application et possède déjà la bonne arborescence. Les fonctions \texttt{void importCircuitXML}, \texttt{void importBallsXML} et \texttt{void importObstaclesXML} font partie de la fonction \texttt{toImport}. Leur séparation est uniquement due à un souci de lisibilité.
 \end{itemize}
 
 \subsubsection{Classe QuadTree}
@@ -959,7 +1006,7 @@ Cette classe permet l'optimisation de la détection des collisions en réduisant
 \begin{itemize}
 \item \texttt{int \_MAX\_OBJECTS} : nombre maximum d'objets dans une région. Lorsque cette limite est atteinte, si un nouvel objet est ajouté, la région se divise en 4 sous-régions.
 \item \texttt{int \_MAX\_LEVELS} : profondeur maximale du Quadtree.
-\item \texttt{int \_level} : niveau de profondeur du noeud courant dans le Quadtree (noeud représenté lui-même par un objet Quadtree).
+\item \texttt{int \_level} : niveau de profondeur du nœud courant dans le Quadtree (nœud représenté lui-même par un objet Quadtree).
 \item \texttt{List<Ball> \_objects} : liste des billes situées dans la région représentée par le Quadtree.
 \item \texttt{Rectangle \_bounds} : rectangle représentant la région du Quadtree.
 \item \texttt{QuadTree[] \_nodes} : 4 Quadtree fils représentant les 4 sous-régions du Quadtree.
@@ -967,10 +1014,10 @@ Cette classe permet l'optimisation de la détection des collisions en réduisant
 
 \paragraph*{Méthodes}
 \begin{itemize}
-\item \texttt{int getIndex(Ball ball)} : renvoie la sous-région dans laquelle se situe la bille. Valeurs possibles : 0, 1, 2, 3 ou -1 si la bille ne rentre pas complètement dans une des sous-régions et dans ce cas on considère qu'elle fait partie de la région entière (donc des 4 sous-régions).
+\item \texttt{int getIndex(Ball ball)} : renvoie la sous-région dans laquelle se situe la bille. Valeurs possibles : 0, 1, 2, 3 ou -1 si la bille ne rentre pas complètement dans une des sous-régions et, dans ce cas, on considère qu'elle fait partie de la région entière (donc des 4 sous-régions).
 \item \texttt{void insert(Ball ball)} : insère la bille dans le Quadtree.
 \item \texttt{void split()} : divise la région en 4 sous régions de taille identique.
-\item \texttt{void clear()} : vide le Quadtree en supprimant tous les noeuds pour revenir au Quadtree initial dont la région représente le circuit entier.
+\item \texttt{void clear()} : vide le Quadtree en supprimant tous les nœuds pour revenir au Quadtree initial dont la région représente le circuit entier.
 \item \texttt{List<Ball> retrieve(List<Ball> returnObjects, Ball ball)} : pour une bille donnée en paramètre, renvoie la liste des billes avec lesquelles elle doit vérifier si elle est en collision.
 \end{itemize}
 
@@ -993,10 +1040,10 @@ C'est un Singleton, il possède donc son instance et garantit qu'elle est unique
 
 \paragraph*{Attributs}
 \begin{itemize}
-\item \texttt{Circuit \_circuit} : circuit de l'application. C'est celui que l'interface affichera et sur lequel on effectuera la simulation.
-\item \texttt{Controller \_instance} : unique instance du controller qui existera au cours de l'exécution de l'application.
+\item \texttt{Circuit \_circuit} : circuit de l'application. C'est celui que l'interface affiche et sur lequel on effectue la simulation.
+\item \texttt{Controller \_instance} : unique instance de Controller qui existe au cours de l'exécution de l'application.
 \item \texttt{Boolean \_isRunning} : booléen permettant de savoir si la simulation est en cours ou non.
-\item \texttt{PhysicalEngine \_pe} : instance du moteur physique qui sera utilisée pour exécuter la simulation.
+\item \texttt{PhysicalEngine \_pe} : instance du moteur physique qui est utilisée pour exécuter la simulation.
 \end{itemize}
 
 \paragraph*{Méthodes}
@@ -1005,7 +1052,7 @@ C'est un Singleton, il possède donc son instance et garantit qu'elle est unique
 \item \texttt{ObstacleLine checkIfPointIsNearLine(Point p)} : appelle la méthode \texttt{isNearPoint()} pour déterminer si le point donné en argument se trouve près d'un obstacle du circuit, et l'obstacle est retourné si c'est le cas. Elle est utilisée lorsque l'utilisateur a cliqué près d'un obstacle existant.
 \item \texttt{void removeLinesOutOfBounds(int xMin, int xMax, int yMin, int yMax)} : supprime les obstacles hors du circuit lors du redimensionnement, en comparant la position de leurs extrémités avec les dimensions données en argument.
 \item \texttt{void removeBallsOutOfBounds(int xMin, int xMax, int yMin, int yMax)} : supprime les billes hors du circuit lors du redimensionnement, en comparant la position de leurs extrémités avec les dimensions données en argument.
-\item \texttt{void runSimulation(DrawingPanel creationZone)} : passe le booléen \_isRunning à Vrai pour indiquer la simulation est lancée, puis lance le moteur physique sur le panneau donné en argument. Elle est utilisée lorsque l'utilisateur clique sur le bouton "Lancer".
+\item \texttt{void runSimulation(DrawingPanel creationZone)} : passe le booléen \_isRunning à Vrai pour indiquer que la simulation est lancée, puis lance le moteur physique sur le panneau donné en argument. Elle est utilisée lorsque l'utilisateur clique sur le bouton "Lancer".
 \item \texttt{void stopSimulation()} : passe le booléen \_isRunning à Faux pour indiquer que la simulation est stoppée, puis arrête le moteur physique. Elle est utilisée lorsque l'utilisateur clique sur le bouton "Arrêter".
 \item \texttt{boolean checkIfBallIsOnExistingBall(Ball b)} : teste si la bille donnée en entrée est positionnée sur une bille du circuit, en appelant la méthode de détection de collisions bille-bille. Retourne Vrai si c'est le cas et Faux sinon.
 \item \texttt{boolean checkIfBallIsOnExistingLine(Ball b)} : teste si la bille donnée en entrée est positionnée sur un obstacle du circuit, en appelant la méthode de détection de collisions bille-obstacle. Retourne Vrai si c'est le cas et Faux sinon.
@@ -1013,15 +1060,16 @@ C'est un Singleton, il possède donc son instance et garantit qu'elle est unique
 \item \texttt{boolean checkIfLineIsOnExistingBall(ObstacleLine o)} : teste si l'obstacle donné en entrée est positionné sur une bille du circuit, en appelant la méthode de détection de collisions bille-obstacle. Retourne Vrai si c'est le cas et Faux sinon.
 \item \texttt{boolean updateBall(Ball b, int new\_radius, double new\_mass, int new\_centerX, int new\_centerY)} : met à jour les paramètres de la bille en vérifiant qu'elle est bien sur le circuit. Si c'est le cas, les modifications sont bien effectuées et la méthode renvoie Vrai. Sinon, les changements sont annulés et la méthode renvoie Faux.
 \item \texttt{boolean updateLine(ObstacleLine line, int new\_beginX, int new\_beginY, int new\_endX, int new\_endY, double newCOR)} : met à jour les paramètres de l'obstacle en vérifiant qu'il est bien sur le circuit. Si c'est le cas, les modifications sont bien effectuées et la méthode renvoie Vrai. Sinon, les changements sont annulés (sauf celui du coefficient de restitution) et la méthode renvoie Faux.
-\item \texttt{void exportCircuit(File f)} : appelle la méthode d'export du circuit en passant le fichier donné en paramètre. Cette méthode permet d'export le circuit au format XML dans un fichier.
+\item \texttt{void exportCircuit(File f)} : appelle la méthode d'export du circuit en passant le fichier donné en paramètre. Cette méthode permet d'exporter le circuit au format XML dans un fichier.
 \item \texttt{void importCircuit(DrawingPanel creationZone, File f)} : appelle la méthode d'import du circuit en passant le fichier donné en paramètre, et redimensionne la taille du panneau de dessin par rapport au circuit importé.
 \item \texttt{boolean checkCollisionBallBall(Ball ball1, Ball ball2)} : calcule la distance entre le centre des deux billes, et vérifie si cette distance est strictement supérieure à la somme du rayon des deux billes. Si c'est le cas, il n'y a pas collision et la méthode renvoie Vrai, sinon elle renvoie Faux.
 \item \texttt{boolean checkCollisionBallObstacle(Ball ball, ObstacleLine obstacle)} : cette fonction vérifie s'il y a une collision entre une bille et la droite formée par un obstacle passé en paramètre. Pour cela, on projette le centre de la bille sur la droite. Si la distance entre le centre de la bille et le point de projection du centre de la bille sur la droite formée par l'obstacle est supérieure au  rayon de la bille, on sait qu'il n'y a pas de collision. Sinon, il faut faire un autre test que l'on réalise avec la méthode \texttt{collisionSegmen(Ball, ObstacleLine):bool}.
 \item \texttt{boolean collisionSegment(Ball ball, ObstacleLine obstacle)} : on vérifie si la bille est en collision avec le segment "obstacle". 
 \item \texttt{double distance(Point2D.Double a, Point2D.Double b)} : renvoie la distance euclidienne séparant les points a et b.
-\item \texttt{void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight)} : met à jour la valeur de la taille du circuit et du panneau de dessin  aux valeurs passées en paramètre, puis supprime les objets du circuits qui sont hors de ses nouvelles dimensions.
+\item \texttt{void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight)} : met à jour la valeur de la taille du circuit et du panneau de dessin aux valeurs passées en paramètre, puis supprime les objets du circuit qui sont hors de ses nouvelles dimensions.
 \end{itemize}
 
+\newpage
 \subsubsection{Classe PhysicalEngine}
 
 Cette classe implémente notre moteur physique. C'est lui qui gère le déplacement des billes, le Quad-tree et les résolutions de collisions.
@@ -1037,12 +1085,11 @@ Cette classe implémente notre moteur physique. C'est lui qui gère le déplacem
 
 \paragraph*{Méthodes}
 \begin{itemize}
-\item \texttt{void run(DrawingPanel dp)} : démarre la simulation. À chaque tic de notre timer, pour chaque bille dans le circuit, on la déplace, on vérifie via le Quad tree si elle est en collision avec un autre objet du circuit et, si oui, on calcule sa réaction ; puis on ajoute la trace effectuée à l'affichage. Enfin, lorsque toutes les billes se sont déplacées une fois, on repeint le panneau de dessin.
+\item \texttt{void run(DrawingPanel dp)} : démarre la simulation. À chaque tic de notre timer, pour chaque bille dans le circuit, on la déplace, on vérifie via le Quadtree si elle est en collision avec un autre objet du circuit et, si oui, on calcule sa réaction ; puis on ajoute la trace effectuée à l'affichage. Enfin, lorsque toutes les billes se sont déplacées une fois, on repeint le panneau de dessin.
 \item \texttt{void stop()} : arrête le timer, ce qui met en pause l'exécution de la simulation. 
-\item \texttt{boolean ballIsOutOfCircuit(Ball b)} : vérifie si une bille passée en paramètre est encore visible du circuit. Si ce n'est pas le cas, renvoie vrai, sinon renvoie faux. 
+\item \texttt{boolean ballIsOutOfCircuit(Ball b)} : vérifie si une bille passée en paramètre est encore visible du circuit. Si ce n'est pas le cas, renvoie Vrai, sinon renvoie Faux. 
 
-Cette fonction est utilisée dans
-\texttt{run(DrawingPanel):void} pour éviter deux choses : 1) déplacer des billes qu'on ne voit plus ; 2) notre plateau est fictivement dans les airs, si elle est sortie du circuit, peu importe par quel côté, on part du principe qu'elle est "tombée" du circuit et qu'elle ne fait plus partie de notre modèle.
+Cette fonction est utilisée dans \texttt{run(DrawingPanel):void} pour éviter deux choses : 1) déplacer des billes qu'on ne voit plus ; 2) notre plateau est fictivement dans les airs, si elle est sortie du circuit, peu importe par quel côté, on part du principe qu'elle est "tombée" du circuit et qu'elle ne fait plus partie de notre modèle.
 \item \texttt{void resolveCollisionBallBall(Ball ball1, Ball ball2)} : calcule les nouvelles vitesses X et Y des billes données en argument qui sont entrées en collision, en utilisant les équations du choc élastique. Pour cela, on utilise la direction et l'angle de collision des billes.
 \item \texttt{void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle)} : calcule les nouvelles vitesses X et Y de la bille donnée en argument qui est entrée en collision avec un obstacle. Pour calculer l'angle de sortie de la bille, on utilise son angle d'incidence et l'inclinaison de l'obstacle.
 \item \texttt{Vector GetNormale(Point A, Point B, Point2D.Double C)} : renvoie le vecteur normal du segment AB qui passe par le point C.
@@ -1074,7 +1121,7 @@ C'est la fenêtre principale de l'application, qui s'ouvre lorsque l'application
 
 \subsubsection{Classe ParamPanel}
 
-C'est le panneau de paramétrage de l'application, permettant de modifier différents paramètres du circuit. Elle étend la classe JPanel de Swing, permettant des créer des panneaux dans des fenêtres graphiques.
+C'est le panneau de paramétrage de l'application, permettant de modifier différents paramètres du circuit. Elle étend la classe JPanel de Swing, permettant de créer des panneaux dans des fenêtres graphiques.
 
 \paragraph*{Attributs}
 
@@ -1101,7 +1148,7 @@ C'est le panneau de paramétrage de l'application, permettant de modifier diffé
 
 \subsubsection{Classe DrawingPanel}
 
-C'est le panneau de dessin sur lequel l'utilisateur interagit directement avec les objets du circuit. Elle étend la classe JPanel de Swing, permettant des créer des panneaux dans des fenêtres graphiques.
+C'est le panneau de dessin sur lequel l'utilisateur interagit directement avec les objets du circuit. Elle étend la classe JPanel de Swing, permettant de créer des panneaux dans des fenêtres graphiques.
 
 \paragraph*{Attributs}
 
@@ -1148,7 +1195,7 @@ Cette classe permet de factoriser du code qui servira à afficher les pop up de 
 
 \paragraph*{Attributs}
 \begin{itemize}
-\item \texttt{Controller \_controller } : chaque pop up clic droit aura besoin de connaître le contrôler car dans le comportement minimum d'un pop up, il est nécessaire d'être capable de demander la suppression d'un objet. Pour cela, il faut donc une référence vers le controller.
+\item \texttt{Controller \_controller } : chaque pop up clic droit aura besoin de connaître le Controller car, dans le comportement minimum d'un pop up, il est nécessaire d'être capable de demander la suppression d'un objet. Pour cela, il faut donc une référence vers le Controller.
 \item \texttt{DrawingPanel \_drawingPan } : chaque pop up clic droit pouvant demander la suppression d'un objet, il faut demander au panneau de dessin d'actualiser l'affichage du circuit. On garde donc une référence vers le DrawingPanel.
 \item \texttt{JMenuItem \_suppr } : item donnant la possibilité à l'utilisateur de demander la suppression de l'objet sujet du clic droit.
 \item \texttt{JMenuItem \_param } : item donnant la possibilité à l'utilisateur de demander de paramétrer l'objet sujet du clic droit.
@@ -1192,9 +1239,9 @@ Permet d'afficher un menu pop up de clic droit sur un ObstacleLine et propose d'
 
 \subsubsection{Classe RightClickChooser}
 
-Classe "Visitor" qui ne contient qu'une méthode statique surchargée. Il existe une version de cette méthode pour chaque objet pouvant être placé sur le circuit de cette application. Cette méthode renvoie un pop up en fonction de l'objet qui lui est passé en paramètre. En outre, lorsque l'on fait un clic droit sur un objet, on appelle la méthode du RightClickChooser en passant en paramètre l'objet sur lequel on a réalisé le clic et, en fonction de cet objet, on récupère un IRightClickPopUpMenu correspondant.
+Classe "Visitor" qui ne contient qu'une méthode statique. Cette méthode renvoie un pop up si le point qu'elle reçoit en paramètre est dans un objet du circuit. En outre, lorsque l'on fait un clic droit sur un objet, on appelle la méthode du RightClickChooser en passant en paramètre le point correspondant aux coordonnées de la souris sur le circuit et, en fonction de l'objet présent sous la souris, on récupère un IRightClickPopUpMenu correspondant.
 
-Dans le futur, si on ajoute un nouveau type d'objet à l'application, il faut alors créer une surcharge de la méthode de RightClickChooser si on veut pouvoir ouvrir un pop up sur cet objet via un clic droit.
+Dans le futur, si on ajoute un nouveau type d'objet à l'application, il faut alors rajouter une condition au RightClickChooser qui testera si le point passé en paramètre fait partie de cet objet.
 
 \paragraph*{Méthodes} Notre application ne contenant pour l'instant que deux types d'objets, on a donc deux méthodes de même nom :
 \begin{itemize}
@@ -1204,7 +1251,7 @@ Dans le futur, si on ajoute un nouveau type d'objet à l'application, il faut al
 
 \subsubsection{Classe abstraite AParamObject}
 
-Cette classe sert à factoriser le codes de nos "ParamObjects". Un "ParamObject" au sens où nous l'entendons est une fenêtre de paramétrage liée à un type d'objet. Dans notre application actuelle, les deux seuls types d'objets présents sont Ball et ObstacleLine. Il n'y a donc actuellement que deux classes qui hériteront de AParamObject. Dans le futur, si un nouveau type d'objet est ajouté à l'application, pour pouvoir le paramétrer via une fenêtre, on pourra créer une classe "ParamNewObject" qui étend "AParamObject" pour qu'elle possède le comportement minimum nécessaire pour fonctionner.
+Cette classe sert à factoriser le code de nos "ParamObjects". Un "ParamObject" au sens où nous l'entendons est une fenêtre de paramétrage liée à un type d'objet. Dans notre application actuelle, les deux seuls types d'objets présents sont Ball et ObstacleLine. Il n'y a donc actuellement que deux classes qui hériteront de AParamObject. Dans le futur, si un nouveau type d'objet est ajouté à l'application, pour pouvoir le paramétrer via une fenêtre, on pourra créer une classe "ParamNewObject" qui étend "AParamObject" pour qu'elle possède le comportement minimum nécessaire pour fonctionner.
 
 Cette classe étend la classe JDialog de notre bibliothèque d'affichage SWING afin d'afficher une fenêtre que l'on peut définir comme prioritaire : tant qu'elle est ouverte, on ne peut pas modifier d'autre fenêtre de l'application. 
 
@@ -1284,7 +1331,7 @@ Pour chacun de ces attributs, il existe un JTextField permettant d'afficher la v
 
 Les tests unitaires servent à vérifier que les méthodes testées ont le bon comportement en sortie par rapport à l’entrée donnée. \\
 
-Dans chaque test se trouvent les fonctions \texttt{setUp()} et \texttt{tearDown()} : la première sera lancée avant chaque test (elle sert donc d’initialisation des variables communes à plusieurs tests), et la seconde sera lancée après chaque test (elle sert donc de désallocation des variables communes). \\
+Dans chaque test se trouvent les fonctions \texttt{setUp()} et \texttt{tearDown()} : la première est lancée avant chaque test (elle sert donc d’initialisation des variables communes à plusieurs tests), et la seconde est lancée après chaque test (elle sert donc de désallocation des variables communes). \\
 
 Certains tests peuvent paraître triviaux mais ils sont aussi présents afin de garantir la non-régression de nos fonctions.
 
@@ -1510,11 +1557,12 @@ On teste trois cas : soit l’obstacle ne chevauche aucune bille, soit l’obsta
 
 \paragraph{test\_updateBall}
 
-La méthode \texttt{updateBall(Ball, int, double, int, int):bool} modifie les attributs d’une bille et renvoie vrai si la mise à jour a réussi.
-Les deux seuls cas pouvant faire échouer la mise à jour sont que les nouveaux attributs de la bille créent un chevauchement avec un autre objet déjà existant (via un déplacement ou une augmentation de la taille du radius) ou que le centre de la bille soit déplacé hors du circuit.
+La méthode \texttt{updateBall(Ball, int, double, int, int):bool} modifie les attributs d’une bille et renvoie Vrai si la mise à jour a réussi.
+Les deux seuls cas pouvant faire échouer la mise à jour sont que les nouveaux attributs de la bille créent un chevauchement avec un autre objet déjà existant (via un déplacement ou une augmentation de la taille du rayon) ou que le centre de la bille soit déplacé hors du circuit.
 
+
+On teste donc différents cas et, à chaque fois, on vérifie la valeur des attributs de la bille :
 \begin{itemize}
-\item On teste donc différents cas et, à chaque fois, on vérifie la valeur des attributs de la bille :
 \item On modifie tous les attributs de la bille en la déplaçant à l’intérieur d’un circuit vide. Il n’y a pas d’autres objets dans le circuit et la bille a été déplacée à l’intérieur de celui-ci. Il n’y a aucun conflit, on vérifie que les attributs de la bille ont bien été modifiés.
 \item On déplace le centre de la bille hors du circuit. La modification est censée échouer. On vérifie donc que les attributs de la bille sont remis à leur valeur antérieure.
 \item On déplace la bille sur un autre objet du circuit (bille ou obstacle). La modification est censée échouer car il y aurait chevauchement. On vérifie donc que les attributs de la bille sont remis à leur valeur antérieure.
@@ -1536,7 +1584,7 @@ On teste donc différents cas et, à chaque fois, on vérifie la valeur des attr
 
 \paragraph{test\_collisionSegment}
 
-Cette fonction est privée, on n’est donc censé ne pas pouvoir y accéder. C’est pour cela que ce test  commence par une récupération d’un accès à la méthode par réflexion (introspection). 
+Cette fonction est privée, on est donc censé ne pas pouvoir y accéder. C’est pour cela que ce test commence par une récupération d’un accès à la méthode par réflexion (introspection). 
 
 On crée une bille 1 qu’on place de telle sorte qu’elle chevauche l’obstacle. On place une bille 2 de telle sorte qu’elle ne chevauche pas l’obstacle. On vérifie que la fonction \texttt{collisionSegment} renvoie “vrai” pour la bille 1 et “faux” pour la bille 2.
 
@@ -1560,11 +1608,11 @@ Pour tester cette méthode, on crée donc un panneau de taille (x1, y1), puis on
 \paragraph{test\_resolveCollisionBallBallSameMass}
 
 Pour tester la fonction \texttt{resolveCollisionBallBall}, on crée deux billes ayant la même masse.
-D’abord on commence par le test où la collision est horizontale. 
+D’abord, on commence par le test où la collision est horizontale. 
 
 \begin{enumerate}
-\item On met une vitesse positive sur l’axe x pour la première bille et son inverse pour la deuxième, la vitesse sur l’axe Y est nulle..
-\item On appelle la fonction \texttt{resolveCollisionBallBall} avec les deux billes créées à l’étape précédente .
+\item On met une vitesse positive sur l’axe x pour la première bille et son inverse pour la deuxième, la vitesse sur l’axe Y est nulle.
+\item On appelle la fonction \texttt{resolveCollisionBallBall} avec les deux billes créées à l’étape précédente.
 \item On vérifie que le signe de chaque vitesse est bien inversé après l’impact et que la quantité de mouvement est conservée.\\
 \end{enumerate}
 
@@ -1585,34 +1633,34 @@ Pour le dernier cas on teste une collision diagonale :
 \item On vérifie que les vitesses sont inversées après l’impact avec :
 \end{enumerate}
  
-(v1’.getX == -1) AND (v1’.getX == 1)
+\((v_1'.getX == -1) AND (v_1'.getX == 1)\)
 
-(v2’.getY == 1) AND (v2’.getY == -1) 
+\((v_2'.getY == 1) AND (v_2'.getY == -1)\)
 
 \paragraph{test\_resolveCollisionBallBallDifferentMass}
 
-Dans cette fonction on teste le cas d’une collision entre deux billes ayant une masse différente :
+Dans cette fonction, on teste le cas d’une collision entre deux billes ayant une masse différente :
 
 \begin{enumerate}
 \item On crée deux billes en collision sur le même axe horizontal, de masse différente et de vitesses opposées sur l’axe X, la vitesse sur l’axe Y est nulle.
-\item On calcule la quantité de mouvement et de l’énergie cinétique avant le choc “qmi”, “eci” .
+\item On calcule la quantité de mouvement et de l’énergie cinétique avant le choc.
 \item On appelle la fonction \texttt{resolveCollisionBallBall}.
-\item On calcule la quantité de mouvement et de l’énergie cinétique après le choc “qmf”, “ecf”
-\item On vérifie que qmi est égale à  qmf et que eci égale à ecf.\\
+\item On calcule la quantité de mouvement et de l’énergie cinétique après le choc.
+\item On vérifie que les quantités de mouvement initiale et finale sont égales. On fait de même pour les énergies cinétiques.\\
 \end{enumerate}
 
-Dans l’autre cas on teste avec deux billes de vitesse différente :
+Dans l’autre cas, on teste avec deux billes de vitesse différente :
 
 \begin{enumerate}
-\item On crée deux billes avec deux vitesses opposées non nuls, 
-\item On appelle la fonction \texttt{resolveCollisionBallBall} et on vérifie si la quantité de mouvement et de l’énergie cinétique est conservée.\\
+\item On crée deux billes avec deux vitesses opposées non-nulles.
+\item On appelle la fonction \texttt{resolveCollisionBallBall} et on vérifie si la quantité de mouvement et l’énergie cinétique sont conservées.\\
 \end{enumerate}
 
-Dans le dernier cas on teste avec deux billes dont l’une est immobile :
+Dans le dernier cas, on teste avec deux billes dont l’une est immobile :
 
 \begin{enumerate}
-\item On crée deux billes une possède une vitesse et l’autre a une vitesse nulle.
-\item On appelle la fonction \texttt{resolveCollisionBallBall} et on vérifie si la quantité de mouvement et de l’énergie cinétique est conservée.
+\item On crée deux billes, une possède une vitesse et l’autre a une vitesse nulle.
+\item On appelle la fonction \texttt{resolveCollisionBallBall} et on vérifie si la quantité de mouvement et l’énergie cinétique sont conservées.
 \end{enumerate}
 
 \paragraph{test\_resolveCollisionBallObstacle}
@@ -1631,7 +1679,7 @@ Pour tester cela :
 Deuxièmement :
 
 \begin{enumerate}
-\item On crée un obstacle vertical avec un coefficient de restitution égal à 1
+\item On crée un obstacle vertical avec un coefficient de restitution égal à 1.
 \item On crée une bille au même niveau que l’obstacle avec une vitesse sur l’axe X.
 \item On appelle \texttt{resolveCollisionBallObstacle} avec l’obstacle et la bille.
 \item On vérifie la vitesse de la bille après le rebond a été inversée.\\
@@ -1640,7 +1688,7 @@ Deuxièmement :
 Dans le dernier cas :
 
 \begin{enumerate}
-\item On crée un obstacle diagonal à 45 degrés avec un coefficient de restitution égal à 1
+\item On crée un obstacle diagonal à 45 degrés avec un coefficient de restitution égal à 1.
 \item On crée une bille en dessus de l’obstacle avec une vitesse (1,1).
 \item On appelle \texttt{resolveCollisionBallObstacle} avec l’obstacle et la bille.
 \item On vérifie que la vitesse de la bille après le rebond est égale à (-1,-1).
@@ -1651,13 +1699,13 @@ Dans le dernier cas :
 Pour tester le cas où le coefficient de restitution des obstacles est inférieur à 1:
 
 \begin{enumerate}
-\item On crée un obstacle diagonal horizontal avec un coefficient de restitution égal à 0,5
-\item On crée une bille au dessus de l’obstacle avec une vitesse (0,6).
+\item On crée un obstacle diagonal horizontal avec un coefficient de restitution égal à 0,5.
+\item On crée une bille au-dessus de l’obstacle avec une vitesse (0,6).
 \item On appelle \texttt{resolveCollisionBallObstacle} avec l’obstacle et la bille.
 \item On vérifie que la vitesse de la bille après le rebond a été divisée par deux sur l’axe de Y c’est-à-dire égale à (0,-3).
 \end{enumerate}
 
-On reteste avec un obstacle diagonal avec un coefficient de restitution égal à 0,5 et une bille au même niveau avec une vitesse (8,8) et on appelle la fonction avec les deux objets créés puis on vérifie que la vitesse de la bille est correctement modifiée, c’est-à-dire divisée par deux uniquement sur l’axe Y. La nouvelle vitesse est (-8,-4).
+On teste à nouveau avec un obstacle diagonal ayant un coefficient de restitution égal à 0,5 et une bille au même niveau avec une vitesse (8,8), et on appelle la fonction avec les deux objets créés puis on vérifie que la vitesse de la bille est correctement modifiée, c’est-à-dire divisée par deux uniquement sur l’axe Y. La nouvelle vitesse est (-8,-4).
 
 \paragraph{test\_getNormale}
 
@@ -1679,16 +1727,15 @@ Pour tester la fonction \texttt{projectionI} qui renvoie la projection perpendic
 \begin{enumerate}
 \item On crée une droite horizontale AB et un point center au dessus.
 \item On appelle la fonction \texttt{projectionI} avec la droite AB et le point center.
-\item On vérifie les coordonnées du point projeté P avec cette formule 
-\item (center.X  == P.X) AND (center.Y < P.Y)
+\item On vérifie les coordonnées du point projeté P avec cette formule : (center.X == P.X) AND (center.Y < P.Y).
 \end{enumerate}
 
-Dans l’autre cas on appelle la fonction \texttt{projectionI} avec une droite verticale AB et un point center au même niveau. On vérifie les composantes du point projeté P : (center.Y == P.Y) AND (center.X < P.X).
+Dans l’autre cas, on appelle la fonction \texttt{projectionI} avec une droite verticale AB et un point center au même niveau. On vérifie les composantes du point projeté P : (center.Y == P.Y) AND (center.X < P.X).
 Dernier cas avec une droite verticale AB : (center.X < P.X) AND (center.Y < P.Y). 
 
 \paragraph{test\_ballIsOutOfCircuit}
 
-La méthode \texttt{ballIsOutOfCircuit(Ball):boolean} vérifie si une bille est complètement hors du circuit, en comparant sa position (en prenant en compte son rayon) avec les dimensions du circuit. Elle retourne Vrai si c’est le cas, et Faux sinon.
+La méthode \texttt{ballIsOutOfCircuit(Ball):boolean} vérifie si une bille est complètement hors du circuit, en comparant sa position (en prenant en compte son rayon) avec les dimensions du circuit. Elle retourne Vrai si c’est le cas, et Faux sinon. \\
 
 Pour tester cette méthode, on teste 3 cas :
 
@@ -1718,7 +1765,7 @@ Les classes \texttt{ParamBall} et \texttt{ParamLine} héritent de \texttt{AParam
 
 Actuellement, ces fonctions ne sont pas redéfinies dans les classes filles, elles ont donc le même code et le même test. Il appartient toutefois de créer leurs tests séparément étant donné qu’il est possible qu’une des deux classes redéfinisse un jour cette fonction car il se pourrait qu’il faille modifier le test en conséquence. \\
 
-Ces deux fonctions que nous voulons tester sont protégées, on n’est donc censé ne pas pouvoir y accéder. C’est pour cela que chaque test commence par une récupération d’un accès à la méthode par réflexion (introspection).
+Ces deux fonctions que nous voulons tester sont protégées, on est donc censé ne pas pouvoir y accéder. C’est pour cela que chaque test commence par une récupération d’un accès à la méthode par réflexion (introspection).
 
 \paragraph{test\_checkInt}
 
@@ -1739,7 +1786,7 @@ L’expression régulière utilisée par la fonction est simple (un seul opérat
 \newpage
 \section{Tests de profil}
 
-Les tests de profil que nous avons effectués servent à tester les performances de notre application selon deux critères : le pourcentage d’utilisation du processeur et l’utilisation de la mémoire RAM en Mo. En faisant varier le nombre de billes lors d’une simulation, les résultats obtenus permettent de déterminer le seuil de performance de notre application, c’est-à-dire jusqu’à quel nombre maximal de billes l’application garde-t-elle sa vitesse de fonctionnement maximale. \\
+Les tests de profil que nous avons effectués servent à tester les performances de notre application selon deux critères : le pourcentage d’utilisation du processeur et l’utilisation de la mémoire RAM en Mo. En faisant varier le nombre de billes lors d’une simulation, les résultats obtenus permettent de déterminer le seuil de performance de notre application, c’est-à-dire jusqu’à quel nombre maximal de billes l’application garde sa vitesse de fonctionnement maximale pour un processeur. \\
 
 Les tests suivants ont été réalisés sur une machine possédant un processeur I5-4200U\footnote{2 coeurs 4 threads 1.6 à 2.6 GHz}. 
 
@@ -1775,7 +1822,7 @@ Voici alors l’état de l’utilisation de notre machine : \\
 \caption{Taux d'utilisation de la mémoire avec 4000 billes}
 \end{figure}
 
-Jusqu’à 16:45:25, notre application était “au repos” : on avait créé le circuit mais on ne faisait aucune opération. Dans ce cas, notre application ne consomme que peu (entre 30 et 40Mo) de ressources. 
+Jusqu’à 16:45:25, notre application est “au repos” : on crée le circuit mais on ne fait aucune opération. Dans ce cas, notre application ne consomme que peu (entre 30 et 40Mo) de ressources. 
 
 À 16:45:25, on lance la simulation et les 4000 billes se mettent alors à se déplacer et se rentrer dedans. L’exécution est mise en pause à 16:46:05.
 Pendant ce laps de temps, on voit que notre application a consommé jusqu’à 110Mo de RAM. 
@@ -1793,7 +1840,7 @@ Ce qui nous intéresse ici est surtout de voir que dans un cas coûteux (avec 40
 
 Au moment où la simulation est lancée via le bouton “Lancer” (vers 16:45:25), on voit que le CPU monte quasiment instantanément à 100\% d’utilisation. En effet, c’est à partir de ce moment que se lancent tous les calculs de vitesses, coordonnées, collisions et d’actualisation d’affichage. Le nombre de billes à cet instant est donc trop important pour faire fonctionner l’application de façon optimale.
 
-Cependant, bien que beaucoup de billes sortent du circuit au cours de la simulation (elles ne sont donc plus prises en compte dans les méthodes de gestion de collisions et d’affichage), on voit que l’utilisation CPU reste quand même aux alentours de 100\% (entre 16:45:25 et 16:46:05 environ). On peut donc en déduire que le nombre de billes restants ralentit toujours notre application.
+Cependant, bien que beaucoup de billes sortent du circuit au cours de la simulation (elles ne sont donc plus prises en compte dans les méthodes de gestion de collisions et d’affichage), on voit que l’utilisation CPU reste quand même aux alentours de 100\% (entre 16:45:25 et 16:46:05 environ). On peut donc en déduire que le nombre de billes restant ralentit toujours notre application.
 
 Enfin, une fois la simulation stoppée (vers 16:46:05), l’utilisation CPU retombe très vite à 0\% : tous les calculs de collisions et d’actualisation d’affichage s’arrêtent donc aussi, ce qui est le comportement prévu.
 
@@ -1831,11 +1878,11 @@ Lors d’une exécution avec 760 billes, notre application atteint une consommat
 \caption{Taux d'utilisation du processeur avec 760 billes}
 \end{figure}
 
-On remarque en effet que, sur la machine où nous avons testé notre application, le processeur n’est pas utilisé à 100\% lors d’une simulation avec 760 billes.
+On remarque en effet que, sur la machine sur laquelle nous avons testé notre application, le processeur n’est pas utilisé à 100\% lors d’une simulation avec 760 billes.
 
 \subsection{Tests avec et sans Quadtree}
 
-L’utilisation du Quadtree réduit fortement le nombre de calculs à réaliser pour la détection de collisions. On passe d’une complexité en temps O(\(n^2\)) à une complexité de l’ordre de O(n log(n)). Voici deux tests qui vérifient ce gain de performances. \\
+L’utilisation du Quadtree réduit fortement le nombre de calculs à réaliser pour la détection de collisions. On passe d’une complexité en temps O(\(n^2\)) à une complexité de l’ordre de O(n log(n)). Voici deux tests qui vérifient ce gain de performances : \\
 
 Nombre de billes : 3869\\
 
@@ -1897,26 +1944,27 @@ Excepté cette méthode, la quasi-intégralité du moteur physique est utilisé.
 
 \subsection{Frottements}
 
-La simulation actuelle peut être considérée comme “dans le vide”, c’est-à-dire que seule la gravité influe sur le circuit, il n’y a aucune perte d’énergie (sauf en cas de collision avec coefficient de rebond inférieur à 1). Dans le cas où on voudrait rendre le simulateur plus réaliste, il faudrait y rajouter la force de frottements.
+La simulation actuelle peut être considérée comme “dans le vide”, c’est-à-dire que seule la gravité influe sur le circuit. Il n’y a aucune perte d’énergie (sauf en cas de collision avec coefficient de rebond inférieur à 1). Dans le cas où on voudrait rendre le simulateur plus réaliste, il faudrait y rajouter la force de frottements. \\
 
-Pour cela, il faudrait les ajouter dans la méthode \texttt{step()} de la classe Ball, via un facteur qui modifierait l’accélération des billes selon leur taille et leur masse.
+Pour cela, il faudrait l'ajouter dans la méthode \texttt{step()} de la classe Ball, via un facteur qui modifierait l’accélération des billes selon leur taille et leur masse.
 
 \subsection{Modifier la vitesse de la simulation}
 
-Lors d’une simulation, la vitesse de la simulation est verrouillée. Cependant, il peut être intéressant de l’accélérer pour obtenir le résultat final plus rapidement, ou au contraire la ralentir pour mieux observer le parcours des billes à un certain moment.
+Lors d’une simulation, la vitesse de la simulation est verrouillée. Cependant, il peut être intéressant de l’accélérer pour obtenir le résultat final plus rapidement, ou au contraire la ralentir pour mieux observer le parcours des billes à un certain moment. \\
 
 Pour cela, on pourrait créer un slider (comme celui de l’inclinaison) afin de modifier en temps réel la vitesse de la simulation. Ce slider pourrait modifier la vitesse par un facteur compris entre 0.5 et 2.
 
 
 \subsection{Retour à un temps antérieur de la simulation}
 
-Notre application sauvegardant les traces des billes lors de la simulation, elle pourrait proposer une fonctionnalité de “retour dans le passé” pour rejouer la simulation à partir d’un instant précis. Il faudrait pour cela compter et actualiser la taille de la trace des billes au cours de la simulation. 
+Notre application sauvegardant les traces des billes lors de la simulation, elle pourrait proposer une fonctionnalité de “retour dans le passé” pour rejouer la simulation à partir d’un instant précis. Il faudrait pour cela compter et actualiser la taille de la trace des billes au cours de la simulation. \\
 
-A l’aide de l’interface graphique, on proposerait à l’utilisateur de choisir un entier i entre 0 et la taille de la trace des billes (qui est la même pour toutes les billes excepté pour celles qui sont sorties de l’écran puisqu’on ne les déplace plus) et on replacerait chaque bille à sa trace i et on effacerait toutes les traces après la ième.
+A l’aide de l’interface graphique, on proposerait à l’utilisateur de choisir un entier i entre 0 et la taille de la trace des billes (qui est la même pour toutes les billes excepté pour celles qui sont sorties de l’écran puisqu’on ne les déplace plus) et on replacerait chaque bille à sa trace i et on effacerait toutes les traces après la i-ème.
 
+\newpage
 \subsection{Pas de temps évolutif}
 
-Le pas de temps est actuellement modifiable à l’aide du panneau de paramétrage afin de choisir entre une simulation plus rapide mais moins précise, et une simulation fine mais lente. 
+Le pas de temps est actuellement modifiable à l’aide du panneau de paramétrage afin de choisir entre une simulation plus rapide mais moins précise, et une simulation fine mais lente. \\
 
 Il pourrait être intéressant d’intégrer un pas de temps évolutif : lors de la simulation, on récupère à chaque pas de temps la vitesse la plus élevée d’une bille, et on adapte le pas de temps en fonction de cette vitesse. Ainsi, plus la bille est rapide, plus le pas de temps est diminué afin d’améliorer la précision de la simulation. La distance parcourue par une bille lors d’un pas de temps ne devrait jamais être supérieure à son rayon.
 
@@ -1932,52 +1980,55 @@ Dans notre application, on ne peut interagir qu’avec un seul objet à la fois 
 
 \subsection{Zoom}
 
-Pour améliorer la visibilité de notre circuit, surtout lorsqu’il y a beaucoup d’objets ou de petits objets, on pourrait implémenter un zoom à notre interface graphique. 
+Pour améliorer la visibilité de notre circuit, surtout lorsqu’il y a beaucoup d’objets ou de petits objets, on pourrait implémenter un zoom à notre interface graphique. \\
+=============
+A l’aide de la molette de la souris, on appellerait une fonction qui modifierait un facteur de zoom. Chaque fois que ce facteur de zoom est modifié, il faudrait modifier l’échelle du panneau de dessin et des objets qui se trouvent dessus. \\
 
-A l’aide de la molette de la souris, on appellerait une fonction qui modifierait un facteur de zoom. Chaque fois que ce facteur de zoom est modifié, il faudrait modifier l’échelle du panneau de dessin et des objets qui se trouvent dessus. 
+De plus, si on implémente un zoom centré sur la position de la souris au moment où l’événement “défilement molette” est appelé, il faut par la suite recalculer les coordonnées de la souris sur le circuit. En outre, lorsqu’on clique par exemple sur le coin en haut à gauche du panneau de dessin, quel que soit le facteur de zoom, les coordonnées de ce point sur le panneau seront (0,0). Or, si on a au préalable zoomé sur le coin en bas à gauche du circuit, on s’attend à avoir une autre valeur. \\
 
-De plus, si on implémente un zoom centré sur la position de la souris au moment où l’événement “défilement molette” est appelé, il faut par la suite recalculer les coordonnées de la souris sur le circuit. En outre, lorsqu’on clique par exemple sur le coin en haut à gauche du panneau de dessin, quel que soit le facteur de zoom, les coordonnées de ce point sur le panneau sera (0,0). Or, si on a au préalable zoomé sur le coin en bas à gauche du circuit, on s’attend à avoir une autre valeur. 
+Il faut, à ce moment, bien faire la distinction entre le circuit et son affichage sur l’interface en corrigeant les coordonnées de la souris lorsqu’on a besoin d’utiliser ses coordonnées alors qu’on est en train de zoomer.
 
-Il faut à ce moment bien faire la distinction entre le circuit et son affichage sur l’interface en corrigeant les coordonnées de la souris lorsqu’on a besoin d’utiliser ses coordonnées alors qu’on est en train de zoomer.
+\newpage
+\subsection{Couleur de billes unique}
 
+Pour améliorer la lisibilité de notre application, on pourra créer un couple (bille, couleur) unique pour chaque bille de telle sorte que chaque bille soit d’une couleur différente et que la couleur de la trace d’une bille soit de la même couleur que celle-ci. De cette façon, lorsque plusieurs billes sont proches, on arrive à distinguer leurs traces les unes des autres. \\
 
-\subsection{Couleur de billes uniques}
-
-Pour améliorer la lisibilité de notre application, on pourra créer un couple (bille, couleur) unique pour chaque bille de telle sorte que chaque bille soit d’une couleur différente et que la couleur de la trace d’une bille soit de la même couleur que celle-ci. De cette façon, lorsque plusieurs billes sont proches, on arrive à distinguer leurs traces les unes des autres. 
-
-Étant donné que notre application permet de gérer un nombre relativement grand de billes (quelques milliers), on pourra répéter l’apparition de certaines couleurs. De plus, il faut faire attention à ne pas proposer une palette trop grande de couleurs trop proches car cela rendrait les distinctions difficiles pour un daltonien.
+Étant donné que notre application permet de gérer un nombre relativement grand de billes (quelques milliers), on pourra -répéter l’apparition de certaines couleurs. Il faut par contre éviter de proposer une palette de couleurs trop proches car cela rendrait leur distinction difficile ; et cela serait encore pire pour un daltonien. \\
 
 Pour aller plus loin, on pourra laisser à l’utilisateur la possibilité de changer la couleur d’une bille dans sa fenêtre de paramétrage. Il faudra alors recolorier une autre bille afin de conserver un équilibre entre le nombre de billes par couleur
 
 
 \subsection{Choix d'affichage des traces}
 
-Donner la possibilité à l’utilisateur d’afficher ou masquer la trace d’une ou plusieurs billes pendant l’exécution. Cela permettrait de pouvoir se concentrer sur le comportement de certaines billes parmis un grand nombre.
+Il conviendrait de donner la possibilité à l’utilisateur d’afficher ou masquer la trace d’une ou plusieurs billes pendant l’exécution. Cela permettrait de pouvoir se concentrer sur le comportement de certaines billes parmi un grand nombre.
 
 \section{Gestion du circuit}
 
 \subsection{Billes - Coefficient de restitution}
 
-Pour améliorer la paramétrabilité de notre application, on pourrait rendre modifiable le coefficient de restitution des billes. De la même manière que pour les obstacles, ce coefficient serait pris en compte lors d’une collision avec un autre objet du circuit et impacterait sur l’amplitude du rebond qui va en découler.
+Pour améliorer la paramétrabilité de notre application, on pourrait rendre modifiable le coefficient de restitution des billes. De la même manière que pour les obstacles, ce coefficient serait pris en compte lors d’une collision avec un autre objet du circuit et impacterait sur l’amplitude du rebond qui en découlerait.
 
 \subsection{Obstacles - Formes}
 
-L’application propose uniquement des obstacles sous forme de lignes individuelles. Nous pourrions ajouter plus de formes, comme des rectangles ou des cercles.
+L’application propose uniquement des obstacles sous forme de lignes individuelles. Nous pourrions ajouter plus de formes, comme des rectangles ou des cercles. \\
 
-Pour cela, on ajouterait dans la barre de paramétrage des icônes permettant de sélectionner un objet à créer, et en fonction de l’objet sélectionné, un événement de clic du panneau de dessin associé à cet objet serait utilisé. Il faudrait alors les intégrer dans l’import/export.
+Pour cela, on ajouterait dans la barre de paramétrage des icônes permettant de sélectionner un objet à créer, et en fonction de l’objet sélectionné, un événement de clic du panneau de dessin associé à cet objet serait utilisé. Il faudrait alors les intégrer dans l’import/export. \\
 
-De plus, il pourrait être possible de créer ses propres obstacles à l’aide d’un éditeur d’obstacles, où l’utilisateur peindrait à la souris son propre obstacle. Cependant, une forme quelconque est plus compliquée à gérer au niveau de la structure de données la représentant : il pourrait s’agir uniquement d’une liste de points. Cela rendrait l’export de cette forme beaucoup plus lourd que quelques attributs bien choisis.
+De plus, il pourrait être possible de créer ses propres obstacles à l’aide d’un éditeur d’obstacles, où l’utilisateur peindrait à la souris son propre obstacle. Cependant, une forme quelconque est plus compliquée à gérer au niveau de la structure de données la représentant : il pourrait s’agir uniquement d’une liste de points. Cela rendrait l’export de cette forme beaucoup plus lourd que quelques attributs bien choisis. \\
+
+Enfin, cette extension complexifierait notamment le moteur physique car, pour chaque nouveau type d'obstacle, il faudra gérer les collisions (détection et résolution) de manières différentes.
 
 
 \section{Gestion de fichiers}
 
 \subsection{Vidéo de l'exécution}
 
-Nous pourrions ajouter à notre application la possibilité d’enregistrer le panneau de dessin. Il faudrait pour cela ajouter un bouton permettant au premier clic de débuter un enregistrement et au second de terminer l’enregistrement et d’ouvrir une interface de gestion de fichier pour la sauvegarde de la vidéo.
+Nous pourrions ajouter à notre application la possibilité d’enregistrer le panneau de dessin. Il faudrait pour cela ajouter un bouton permettant au premier clic de débuter un enregistrement et au second de terminer l’enregistrement et d’ouvrir une interface de gestion de fichier pour la sauvegarde de la vidéo. \\
+
 Pour réaliser l’enregistrement en lui-même, on pourrait :
 \begin{itemize}
-\item utiliser une bibliothèque capable d’enregistrer ce qui se passe sur le panneau de dessin. Cette méthode permet de n’enregistrer que ce qui nous intéresse mais nécessite sans doute une compatibilité de la bibliothèque d’enregistrement avec notre bibliothèque d’affichage SWING
-\item utiliser une bibliothèque capable d’enregistrer ce qui se passe sur la fenêtre de l’application. Avec cette méthode, il y a moins de risques de compatibilité avec la bibliothèque d’affichage. En revanche, on ne capture pas que la simulation
+\item utiliser une bibliothèque capable d’enregistrer ce qui se passe sur le panneau de dessin. Cette méthode permet de n’enregistrer que ce qui nous intéresse, mais nécessite sans doute une compatibilité de la bibliothèque d’enregistrement avec notre bibliothèque d’affichage SWING.
+\item utiliser une bibliothèque capable d’enregistrer ce qui se passe sur la fenêtre de l’application. Avec cette méthode, il y a moins de risques de compatibilité avec la bibliothèque d’affichage. En revanche, on ne capture pas que la simulation.
 \end{itemize}
 
 
@@ -1989,15 +2040,17 @@ Pour réaliser l’enregistrement en lui-même, on pourrait :
 
 Actuellement, lors de l’import d’un circuit dans l’application, si la taille de l’écran de l’utilisateur ne permet  pas d’afficher le circuit importé en entier, le circuit importé est rogné à la taille maximale possible sur l’écran de l’utilisateur. Une amélioration de notre application serait alors de permettre à ce genre d’import de ne pas être rogné en changeant l’échelle d’affichage du circuit. Cela équivaut à “zoomer en arrière” et peut donc se coupler avec l’extension “Zoom”.
 
-\newpage
 \subsubsection{Fusion de circuits}
 
-Dans notre application, lorsqu’on importe un circuit, on efface systématiquement le circuit qui était présent avant. Il est donc possible d’améliorer notre logiciel en permettant la fusion de circuit : c’est-à-dire que lorsqu’on importe un circuit, on a la possibilité de le “coller” à côté du circuit déjà présent. Ces deux circuits seraient alors fusionnés pour n’en faire qu’un, leur inclinaison devenant liée. Lorsque deux circuits fusionnent, il faut alors permettre à une bille de s’écouler de l’un à l’autre. En outre, on peut imaginer qu’on avait deux circuits en cartons et que nous les avons mis côte à côte sur un bord.
+Dans notre application, lorsqu’on importe un circuit, on efface systématiquement celui qui était présent avant. Il est donc possible d’améliorer notre logiciel en permettant la fusion de circuits : c’est-à-dire que lorsqu’on importe un circuit, on a la possibilité de le “coller” à côté du circuit déjà présent. Ces deux circuits seraient alors fusionnés pour n’en faire qu’un, leur inclinaison devenant liée. Lorsque deux circuits fusionnent, il faut alors permettre à une bille de s’écouler de l’un à l’autre. En outre, on peut imaginer qu’on avait deux circuits en carton et que nous les avons mis côte-à-côte sur un bord. \\
 
-On peut imaginer qu’on puisse ensuite à nouveau fusionner un circuit à notre circuit composé, et ainsi permettre la fusion entre eux de plusieurs circuit.
-Cette fonctionnalité nécessiterait de mettre en place un “mode fusion” dans lequel on verrait nos deux circuits (celui déjà présent et celui que l’on souhaite importer) et permettrait de choisir le côté sur lequel on va fusionner les deux circuits. 
+\newpage
+On peut imaginer qu’on puisse ensuite à nouveau fusionner un circuit à notre circuit composé, et ainsi permettre la fusion entre plusieurs circuits.
+Cette fonctionnalité nécessiterait de mettre en place un “mode fusion” dans lequel on verrait nos deux circuits (celui déjà présent et celui que l’on souhaite importer) et permettrait de choisir le côté sur lequel on va fusionner les deux circuits. \\
 
-Sur la figure ci dessous, en noir figure le circuit déjà présent et en rouge, des possibilités de fusions  :
+Pour cela, on pourra définir une position par défaut du circuit à fusionner sur le circuit existant, puis proposer à l'utilisateur de faire glisser ce premier autour de ce dernier en faisant une translation des coordonnées du circuit "mobile", en fonction des actions de l'utilisateur. \\
+
+Sur la figure ci-dessous, en noir figure le circuit déjà présent et en rouge, des possibilités de fusions  :
 
 \begin{figure}[H]
 \centering
@@ -2008,15 +2061,16 @@ Sur la figure ci dessous, en noir figure le circuit déjà présent et en rouge,
 %%% PARTIE 8 : CONCLUSION %%%
 \chapter{Conclusion}
 
-Dans le cadre de ce projet, nous avons dû étudier plusieurs lois physiques telles que la mécanique du point avec le mouvement rectiligne uniformément accéléré, ainsi que les chocs élastiques et inélastiques. Ces recherches nous ont permis de concevoir un moteur physique essayant de correspondre le plus possible à la réalité. Bien qu’essentielles, nous nous sommes rendus compte à quel point les recherches et la compréhension d’un domaine éloigné du nôtre pouvaient êtres coûteuses. \\
+Dans le cadre de ce projet, nous avons été amenées à étudier plusieurs lois physiques telles que la mécanique du point avec le mouvement rectiligne uniformément accéléré, ainsi que les chocs élastiques et inélastiques. Ces recherches nous ont permis de concevoir un moteur physique tentant de correspondre le plus possible à la réalité. Bien qu’essentielles, nous nous sommes rendus compte à quel point les recherches et la compréhension d’un domaine éloigné du nôtre pouvaient êtres coûteuses en temps. \\
 
-Toutefois, nous pensons avoir atteint les objectifs du projet, bien que ceux-ci aient été ambitieux. Notre logiciel, malgré ses limites, permet la création, la personnalisation, l’import et l’export de circuits à travers une interface homme-machine que nous jugeons assez simple pour être comprise par n’importe quel utilisateur familier des écoulements de bille, bien que son ergonomie soit discutable. \\
+Toutefois, nous pensons avoir atteint les objectifs du projet, bien que ceux-ci aient été ambitieux. Notre logiciel, malgré ses limites, permet la création, la personnalisation, l’import et l’export de circuits à travers une interface homme-machine que nous jugeons assez simple pour être comprise par n’importe quel utilisateur familier des écoulements de billes, bien que son ergonomie reste discutable. \\
 
-Le moteur physique, quant à lui, permet de simuler un lâché de billes sur un plan incliné et parsemé d’obstacles. Les résolutions de collisions sont pour la majorité correctement calculées, ce qui permet d’avoir un moteur physique respectant la physique en apparence.
-En revanche, notre moteur ne possédant pas de frottements, notre application ne peut être assimilé à un simulateur d’écoulements de billes soumises aux lois de la physique terrestres. \\
+Le moteur physique, quant à lui, permet de simuler un lâché de billes sur un plan incliné et parsemé d’obstacles. Les résolutions de collisions sont pour la majorité correctement calculées, ce qui permet d’avoir un moteur physique respectant la physique, au moins en apparence.
+En revanche, notre moteur ne possédant pas de frottements, notre application ne peut être assimilée à un simulateur d’écoulements de billes soumis aux lois de la physique terrestre. \\
 
-Notre application est évidemment sujette à être améliorée et étendue, par exemple en implémentant les frottements, en corrigeant les bugs restants, et en implémentant de nouvelles fonctionnalités.
+Notre application est évolutive et pourrait être améliorée et étendue, par exemple en implémentant les frottements, en corrigeant les bugs restants, et en implémentant de nouvelles fonctionnalités.
 
-
+\bibliographystyle{unsrt}
+\bibliography{biblio.bib}
 
 \end{document}
