@@ -740,9 +740,7 @@ Cependant, bien que cette méthode améliore nettement les performances de l’a
 
 \paragraph{Bugs}
 
-Deux bugs connus peuvent survenir lors d’une exécution. \\
-
-Premier bug : une bille traverse un obstacle. Cela arrive lorsqu’une bille possède une grande vitesse. Si la distance parcourue lors d’un pas de temps est supérieure à deux fois le rayon de la bille, il peut arriver que la collision de soit pas détectée. De même, si cette distance est supérieure au rayon et inférieure à deux fois le rayon, il peut arriver que le centre de la bille se trouve de l’autre côté de l’obstacle lorsque la collision est détectée. Dans ce cas la bille est replacée en dessous de l’obstacle au lieu d’être replacée dessus.
+Une bille traverse un obstacle. Cela arrive lorsqu’une bille possède une grande vitesse. Si la distance parcourue lors d’un pas de temps est supérieure à deux fois le rayon de la bille, il peut arriver que la collision ne soit pas détectée. De même, si cette distance est supérieure au rayon et inférieure à deux fois le rayon, il peut arriver que le centre de la bille se trouve de l’autre côté de l’obstacle lorsque la collision est détectée. Dans ce cas la bille est replacée en dessous de l’obstacle au lieu d’être replacée dessus.
 
 \begin{figure}[H]
 \centering
@@ -787,14 +785,10 @@ Premier bug : une bille traverse un obstacle. Cela arrive lorsqu’une bille pos
 \end{figure}
 %===========================
 
-\newpage
-Deuxième bug : lorsque la bille entre en collision avec une extrémité d’un obstacle vertical ou horizontal. Dans la gestion de la collision, on calcule la projection d’un point sur un point au lieu de calculer la projection d’un point sur une droite. On ne replace donc pas la bille au bon endroit.
+Ce bug est le seul que nous ayons réussi à mettre en évidence, néanmoins, il est possible que d'autres subsistent.
 
-\begin{figure}[H]
-\centering
-\includegraphics[scale=1]{bug_2.PNG}
-\caption{Schémas du bug d'une bille entrant en collision avec l'extrémité d'un obstacle}
-\end{figure}
+\newpage
+
 
 \paragraph{Mécanique du moteur}
 
@@ -802,7 +796,6 @@ Notre moteur physique est basé sur la simulation discrète synchrone qui est re
 
 Un autre point qui n’est pas pris en compte est la gestion des événements dans le temps. Par exemple, si deux billes sont au repos et en contact, et qu’une bille vient entrer en collision dans les deux en même temps, laquelle doit-on déplacer en premier ? Dans notre cas, on ne gère la collision qu’avec une seule bille. Pour gérer une collision entre plusieurs billes, il aurait fallu implémenter un moteur physique basé sur la simulation discrète asynchrone dans laquelle les événements (ici collisions) sont déterminés avant le déplacement.
 
-\newpage
 \subsubsection{Interface graphique}
 
 \paragraph{Ergonomie}
@@ -1091,7 +1084,7 @@ Cette classe implémente notre moteur physique. C'est lui qui gère le déplacem
 
 Cette fonction est utilisée dans \texttt{run(DrawingPanel):void} pour éviter deux choses : 1) déplacer des billes qu'on ne voit plus ; 2) notre plateau est fictivement dans les airs, si elle est sortie du circuit, peu importe par quel côté, on part du principe qu'elle est "tombée" du circuit et qu'elle ne fait plus partie de notre modèle.
 \item \texttt{void resolveCollisionBallBall(Ball ball1, Ball ball2)} : calcule les nouvelles vitesses X et Y des billes données en argument qui sont entrées en collision, en utilisant les équations du choc élastique. Pour cela, on utilise la direction et l'angle de collision des billes.
-\item \texttt{void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle)} : calcule les nouvelles vitesses X et Y de la bille donnée en argument qui est entrée en collision avec un obstacle. Pour calculer l'angle de sortie de la bille, on utilise son angle d'incidence et l'inclinaison de l'obstacle.
+\item \texttt{void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle)} : calcule les nouvelles vitesses X et Y de la bille donnée en argument qui est entrée en collision avec un obstacle. Pour calculer l'angle de sortie de la bille, on utilise son angle d'incidence et l'inclinaison de l'obstacle. Si la collision a lieu sur une des extrémités de l'obstacle, on crée temporairement en mémoire une droite correspondant à la tangente entre l'extrémité de l'obstacle et la bille et on calcule l'angle de rebond de la bille par rapport à cette tangente.
 \item \texttt{Vector GetNormale(Point A, Point B, Point2D.Double C)} : renvoie le vecteur normal du segment AB qui passe par le point C.
 \item \texttt{Point2D.Double ProjectionI(Point A, Point B, Point2D.Double C)} : renvoie le point correspondant à la projection du point C sur le segment AB.
 \item \texttt{void ReplaceBall(ObstacleLine obstacle, Ball ball)} : replace la bille de manière tangente à l'obstacle passé en paramètre en fonction de la projection de son centre sur l'obstacle et de l'orientation de sa vitesse.
