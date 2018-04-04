@@ -154,27 +154,26 @@ public class PhysicalEngine {
 	 */
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle,DrawingPanel dp) throws InterruptedException {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-		//ReplaceBall(obstacle, ball);
+		ReplaceBall(obstacle, ball);
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
 		Vector N = new Vector();
 		N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
 		Point2D.Double P = ProjectionI(obstacle.get_begin(),obstacle.get_end(), c);
 		if(P.getX() >= Math.min(obstacle.get_begin().getX(),obstacle.get_end().getX())
 				 && P.getX() <= Math.max(obstacle.get_begin().getX(),obstacle.get_end().getX())) {
-			// CAS NORMAL
+			// projection is on obstacle
 			double normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX()));
 			angle = 2 * normalAngle - 180 - angle;
 			double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
 			double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed();
 			ball.set_speed(vx, vy * obstacle.getCOR());
 			
-		}else { // PROJECTION PAS SUR SEGMENT
+		}else { // projection is not on obstacle
 			int point = _controller.whereCollisionSegment(ball, obstacle);
-			System.out.println(point);
 			Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 			Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
 			
-			if(point == 2) {
+			if(point == 2) { //ball collides with the begin point of the obstacle
 				Point center = new Point((int) c.getX(),(int) c.getY());
 				Vector v1 = new Vector(A.getX()-c.getX(),A.getY()-c.getY());
 				Point2D.Double haut = new Point2D.Double(A.getX()+(v1.getY()*15),A.getY()-(v1.getX()*15));
@@ -185,7 +184,7 @@ public class PhysicalEngine {
 				resolveCollisionBallObstacle(ball,obtmp,dp);
 			}
 			
-			if(point == 3) {
+			if(point == 3) { //ball collides with the end point of the obstacle
 				Point center = new Point((int) c.getX(),(int) c.getY());
 				Vector v1 = new Vector(B.getX()-c.getX(),B.getY()-c.getY());
 				Point2D.Double haut = new Point2D.Double(B.getX()+v1.getY(),B.getY()-v1.getX());
@@ -237,39 +236,22 @@ public class PhysicalEngine {
 	 * ball's radius.
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
-		double EPSILON = 1E-10;
-		int cpt = 1;
-		double newX, newY;
-		Boolean wasIn = true;
-
 		Point2D.Double center = new Point2D.Double(ball.get_x(), ball.get_y());
 		Point2D.Double proj = ProjectionI(obstacle.get_begin(), obstacle.get_end(), center);
-		double h = Math.abs(center.distance(proj) - ball.get_radius());
-
-		while (EPSILON < h) {
-
-			if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
-				newX = ball.get_x() - ball.get_velocity().getX() / Math.pow(2, cpt);
-				newY = ball.get_y() - ball.get_velocity().getY() / Math.pow(2, cpt);
-				if (!wasIn) {
-					wasIn = true;
-					cpt++;
-				}
-			} else {
-				newX = ball.get_x() + ball.get_velocity().getX() / Math.pow(2, cpt);
-				newY = ball.get_y() + ball.get_velocity().getY() / Math.pow(2, cpt);
-				if (wasIn) {
-					wasIn = false;
-					cpt++;
-				}
+		
+		if(proj.getX() >= Math.min(obstacle.get_begin().getX(),obstacle.get_end().getX())
+				 && proj.getX() <= Math.max(obstacle.get_begin().getX(),obstacle.get_end().getX())) {
+			
+			int coeff = 10;
+			double newX, newY;
+			while(_controller.checkCollisionBallObstacle(ball, obstacle)) {
+				 newX = ball.get_x() - ball.get_velocity().getX() / coeff;
+				 newY = ball.get_y() - ball.get_velocity().getY() / coeff;
+				 ball.set_location(newX, newY);
+				// System.out.println(coeff);
 			}
-
-			ball.set_location(newX, newY);
-
-			center = new Point2D.Double(ball.get_x(), ball.get_y());
-			proj = ProjectionI(obstacle.get_begin(), obstacle.get_end(), center);
-			h = Math.abs(center.distance(proj) - ball.get_radius());
-
+			
 		}
+
 	}
 }
