@@ -230,21 +230,25 @@ public class PhysicalEngine {
 	 * ball's radius.
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
+		System.out.println("enter");
 		Point2D.Double center = new Point2D.Double(ball.get_x(), ball.get_y());
 		Point2D.Double proj = ProjectionI(obstacle.get_begin(), obstacle.get_end(), center);
+		double h = Math.abs(center.distance(proj) - ball.get_radius());
 
-		if (proj.getX() >= Math.min(obstacle.get_begin().getX(), obstacle.get_end().getX())
-				&& proj.getX() <= Math.max(obstacle.get_begin().getX(), obstacle.get_end().getX())) {
+		if (!(proj.getX() >= Math.min(obstacle.get_begin().getX(), obstacle.get_end().getX())
+				&& proj.getX() <= Math.max(obstacle.get_begin().getX(), obstacle.get_end().getX())))
+			return;
 
-			int coeff = 100;
-			double newX, newY;
-			while (_controller.checkCollisionBallObstacle(ball, obstacle)) {
-				newX = ball.get_x() - ball.get_velocity().getX() / coeff;
-				newY = ball.get_y() - ball.get_velocity().getY() / coeff;
-				ball.set_location(newX, newY);
-			}
+		int coeff = 10;
+		double newX, newY;
+		while (_controller.checkCollisionBallObstacle(ball, obstacle)) {
+			newX = ball.get_x() - ball.get_velocity().getX() / coeff;
+			newY = ball.get_y() - ball.get_velocity().getY() / coeff;
+			ball.set_location(newX, newY);
 
 		}
 
+		// System.out.println(ball.get_velocity().getX() + " - " +
+		// ball.get_velocity().getY());
 	}
 }
