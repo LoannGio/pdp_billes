@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
 import model.AnimationTimer;
 import model.Ball;
 import model.Circuit;
@@ -54,7 +55,7 @@ public class PhysicalEngine {
 						}
 						for (ObstacleLine obstacle : _circuit.get_lines()) {
 							if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
-										resolveCollisionBallObstacle(ball, obstacle);
+								resolveCollisionBallObstacle(ball, obstacle);
 							}
 						}
 						ball.step(_circuit.get_acceleration());
@@ -145,7 +146,7 @@ public class PhysicalEngine {
 	 * perpendicular angle, the bouncing angle is calculated. This angle allows
 	 * to calculate the new speed vector.
 	 */
-	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle){
+	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
 		Vector N = new Vector();
@@ -162,8 +163,8 @@ public class PhysicalEngine {
 			double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
 			double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed();
 			ball.set_speed(vx, vy * obstacle.getCOR());
-			
-		}else { // projection is not on obstacle
+
+		} else { // projection is not on obstacle
 			int point = _controller.whereCollisionSegment(ball, obstacle);
 			Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 			Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
@@ -176,6 +177,7 @@ public class PhysicalEngine {
 				Point ob_end = new Point((int) bas.getX(),(int) bas.getY());
 				ObstacleLine obtmp = new ObstacleLine(ob_begin,ob_end,obstacle.getCOR());
 				resolveCollisionBallObstacle(ball,obtmp);
+
 			}
 			
 			if(point == 3) { //ball collides with the end point of the obstacle
@@ -186,8 +188,9 @@ public class PhysicalEngine {
 				Point ob_end = new Point((int) bas.getX(),(int) bas.getY());
 				ObstacleLine obtmp = new ObstacleLine(ob_begin,ob_end,obstacle.getCOR());
 				resolveCollisionBallObstacle(ball,obtmp);		
+
 			}
-			
+
 		}
 	}
 
@@ -259,6 +262,5 @@ public class PhysicalEngine {
 
         }
     }
-
 
 }
