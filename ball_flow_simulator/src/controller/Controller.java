@@ -241,9 +241,9 @@ public class Controller {
 		float pscal1 = (float) Vector.dotProduct(AB, AC);
 		float pscal2 = (float) Vector.dotProduct(BA, BC);
 
-		if (pscal1 >= 0 && pscal2 >= 0)
+		if (pscal1 >= 0 && pscal2 >= 0) {
 			return true;
-
+		}
 		if (ball.contains(A))
 			return true;
 		if (ball.contains(B))
@@ -251,6 +251,29 @@ public class Controller {
 		return false;
 	}
 
+	int whereCollisionSegment(Ball ball, ObstacleLine obstacle) {
+
+		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
+		Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
+		Point2D.Double C = new Point2D.Double(ball.get_x(), ball.get_y());
+
+		Vector AB = new Vector(B.x - A.x, B.y - A.y);
+		Vector AC = new Vector(C.x - A.x, C.y - A.y);
+		Vector BC = new Vector(C.x - B.x, C.y - B.y);
+		Vector BA = new Vector(-AB.getX(), -AB.getY());
+
+		float pscal1 = (float) Vector.dotProduct(AB, AC);
+		float pscal2 = (float) Vector.dotProduct(BA, BC);
+
+		if (pscal1 >= 0 && pscal2 >= 0) {
+			return 1;
+		}
+		if (ball.contains(A))
+			return 2;
+		if (ball.contains(B))
+			return 3;
+		return 0;
+	}
 
 
 	public double distance(Point2D.Double a, Point2D.Double b) {
