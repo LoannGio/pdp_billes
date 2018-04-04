@@ -149,23 +149,21 @@ public class PhysicalEngine {
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
-		Vector N = new Vector();
-		N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
 		Point2D.Double P = ProjectionI(obstacle.get_begin(),obstacle.get_end(), c);
 		if(P.getX() > Math.min(obstacle.get_begin().getX(),obstacle.get_end().getX())
 				 && P.getX() < Math.max(obstacle.get_begin().getX(),obstacle.get_end().getX())) {
 			ReplaceBall(obstacle, ball);
-			angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
+			Vector N = new Vector();
 			N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
-			// projection is on obstacle
+			// projection is on the obstacle
 			double normalAngle = Math.toDegrees(Math.atan2(N.getY(), N.getX()));
 			angle = 2 * normalAngle - 180 - angle;
 			double vx = Math.cos(Math.toRadians(angle)) * ball.get_speed();
 			double vy = Math.sin(Math.toRadians(angle)) * ball.get_speed();
 			ball.set_speed(vx, vy * obstacle.getCOR());
 
-		} else { // projection is not on obstacle
-			int point = _controller.whereCollisionSegment(ball, obstacle);
+		} else { // projection is not on the obstacle
+			int point = _controller.whereIsCollisionSegment(ball, obstacle);
 			Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 			Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
 			

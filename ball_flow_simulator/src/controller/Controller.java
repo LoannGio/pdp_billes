@@ -251,7 +251,10 @@ public class Controller {
 		return false;
 	}
 
-	int whereCollisionSegment(Ball ball, ObstacleLine obstacle) {
+	/*
+	 * We need this function to know if the points A or B (extremities of the obstacle) are in the Ball.
+	 */
+	int whereIsCollisionSegment(Ball ball, ObstacleLine obstacle) {
 
 		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 		Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
