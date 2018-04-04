@@ -198,33 +198,38 @@ public class PhysicalEngine {
 	 * ball's radius.
 	 */
 	private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
-		
-		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-		Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
-		double dist = _controller.distance(c, p);
-		if (dist < ball.get_radius()) {
-			if (p.getX() == c.getX() && p.getY() == c.getY()) {
-				ball.set_location(ball.get_x() - (ball.get_radius() - dist), ball.get_y());
-			} else {
-				if (p.getY() > c.getY())
-					if (p.getX() == c.getX())
-						ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
-					else if (p.getX() > c.getX())
-						ball.set_location(ball.get_x() - (ball.get_radius() - dist),
-								ball.get_y() - (ball.get_radius() - dist));
-					else
-						ball.set_location(ball.get_x() + (ball.get_radius() - dist),
-								ball.get_y() - (ball.get_radius() - dist));
+		double EPSILON = 1E-10;
+		int cpt = 1;
+		double newX, newY;
+		Boolean wasIn = true;
 
-				else if (p.getX() == c.getX())
-					ball.set_location(ball.get_x(), ball.get_y() + (ball.get_radius() - dist));
-				else if (p.getX() > c.getX())
-					ball.set_location(ball.get_x() - (ball.get_radius() - dist),
-							ball.get_y() + (ball.get_radius() - dist));
-				else
-					ball.set_location(ball.get_x() + (ball.get_radius() - dist),
-							ball.get_y() + (ball.get_radius() - dist));
+		Point2D.Double center = new Point2D.Double(ball.get_x(), ball.get_y());
+		Point2D.Double proj = ProjectionI(obstacle.get_begin(), obstacle.get_end(), center);
+		double h = Math.abs(center.distance(proj) - ball.get_radius());
+
+		while (EPSILON < h) {
+
+			if (_controller.checkCollisionBallObstacle(ball, obstacle)) {
+				newX = ball.get_x() - ball.get_velocity().getX() / Math.pow(2, cpt);
+				newY = ball.get_y() - ball.get_velocity().getY() / Math.pow(2, cpt);
+				if (!wasIn) {
+					wasIn = true;
+					cpt++;
+				}
+			} else {
+				newX = ball.get_x() + ball.get_velocity().getX() / Math.pow(2, cpt);
+				newY = ball.get_y() + ball.get_velocity().getY() / Math.pow(2, cpt);
+				if (wasIn) {
+					wasIn = false;
+					cpt++;
+				}
 			}
+
+			ball.set_location(newX, newY);
+
+			center = new Point2D.Double(ball.get_x(), ball.get_y());
+			proj = ProjectionI(obstacle.get_begin(), obstacle.get_end(), center);
+			h = Math.abs(center.distance(proj) - ball.get_radius());
 
 		}
 	}
