@@ -149,9 +149,9 @@ public class PhysicalEngine {
 	private void resolveCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
 		double angle = Math.toDegrees(Math.atan2(ball.get_velocity().getY(), ball.get_velocity().getX()));
-		Point2D.Double P = ProjectionI(obstacle.get_begin(),obstacle.get_end(), c);
-		if(P.getX() > Math.min(obstacle.get_begin().getX(),obstacle.get_end().getX())
-				 && P.getX() < Math.max(obstacle.get_begin().getX(),obstacle.get_end().getX())) {
+		Point2D.Double P = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
+		if (P.getX() >= Math.min(obstacle.get_begin().getX(), obstacle.get_end().getX())
+				&& P.getX() <= Math.max(obstacle.get_begin().getX(), obstacle.get_end().getX())) {
 			ReplaceBall(obstacle, ball);
 			Vector N = new Vector();
 			N = GetNormale(obstacle.get_begin(), obstacle.get_end(), c);
@@ -166,26 +166,28 @@ public class PhysicalEngine {
 			int point = _controller.whereIsCollisionSegment(ball, obstacle);
 			Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 			Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
-			
-			if(point == 2) { //ball collides with the begin point of the obstacle
-				Vector v1 = new Vector(A.getX()-c.getX(),A.getY()-c.getY());
-				Point2D.Double haut = new Point2D.Double(A.getX()+(v1.getY()*15),A.getY()-(v1.getX()*15));
-				Point2D.Double bas = new Point2D.Double(A.getX()-(v1.getY()*15),A.getY()+(v1.getX()*15));			
-				Point ob_begin = new Point((int) haut.getX(),(int) haut.getY());
-				Point ob_end = new Point((int) bas.getX(),(int) bas.getY());
-				ObstacleLine obtmp = new ObstacleLine(ob_begin,ob_end,obstacle.getCOR());
-				resolveCollisionBallObstacle(ball,obtmp);
+
+			if (point == 2) { // ball collides with the begin point of the
+								// obstacle
+				Vector v1 = new Vector(A.getX() - c.getX(), A.getY() - c.getY());
+				Point2D.Double haut = new Point2D.Double(A.getX() + (v1.getY() * 15), A.getY() - (v1.getX() * 15));
+				Point2D.Double bas = new Point2D.Double(A.getX() - (v1.getY() * 15), A.getY() + (v1.getX() * 15));
+				Point ob_begin = new Point((int) haut.getX(), (int) haut.getY());
+				Point ob_end = new Point((int) bas.getX(), (int) bas.getY());
+				ObstacleLine obtmp = new ObstacleLine(ob_begin, ob_end, obstacle.getCOR());
+				resolveCollisionBallObstacle(ball, obtmp);
 
 			}
-			
-			if(point == 3) { //ball collides with the end point of the obstacle
-				Vector v1 = new Vector(B.getX()-c.getX(),B.getY()-c.getY());
-				Point2D.Double haut = new Point2D.Double(B.getX()+(v1.getY()*15),B.getY()-(v1.getX()*15));
-				Point2D.Double bas = new Point2D.Double(B.getX()-(v1.getY()*15),B.getY()+(v1.getX()*15));	
-				Point ob_begin = new Point((int) haut.getX(),(int) haut.getY());
-				Point ob_end = new Point((int) bas.getX(),(int) bas.getY());
-				ObstacleLine obtmp = new ObstacleLine(ob_begin,ob_end,obstacle.getCOR());
-				resolveCollisionBallObstacle(ball,obtmp);		
+
+			if (point == 3) { // ball collides with the end point of the
+								// obstacle
+				Vector v1 = new Vector(B.getX() - c.getX(), B.getY() - c.getY());
+				Point2D.Double haut = new Point2D.Double(B.getX() + (v1.getY() * 15), B.getY() - (v1.getX() * 15));
+				Point2D.Double bas = new Point2D.Double(B.getX() - (v1.getY() * 15), B.getY() + (v1.getX() * 15));
+				Point ob_begin = new Point((int) haut.getX(), (int) haut.getY());
+				Point ob_end = new Point((int) bas.getX(), (int) bas.getY());
+				ObstacleLine obtmp = new ObstacleLine(ob_begin, ob_end, obstacle.getCOR());
+				resolveCollisionBallObstacle(ball, obtmp);
 
 			}
 
@@ -229,36 +231,36 @@ public class PhysicalEngine {
 	 * where the distance between the ball and the obstacle is equal to the
 	 * ball's radius.
 	 */
-    private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
-        
-        Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
-        Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
-        double dist = _controller.distance(c, p);
-        if (dist < ball.get_radius()) {
-            if (p.getX() == c.getX() && p.getY() == c.getY()) {
-                ball.set_location(ball.get_x() - (ball.get_radius() - dist), ball.get_y());
-            } else {
-                if (p.getY() > c.getY())
-                    if (p.getX() == c.getX())
-                        ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
-                    else if (p.getX() > c.getX())
-                        ball.set_location(ball.get_x() - (ball.get_radius() - dist),
-                                ball.get_y() - (ball.get_radius() - dist));
-                    else
-                        ball.set_location(ball.get_x() + (ball.get_radius() - dist),
-                                ball.get_y() - (ball.get_radius() - dist));
+	private void ReplaceBall(ObstacleLine obstacle, Ball ball) {
 
-                else if (p.getX() == c.getX())
-                    ball.set_location(ball.get_x(), ball.get_y() + (ball.get_radius() - dist));
-                else if (p.getX() > c.getX())
-                    ball.set_location(ball.get_x() - (ball.get_radius() - dist),
-                            ball.get_y() + (ball.get_radius() - dist));
-                else
-                    ball.set_location(ball.get_x() + (ball.get_radius() - dist),
-                            ball.get_y() + (ball.get_radius() - dist));
-            }
+		Point2D.Double c = new Point2D.Double(ball.get_x(), ball.get_y());
+		Point2D.Double p = ProjectionI(obstacle.get_begin(), obstacle.get_end(), c);
+		double dist = _controller.distance(c, p);
+		if (dist < ball.get_radius()) {
+			if (p.getX() == c.getX() && p.getY() == c.getY()) {
+				ball.set_location(ball.get_x() - (ball.get_radius() - dist), ball.get_y());
+			} else {
+				if (p.getY() > c.getY())
+					if (p.getX() == c.getX())
+						ball.set_location(ball.get_x(), ball.get_y() - (ball.get_radius() - dist));
+					else if (p.getX() > c.getX())
+						ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
+					else
+						ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+								ball.get_y() - (ball.get_radius() - dist));
 
-        }
-    }
+				else if (p.getX() == c.getX())
+					ball.set_location(ball.get_x(), ball.get_y() + (ball.get_radius() - dist));
+				else if (p.getX() > c.getX())
+					ball.set_location(ball.get_x() - (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
+				else
+					ball.set_location(ball.get_x() + (ball.get_radius() - dist),
+							ball.get_y() + (ball.get_radius() - dist));
+			}
+
+		}
+	}
 
 }

@@ -17,7 +17,10 @@ import view.DrawingPanel;
 public class Controller {
 	private Circuit _circuit;
 	private static Controller instance = new Controller();
-	/* isRunning is a boolean that indicates whether or not an execution is currently running */
+	/*
+	 * isRunning is a boolean that indicates whether or not an execution is
+	 * currently running
+	 */
 	private boolean _isRunning;
 	private PhysicalEngine _pe;
 
@@ -70,8 +73,7 @@ public class Controller {
 			begin = o.get_begin();
 			end = o.get_end();
 			if (begin.getX() > xMax || begin.getX() < xMin || begin.getY() > yMax || begin.getY() < yMin
-					|| end.getX() > xMax || end.getX() < xMin || end.getY() > yMax
-					|| end.getY() < yMin) {
+					|| end.getX() > xMax || end.getX() < xMin || end.getY() > yMax || end.getY() < yMin) {
 				iterObstacleLine.remove();
 			}
 		}
@@ -198,13 +200,15 @@ public class Controller {
 	}
 
 	/*
-	 * We check if the ball collides with the line that goes through the
-	 * two endpoints of the obstacle. It is done by checking the distance between
-	 * the center of the ball and the projection point on the line. If this distance is shorter
-	 * than the radius, then we know that the ball collides with the line. After that, we now
-	 * have to check if the ball collides with the obstacle by calling collisionSegment.
+	 * We check if the ball collides with the line that goes through the two
+	 * endpoints of the obstacle. It is done by checking the distance between
+	 * the center of the ball and the projection point on the line. If this
+	 * distance is shorter than the radius, then we know that the ball collides
+	 * with the line. After that, we now have to check if the ball collides with
+	 * the obstacle by calling collisionSegment.
 	 * 
-	 * CI = distance between the center of the ball and the projection point on the line.
+	 * CI = distance between the center of the ball and the projection point on
+	 * the line.
 	 */
 	public boolean checkCollisionBallObstacle(Ball ball, ObstacleLine obstacle) {
 		Vector u = new Vector(obstacle.get_begin().getX() - obstacle.get_end().getX(),
@@ -222,12 +226,12 @@ public class Controller {
 	}
 
 	/*
-	 * Check if the projection point is on the obstacle. If so, the ball collides with the obstacle.
-	 * Otherwise, we have to check if the endpoints A and B of the obstacle are located inside the ball.
-	 * If so, the ball collides with the obstacle. Otherwise, there is no collision.
+	 * Check if the projection point is on the obstacle. If so, the ball
+	 * collides with the obstacle. Otherwise, we have to check if the endpoints
+	 * A and B of the obstacle are located inside the ball. If so, the ball
+	 * collides with the obstacle. Otherwise, there is no collision.
 	 */
 	private boolean collisionSegment(Ball ball, ObstacleLine obstacle) {
-
 
 		Point2D.Double A = new Point2D.Double(obstacle.get_begin().getX(), obstacle.get_begin().getY());
 		Point2D.Double B = new Point2D.Double(obstacle.get_end().getX(), obstacle.get_end().getY());
@@ -252,7 +256,8 @@ public class Controller {
 	}
 
 	/*
-	 * We need this function to know if the points A or B (extremities of the obstacle) are in the Ball.
+	 * We need this function to know if the points A or B (extremities of the
+	 * obstacle) are in the Ball.
 	 */
 	int whereIsCollisionSegment(Ball ball, ObstacleLine obstacle) {
 
@@ -278,7 +283,6 @@ public class Controller {
 		return 0;
 	}
 
-
 	public double distance(Point2D.Double a, Point2D.Double b) {
 		return Math.sqrt(Math.pow((b.x - a.x), 2) + Math.pow((b.y - a.y), 2));
 	}
@@ -290,8 +294,9 @@ public class Controller {
 	public void setDimensionsPlan(DrawingPanel creationZone, int newCreationZoneWidth, int newCreationZoneHeight) {
 		_circuit.set_width(newCreationZoneWidth);
 		_circuit.set_height(newCreationZoneHeight);
-		creationZone.deleteObjectsOutOfBounds(creationZone.getX(), creationZone.getX() + newCreationZoneWidth,
-				creationZone.getY(), creationZone.getY() + newCreationZoneHeight);
+
+		creationZone.deleteObjectsOutOfBounds(0, newCreationZoneWidth, 0, newCreationZoneHeight);
+
 		creationZone.mySetBounds(10, 10, newCreationZoneWidth, newCreationZoneHeight);
 		creationZone.repaintBufferedImage(_circuit.get_lines(), _circuit.get_balls());
 	}
