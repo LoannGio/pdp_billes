@@ -1,3 +1,10 @@
+/*Program made by
+ * GIOVANNANGELI Loann
+ * MAYOLINI Maxime
+ * MOUHOUB Noureddine
+ * RIOU Maxence
+ * */
+
 package _defaut;
 
 import view.MainFrame;
