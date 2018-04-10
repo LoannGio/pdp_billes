@@ -8,6 +8,7 @@ import java.awt.geom.Line2D;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class InclinationPreview extends JPanel {
 	private double _angle;
 
