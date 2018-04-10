@@ -34,6 +34,7 @@ public class ParamPanel extends JPanel {
 	private JPanel _inclinationContainer = new JPanel();
 	private JPanel _CORContainer = new JPanel();
 	private JPanel _scaleContainer = new JPanel();
+	private InclinationPreview _inclinationIndicatorContainer;
 
 	private JLabel _widthLabel = new JLabel("Longueur   ");
 	private JLabel _heightLabel = new JLabel("Largeur      ");
@@ -59,7 +60,7 @@ public class ParamPanel extends JPanel {
 	private JButton _exportButton = new JButton("Exporter");
 	private JButton _importButton = new JButton("Importer");
 
-	private JSlider _inclinationSlider = new JSlider(0, 90, 45);
+	private JSlider _inclinationSlider;
 
 	private DrawingPanel _dp;
 
@@ -83,6 +84,7 @@ public class ParamPanel extends JPanel {
 		 * listnener's management. That's why it is passed as parameter
 		 */
 		addListneners(creationZone);
+
 	}
 
 	private void addListneners(DrawingPanel creationZone) {
@@ -242,6 +244,8 @@ public class ParamPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				_controller.set_defaultInclinaison(_inclinationSlider.getValue());
+				_inclinationIndicatorContainer.set_angle(_inclinationSlider.getValue());
+				_inclinationIndicatorContainer.repaint();
 			}
 
 		});
@@ -280,6 +284,7 @@ public class ParamPanel extends JPanel {
 		_inclinationContainer.setLayout(new BoxLayout(_inclinationContainer, BoxLayout.LINE_AXIS));
 		_CORContainer.setLayout(new BoxLayout(_CORContainer, BoxLayout.LINE_AXIS));
 		_scaleContainer.setLayout(new BoxLayout(_scaleContainer, BoxLayout.LINE_AXIS));
+		_inclinationIndicatorContainer.setLayout(new BoxLayout(_inclinationIndicatorContainer, BoxLayout.LINE_AXIS));
 
 		_widthContainer.add(_widthLabel);
 		_widthContainer.add(_widthTxt);
@@ -319,6 +324,7 @@ public class ParamPanel extends JPanel {
 		_container.add(_exportButton);
 
 		add(_container);
+		add(_inclinationIndicatorContainer);
 	}
 
 	private void initializeComponents(Dimension frameSize, DrawingPanel creationZone) {
@@ -330,6 +336,9 @@ public class ParamPanel extends JPanel {
 		double heightProportion = 0.92;
 		_paramZoneWidth = (int) Math.round(widthProportion * frameSize.width);
 		_paramZoneHeight = (int) Math.round(heightProportion * frameSize.height);
+
+		_inclinationSlider = new JSlider(0, 90, (int) _controller.get_defaultInclinaison());
+		_inclinationIndicatorContainer = new InclinationPreview(_inclinationSlider.getValue());
 		initializeTextFields(panelWidth, panelHeight);
 	}
 
@@ -357,6 +366,8 @@ public class ParamPanel extends JPanel {
 		_radiusTxt.setText(Integer.toString(_controller.get_defaultBallRadius()));
 		_massTxt.setText(Double.toString(_controller.get_defaultBallMass()));
 		_inclinationSlider.setValue((int) _controller.get_defaultInclinaison());
+		_inclinationIndicatorContainer.set_angle(_inclinationSlider.getValue());
+		_inclinationIndicatorContainer.repaint();
 		_CORTxt.setText(Double.toString(_controller.get_defaultCOR()));
 		_scaleTxt.setText(Double.toString(_controller.getdefaultScale()));
 	}
